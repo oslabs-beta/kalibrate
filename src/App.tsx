@@ -1,9 +1,9 @@
-import Dashboard from './components/Dashboard.jsx';
+import Connect from './components/Connect';
 
 function App() {
   return (
     <div className="App">
-      <Dashboard />
+      <Connect />
     </div>
   );
 }
