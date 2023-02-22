@@ -1,24 +1,42 @@
-import { Links, Outlet } from 'react-router-dom'
+import Consumers from './consumers';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import {Link, Outlet} from 'react-router-dom';
+import {useState, SyntheticEvent, MouseEvent} from 'react';
 
-const Navbar = () => {
+interface LinkTabProps {
+  label?: string;
+  href?: string;
+}
+function LinkTab(props: LinkTabProps) {
   return (
-    <div>
-      <nav>
-        <ul style={{width: '100vw', display: 'flex', flexDirection: 'row', listStyle: 'none'}}>
-          <li>
-            <span>Kalibrate</span>
-          </li>
-          <li>
-            <span>Dashboard</span>
-          </li>
-          <li>Manage</li>
-          <li>Monitor</li>
-          <li>Test</li>
-          <li>Alerts</li>
-          <li>Settings</li>
-        </ul>
-      </nav>
-    </div>
+    <Tab
+      component="a"
+      onClick={(event: MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        event.preventDefault();
+      }}
+      {...props}
+    />
+  );
+}
+const Navbar = () => {
+  const [value, setValue] = useState();
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+  return (
+    <Box sx={{width: '100vw'}}>
+      <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
+        {/* paths will need to be checked */}
+        <LinkTab label="Dashboard" href="/dashboard" />
+        <LinkTab label="Manage" href="/manage" />
+        <LinkTab label="Monitor" href="/monitor" />
+        <LinkTab label="Test" href="/test" />
+        <LinkTab label="Alerts" href="/alerts" />
+        <LinkTab label="Settings" href="/settings" />
+      </Tabs>
+    </Box>
   );
 };
 export default Navbar;
