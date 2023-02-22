@@ -1,4 +1,4 @@
-const consumersDisplay = () => {
+const ConsumersDisplay = () => {
   return (
     <div className="wrapper">
       <div className="display-table">
@@ -20,4 +20,4 @@ const consumersDisplay = () => {
     </div>
   );
 };
-export default consumersDisplay;
+export default ConsumersDisplay;
