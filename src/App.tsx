@@ -1,9 +1,11 @@
-import {useState} from 'react';
-import Connect from "./components/Connect";
-// import './App.css'
+import Connect from './components/Connect';
 
 function App() {
-  return <Connect />;
+  return (
+    <div className="App">
+      <Connect />
+    </div>
+  );
 }
 
 export default App;
