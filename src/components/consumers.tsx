@@ -1,5 +1,5 @@
 import React from 'react';
-import ConsumersDisplay from './consumersDisplay';
+import ConsumersDisplay from './ConsumersDisplay';
 
 const Consumers = () => {
   return (
