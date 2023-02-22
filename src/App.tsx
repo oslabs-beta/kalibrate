@@ -4,6 +4,8 @@ import Consumers from './components/Consumers';
 import Navbar from './components/Navbar';
 import Events from './components/Events';
 import Home from './components/Home';
+import Producers from './components/Producers';
+import Brokers from './components/Brokers';
 import {useState} from 'react';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
@@ -21,9 +23,9 @@ function App() {
         <Route path="connect" element={<Connect clientId={clientId} setClientId={setClientId} />} />
         <Route path="cluster-name" element={<Dashboard />}>
           <Route index element={<Dashboard />} />
-          <Route path="brokers" />
-          <Route path="producers" />
-          <Route path="consumers" element ={<Consumers/>} />
+          <Route path="brokers" element={<Brokers />} />
+          <Route path="producers" element={<Producers />} />
+          <Route path="consumers" element={<Consumers />} />
           <Route path="topics" />
         </Route>
       </Routes>
