@@ -1,8 +1,9 @@
 import {useState} from 'react';
+import Connect from "./components/Connect";
 // import './App.css'
 
 function App() {
-  return <div className="App">Welcome to Kalibrate</div>;
+  return <Connect />;
 }
 
 export default App;
