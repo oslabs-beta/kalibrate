@@ -2,6 +2,7 @@ import Consumers from './consumers';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import {Link, Outlet} from 'react-router-dom';
 import {useState, SyntheticEvent, MouseEvent} from 'react';
 
 interface LinkTabProps {

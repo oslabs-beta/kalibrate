@@ -33,5 +33,4 @@ const ConsumersDisplay = () => {
     </Box>
   );
 };
-
 export default ConsumersDisplay;
