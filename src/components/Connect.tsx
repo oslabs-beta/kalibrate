@@ -1,16 +1,20 @@
-import * as React from 'react';
-import {useState} from 'react';
+import React from 'react';
+import { useState } from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 
-const Connect = () => {
-  const [clientId, setClientId] = useState('');
+const Connect = (props) => {
+
+  const { clientId, setClientId } = props;
+
   const [host, setHost] = useState('');
   const [mechanism, setMechanism] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState(false);
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    console.log(clientId);
+  };
 
   const handleChange = () => {
     setChecked(!checked);
