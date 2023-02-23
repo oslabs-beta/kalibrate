@@ -11,7 +11,6 @@ import Overview from './components/Overview';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
-
 function App() {
   const [clientId, setClientId] = useState('');
 

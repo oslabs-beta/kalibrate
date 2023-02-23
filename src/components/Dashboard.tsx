@@ -29,8 +29,8 @@ const Dashboard = () => {
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
           <List>
-            <Link to="brokers">
-              <ListItem key="Brokers" disablePadding>
+            <Link to="brokers" style={{ textDecoration:'none', color: 'inherit' }}>
+            <ListItem key="Brokers" disablePadding>
                 <ListItemButton>
                   <ListItemText primary="Brokers" />
                 </ListItemButton>
@@ -43,15 +43,15 @@ const Dashboard = () => {
               </ListItemButton>
             </ListItem>
 
-            <Link to="producers">
+            <Link to="producers" style={{ textDecoration:'none', color: 'inherit' }}>
               <ListItem key="Producers" disablePadding>
                 <ListItemButton>
                   <ListItemText primary="Producers" />
                 </ListItemButton>
               </ListItem>
             </Link>
-            
-            <Link to="consumers">
+
+            <Link to="consumers" style={{ textDecoration:'none', color: 'inherit'}}>
               <ListItem key="Consumers" disablePadding>
                 <ListItemButton>
                   <ListItemText primary="Consumers" />
