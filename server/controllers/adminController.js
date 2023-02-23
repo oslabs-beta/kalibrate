@@ -8,6 +8,7 @@ adminController.getClusterData = async (req, res, next) => {
   // get cluster info
   try {
     res.locals.clusterData = await admin.describeCluster();
+    return next();
   } catch (err) {
     return next({
       log: 'adminController.getClusterData failed to get cluster details',
