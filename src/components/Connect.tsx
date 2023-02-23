@@ -14,7 +14,7 @@ CONNECTION FORM OPTIONS
 todo: add additional connection mechanisms (oauth, aws, etc), currently just using plain
 */
 
-const Connect = ({connectedCluster, setConnectedCluster}) => {
+const Connect = ({setConnectedCluster}) => {
   const navigate = useNavigate();
 
   // controlled state for form
@@ -70,7 +70,7 @@ const Connect = ({connectedCluster, setConnectedCluster}) => {
 
       // update global state and redirect
       setConnectedCluster(clientId);
-      navigate('/cluster-name');
+      navigate('/dashboard');
     } catch {
       setErrorMessage('Failed to connect.');
     }
