@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Producers from './components/Producers';
 import Brokers from './components/Brokers';
 import {useState} from 'react';
+import Overview from './components/Overview';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
@@ -22,7 +23,7 @@ function App() {
         <Route path="home" element={<Home />} />
         <Route path="connect" element={<Connect clientId={clientId} setClientId={setClientId} />} />
         <Route path="cluster-name" element={<Dashboard />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Overview />} />
           <Route path="brokers" element={<Brokers />} />
           <Route path="producers" element={<Producers />} />
           <Route path="consumers" element={<Consumers />} />
