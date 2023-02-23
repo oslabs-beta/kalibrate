@@ -1,6 +1,10 @@
+import React from 'react';
 import Box from '@mui/material/Box';
 import {DataGrid, GridColDef, GridRowsProp} from '@mui/x-data-grid';
 
+//create fetxh request to the back to get cosumer info.
+//ssl true
+//sasl:
 const columns: GridColDef[] = [
   {field: 'id', headerName: 'Consumer ID', width: 500},
   {field: 'numOfTopics', headerName: 'Topics Subscribed', width: 150},
@@ -21,16 +25,18 @@ const row = [
 ];
 const ConsumersDisplay = () => {
   return (
-    <Box sx={{height: 400, width: '90vw'}}>
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[10]}
-        checkboxSelection
-        disableSelectionOnClick
-      />
-    </Box>
+    <div data-testid="consumerDisplay-1">
+      <Box sx={{height: 400, width: '90vw'}}>
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[10]}
+          checkboxSelection
+          disableSelectionOnClick
+        />
+      </Box>
+    </div>
   );
 };
 export default ConsumersDisplay;

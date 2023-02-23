@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import {useState, SyntheticEvent, MouseEvent} from 'react';
-import { red } from '@mui/material/colors';
+import {red} from '@mui/material/colors';
 
 interface LinkTabProps {
   label?: string;
@@ -21,12 +21,15 @@ function LinkTab(props: LinkTabProps) {
   );
 }
 const Navbar = () => {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(0);
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   return (
-    <Box position = 'fixed' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, width: '100vw', bgcolor: 'grey'  }} >
+    <Box
+      position="fixed"
+      sx={{zIndex: theme => theme.zIndex.drawer + 1, width: '100vw', bgcolor: 'grey'}}
+    >
       <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
         {/* paths will need to be checked */}
         <LinkTab label="Dashboard" href="/dashboard" />
