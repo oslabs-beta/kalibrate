@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
+import {useNavigate} from 'react-router-dom';
 
 /*
 CONNECTION FORM OPTIONS
@@ -13,7 +14,9 @@ CONNECTION FORM OPTIONS
 todo: add additional connection mechanisms (oauth, aws, etc), currently just using plain
 */
 
-const Connect = () => {
+const Connect = ({connectedCluster, setConnectedCluster}) => {
+  const navigate = useNavigate();
+
   // controlled state for form
   const [clientId, setClientId] = useState('');
   const [brokers, setBrokers] = useState('');
@@ -37,7 +40,7 @@ const Connect = () => {
     // create config object to send in request
     const connectionConfig = {
       clientId,
-      brokers,
+      brokers: [brokers],
     };
 
     if (sasl) {
@@ -52,28 +55,25 @@ const Connect = () => {
 
     console.log('Attempting to connect:', connectionConfig);
 
-    // Send POST request to connect
-    // const response = await fetch('/connect', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(connectionConfig),
-    // });
+    try {
+      // Send POST request to connect
+      const response = await fetch('/connect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(connectionConfig),
+      });
 
-    // if (response.ok) {
-    //   console.log('success!'); // redirect
-    // } else {
-    //   setErrorMessage('Failed to connect.');
-    // }
+      // handle failed connection
+      if (!response.ok) throw new Error();
 
-    // reset form
-    setClientId('');
-    setBrokers('');
-    setSasl(false);
-    setUsername('');
-    setPassword('');
-    setErrorMessage('');
+      // update global state and redirect
+      setConnectedCluster(clientId);
+      navigate('/cluster-name');
+    } catch {
+      setErrorMessage('Failed to connect.');
+    }
   };
 
   // username and password conditionally rendered based on whether SASL is true

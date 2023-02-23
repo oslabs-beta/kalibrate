@@ -11,7 +11,7 @@ import {useState} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
-  const [clientId, setClientId] = useState('');
+  const [connectedCluster, setConnectedCluster] = useState('');
 
   return (
     <BrowserRouter>
@@ -20,7 +20,15 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="home" element={<Home />} />
-        <Route path="connect" element={<Connect clientId={clientId} setClientId={setClientId} />} />
+        <Route
+          path="connect"
+          element={
+            <Connect
+              connectedCluster={connectedCluster}
+              setConnectedCluster={setConnectedCluster}
+            />
+          }
+        />
         <Route path="cluster-name" element={<Dashboard />}>
           <Route index element={<Dashboard />} />
           <Route path="brokers" element={<Brokers />} />
