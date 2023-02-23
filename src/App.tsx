@@ -15,18 +15,17 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
   //declare clientId state so other components could access for link & routing
-  const [clientId, setClientId] = useState('cluster-1');
+  const [connectedCluster, setConnectedCluster] = useState('cluster-1');
 
   return (
     <BrowserRouter>
       <Navbar />
 
       <Routes>
-        <Route index element={<Home />} />
         <Route path="/" element={<Home />} />
-        <Route path="connect" element={<Connect clientId={clientId} setClientId={setClientId} />} />
-        <Route path="dashboard" element={<Dashboard clientId={clientId}/>} />
-        <Route path="cluster-name" element={<Manage clientId={clientId}/>}>
+        <Route path="connect" element={<Connect setConnectedCluster={setConnectedCluster} />} />
+        <Route path="dashboard" element={<Dashboard clientId={connectedCluster} />} />
+        <Route path="cluster-name" element={<Manage clientId={connectedCluster} />}>
           <Route index element={<Overview />} />
           <Route path="brokers" element={<Brokers />} />
           <Route path="producers" element={<Producers />} />
