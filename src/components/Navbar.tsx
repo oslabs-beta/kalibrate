@@ -2,25 +2,12 @@ import Consumers from './Consumers';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {useState, SyntheticEvent, MouseEvent} from 'react';
+import {useState, SyntheticEvent} from 'react';
 import {red} from '@mui/material/colors';
+import {useNavigate, Link} from 'react-router-dom';
 
-interface LinkTabProps {
-  label?: string;
-  href?: string;
-}
-function LinkTab(props: LinkTabProps) {
-  return (
-    <Tab
-      component="a"
-      onClick={(event: MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.preventDefault();
-      }}
-      {...props}
-    />
-  );
-}
 const Navbar = () => {
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -32,12 +19,16 @@ const Navbar = () => {
     >
       <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
         {/* paths will need to be checked */}
-        <LinkTab label="Dashboard" href="/dashboard" />
-        <LinkTab label="Manage" href="/manage" />
-        <LinkTab label="Monitor" href="/monitor" />
-        <LinkTab label="Test" href="/test" />
-        <LinkTab label="Alerts" href="/alerts" />
-        <LinkTab label="Settings" href="/settings" />
+        <Link to="/dashboard" style={{textDecoration: 'none', color: 'inherit'}}>
+          <Tab label="Dashboard" />
+        </Link>
+        <Link to="/cluster-name" style={{textDecoration: 'none', color: 'inherit'}}>
+          <Tab label="Manage" />
+        </Link>
+        <Tab label="Monitor" />
+        <Tab label="Test" />
+        <Tab label="Alerts" />
+        <Tab label="Settings" />
       </Tabs>
     </Box>
   );
