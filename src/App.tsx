@@ -2,7 +2,7 @@ import Connect from './components/Connect';
 import Manage from './components/Manage';
 import Consumers from './components/Consumers';
 import Navbar from './components/Navbar';
-import Events from './components/Events';
+import Events from './components/Messages';
 import Home from './components/Home';
 import Producers from './components/Producers';
 import Brokers from './components/Brokers';
