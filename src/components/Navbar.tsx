@@ -1,9 +1,9 @@
-import Consumers from './consumers';
+import Consumers from './Consumers';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {Link, Outlet} from 'react-router-dom';
 import {useState, SyntheticEvent, MouseEvent} from 'react';
+import { red } from '@mui/material/colors';
 
 interface LinkTabProps {
   label?: string;
@@ -26,7 +26,7 @@ const Navbar = () => {
     setValue(newValue);
   };
   return (
-    <Box sx={{width: '100vw'}}>
+    <Box position = 'fixed' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, width: '100vw', bgcolor: 'grey'  }} >
       <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
         {/* paths will need to be checked */}
         <LinkTab label="Dashboard" href="/dashboard" />
