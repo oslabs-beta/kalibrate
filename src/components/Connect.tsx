@@ -1,24 +1,83 @@
-import React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 
-const Connect = (props) => {
+/*
+CONNECTION FORM OPTIONS
+- client (string)*
+- seed (string)*
+- sasl checkbox
+  if true:
+    - username*
+    - password*
 
-  const { clientId, setClientId } = props;
+todo: add additional connection mechanisms (oauth, aws, etc), currently just using plain
+*/
 
-  const [host, setHost] = useState('');
-  const [mechanism, setMechanism] = useState('');
+const Connect = () => {
+  // controlled state for form
+  const [clientId, setClientId] = useState('');
+  const [brokers, setBrokers] = useState('');
+  const [sasl, setSasl] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [checked, setChecked] = useState(false);
 
-  const handleSubmit = () => {
-    console.log(clientId);
+  // state for displaying form input errors
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // form submission handler
+  const handleSubmit = async event => {
+    event.preventDefault();
+
+    // input validation
+    if (!clientId) return setErrorMessage('Client ID is required.');
+    if (!brokers) return setErrorMessage('Seed broker is required.');
+    if (sasl && !username) return setErrorMessage('Username is required when SASL enabled.');
+    if (sasl && !password) return setErrorMessage('Password is required when SASL enabled.');
+
+    // create config object to send in request
+    const connectionConfig = {
+      clientId,
+      brokers,
+    };
+
+    if (sasl) {
+      connectionConfig.ssl = true;
+
+      connectionConfig.sasl = {
+        mechanism: 'plain',
+        username,
+        password,
+      };
+    }
+
+    console.log('Attempting to connect:', connectionConfig);
+
+    // Send POST request to connect
+    // const response = await fetch('/connect', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(connectionConfig),
+    // });
+
+    // if (response.ok) {
+    //   console.log('success!'); // redirect
+    // } else {
+    //   setErrorMessage('Failed to connect.');
+    // }
+
+    // reset form
+    setClientId('');
+    setBrokers('');
+    setSasl(false);
+    setUsername('');
+    setPassword('');
+    setErrorMessage('');
   };
 
-  const handleChange = () => {
-    setChecked(!checked);
-  }
+  // username and password conditionally rendered based on whether SASL is true
+  // error message conditionally rendered based on form submission input validation
   return (
     <Grid container direction="column" justifyContent="space-evenly" alignItems="center">
       Connect to a Cluster
@@ -41,60 +100,64 @@ const Connect = (props) => {
             onChange={event => setClientId(event.target.value)}
           />
         </Grid>
+
         <Grid>
           <TextField
             id="outlined-basic"
             size="small"
-            label="Host"
+            label="Seed Broker"
             variant="outlined"
-            value={host}
-            onChange={event => setHost(event.target.value)}
-          />
-        </Grid>
-        <Grid>
-          SSL
-          <Checkbox
-            checked={checked}
-            onChange= {handleChange}
-            inputProps={{'aria-label': 'controlled'}}
-          />
-        </Grid>
-        <Grid>
-          <TextField
-            id="outlined-basic"
-            label="Mechanism"
-            variant="outlined"
-            size="small"
-            value={mechanism}
-            onChange={event => setMechanism(event.target.value)}
-          />
-        </Grid>
-        <Grid>
-          <TextField
-            id="outlined-basic"
-            label="Username"
-            variant="outlined"
-            size="small"
-            value={username}
-            onChange={event => setUsername(event.target.value)}
+            value={brokers}
+            onChange={event => setBrokers(event.target.value)}
           />
         </Grid>
 
         <Grid>
-          <TextField
-            id="outlined-password-input"
-            label="Password"
-            type="password"
-            size="small"
-            value={password}
-            onChange={event => setPassword(event.target.value)}
+          SASL
+          <Checkbox
+            checked={sasl}
+            onChange={() => setSasl(!sasl)}
+            inputProps={{'aria-label': 'controlled'}}
           />
         </Grid>
+
+        {sasl ? (
+          <>
+            <Grid>
+              <TextField
+                id="outlined-basic"
+                label="Username"
+                variant="outlined"
+                size="small"
+                value={username}
+                onChange={event => setUsername(event.target.value)}
+              />
+            </Grid>
+
+            <Grid>
+              <TextField
+                id="outlined-password-input"
+                label="Password"
+                type="password"
+                size="small"
+                value={password}
+                onChange={event => setPassword(event.target.value)}
+              />
+            </Grid>
+          </>
+        ) : null}
+
         <Grid>
           <Button variant="outlined" size="medium" type="submit">
             Connect
           </Button>
         </Grid>
+
+        {errorMessage ? (
+          <Grid>
+            <h3>{errorMessage}</h3>
+          </Grid>
+        ) : null}
       </Box>
     </Grid>
   );
