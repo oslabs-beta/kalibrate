@@ -2,6 +2,7 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import express from 'express';
 import adminController from './controllers/adminController.js';
+import kafkaController from './controllers/kafkaController.js';
 // import {Kafka} from 'kafkajs';
 // import KAFKA_TEST_CONFIG from '../kafka-test-config.js';
 
@@ -16,10 +17,6 @@ const PORT = 5173;
 //   KAFKA_TEST_CONFIG,
 // });
 
-app.get('/connection', kafkaController.initiateKafka, (req, res) => {
-  res.status(200);
-});
-
 // require routers and controllers here
 
 // handle JSON req/res bodies
@@ -32,12 +29,16 @@ app.use(express.json());
 // app.use('/', express.static(path.resolve(__dirname, '../index.html')));
 
 // routes go here
-app.get('/stable-data', adminController.getStable, (req, res) => {
-  res.send(200).json(res.locals.topicData);
+app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
+  res.sendStatus(201);
 });
 
-app.get('/cluster-info', adminController.getClusterData, (req, res) => {
-  res.send(200).json(res.locals.clusterData);
+app.get('api/stable-data', adminController.getStable, (req, res) => {
+  res.status(200).json(res.locals.topicData);
+});
+
+app.get('api/cluster-info', adminController.getClusterData, (req, res) => {
+  res.status(200).json(res.locals.clusterData);
 });
 
 // 404 handler
