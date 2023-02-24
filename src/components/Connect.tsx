@@ -57,7 +57,7 @@ const Connect = ({setConnectedCluster}) => {
 
     try {
       // Send POST request to connect
-      const response = await fetch('/connect', {
+      const response = await fetch('api/connection', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
