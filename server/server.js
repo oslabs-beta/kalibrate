@@ -1,13 +1,12 @@
 import path from 'path';
 import {fileURLToPath} from 'url';
+import * as dotenv from 'dotenv';
 import express from 'express';
-import adminController from './controllers/adminController.js';
-import kafkaController from './controllers/kafkaController.js';
+
 // import {Kafka} from 'kafkajs';
-// import KAFKA_TEST_CONFIG from '../kafka-test-config.js';
+import KAFKA_TEST_CONFIG from '../kafka-test-config.js';
 
 const app = express();
-const PORT = 5173;
 
 // handle kafka connections here?
 // wherever handled, the resulting instances of kafka .admin, .consumer, .producer need to be exported
@@ -18,6 +17,8 @@ const PORT = 5173;
 // });
 
 // require routers and controllers here
+import adminController from './controllers/adminController.js';
+import kafkaController from './controllers/kafkaController.js';
 
 // handle JSON req/res bodies
 app.use(express.json());
@@ -59,8 +60,8 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server listening on port: ${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server listening on port: ${process.env.PORT}`);
 });
 
 export default app;
