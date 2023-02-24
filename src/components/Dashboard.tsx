@@ -21,21 +21,27 @@ const Dashboard = props => {
   const [stableData, setStableData] = useState({});
 
   // on mount, make calls to get cluster data and other admin data
+  // TIL useEffect throws an error if you try to make it async
   useEffect(() => {
-    const endpointTBD = '';
-    fetch(endpointTBD)
+    fetch('api/cluster-info', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then(res => res.json())
       .then(data => {
         console.log(JSON.stringify(data));
         setClusterData(data);
+        console.log('cluster data fetched: ', JSON.stringify(clusterData));
       })
       .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
 
-    fetch(endpointTBD)
+    fetch('api/stable-data')
       .then(res => res.json())
       .then(data => {
-        console.log(JSON.stringify(data));
         setStableData(data);
+        console.log('stable data fetched: ', JSON.stringify(stableData));
       })
       .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
   }, []);

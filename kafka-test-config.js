@@ -12,8 +12,8 @@ const KAFKA_TEST_CONFIG = {
     mechanism: 'plain',
 
     // for purposes of an eventual user, look into how a granular API key might be different from a global one
-    username: KAFKA_TEST_CONFIG_USERNAME,
-    password: KAFKA_TEST_CONFIG_PASSWORD,
+    username: process.env.KAFKA_TEST_CONFIG_USERNAME,
+    password: process.env.KAFKA_TEST_CONFIG_PASSWORD,
   },
 };
 
