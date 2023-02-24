@@ -34,3 +34,5 @@ const run = async () => {
     },
   });
 };
+
+run().catch(e => console.error(`Consumer error: ${e.message}`));
