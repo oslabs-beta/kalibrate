@@ -1,12 +1,16 @@
 // coding under the assumption that an instance of kafka.admin gets connected and exported as part of server startup
 // IMPORT STATEMENT HERE:
-// import {admin} from ???
+import kafkaController from './kafkaController';
 
 const adminController = {};
 
 adminController.getClusterData = async (req, res, next) => {
   // get cluster info
   try {
+    // attempt to connect admin to instance of kafka
+    console.log('kafka instance? ', kafkaController.kafka);
+    const admin = kafkaController.kafka.admin();
+    await admin.connect();
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
@@ -21,6 +25,10 @@ adminController.getClusterData = async (req, res, next) => {
 adminController.getStable = async (req, res, next) => {
   // get array of topics
   try {
+        // attempt to connect admin to instance of kafka
+    console.log('kafka instance? ', kafkaController.kafka);
+    const admin = kafkaController.kafka.admin();
+    await admin.connect()
     const topicList = await admin.listTopics();
     console.log(topicList);
   } catch (err) {
