@@ -15,6 +15,7 @@ adminController.getClusterData = async (req, res, next) => {
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
+    console.log(err);
     return next({
       log: 'adminController.getClusterData failed to get cluster details',
       status: 400,
@@ -25,27 +26,44 @@ adminController.getClusterData = async (req, res, next) => {
 
 adminController.getStable = async (req, res, next) => {
   console.log('hello from getstable');
+  // set topiclist and metadata to null; new queries should get fresh data
+
   // get array of topics
   try {
     // attempt to connect admin to instance of kafka
     console.log('kafka instance? ', kafkaController.kafka);
-    const admin = kafkaController.kafka.admin();
+    var admin = kafkaController.kafka.admin();
     await admin.connect();
-    const topicList = await admin.listTopics();
-    console.log('topiclist: ', topicList);
+
+    // store topic list on admincontroller because const is block-scoped
+    adminController.topicList = await admin.listTopics();
+    console.log('topiclist: ', adminController.topicList);
+    // if there are no topics in the cluster, return an empty array
+    if (adminController.topicList.length === 0) {
+      res.locals.topicData = [];
+      return next();
+    }
   } catch (err) {
+    console.log(err);
     return next({
       log: 'adminController.getStable failed to get list of topics',
       status: 400,
-      message: 'Failed to get static data from cluster',
+      message: err,
     });
   }
 
   // use topics array to get metadata
   try {
-    const topicMetadata = await admin.fetchTopicMetadata(topicList);
-    console.log(JSON.stringify(topicMetadata));
+    console.log('tl:', adminController.topicList);
+    // const admin = kafkaController.kafka.admin();
+
+    // store topic metadata on admincontroller because const is block-scoped
+    adminController.topicMetadata = await admin.fetchTopicMetadata({
+      topics: adminController.topicList,
+    });
+    console.log('metadata: ', JSON.stringify(adminController.topicMetadata));
   } catch (err) {
+    console.log(err);
     return next({
       log: 'adminController.getStable failed to get topic metadata',
       status: 400,
@@ -57,19 +75,23 @@ adminController.getStable = async (req, res, next) => {
   // for each object in the topicMetadata array,
   // use its unique topic ame to fetch offsets for that topic
   // store the result as a new offsets property on that object
+  // try {
+  //   for (let topic of adminController.topicMetadata.topics) {
+  //     adminController.topicMetadata.topics[topic].offsets = await admin.fetchTopicOffsets(
+  //       adminController.topicMetadata.topics.name
+  //     );
+  //   }
+  // } catch (err) {
+  //   console.log(err);
+  //   return next({
+  //     log: 'adminController.getStable failed to add offset data to topic metadata',
+  //     status: 400,
+  //     message: 'Failed to get static data from cluster',
+  //   });
+  // }
+
   try {
-    for (let topic of topicMetadata) {
-      topicMetadata[topic].offsets = await admin.fetchTopicOffsets(topicMetadata.name);
-    }
-  } catch (err) {
-    return next({
-      log: 'adminController.getStable failed to add offset data to topic metadata',
-      status: 400,
-      message: 'Failed to get static data from cluster',
-    });
-  }
-  try {
-    res.locals.topicData = topicMetadata;
+    res.locals.topicData = adminController.topicMetadata;
     return next();
   } catch (err) {
     return next({

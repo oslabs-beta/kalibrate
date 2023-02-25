@@ -20,27 +20,37 @@ const Dashboard = props => {
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
 
-  // on mount, make calls to get cluster data and other admin data
+  // on mount, make calls to GET cluster data and other admin data
   // TIL useEffect throws an error if you try to make it async
   useEffect(() => {
     fetch('api/cluster-info', {
-      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     })
       .then(res => res.json())
       .then(data => {
-        console.log(JSON.stringify(data));
-        setClusterData(data);
+        console.log('cluster: ', JSON.stringify(data));
+        const newData = {};
+        Object.assign(newData, data);
+        setClusterData(newData);
         console.log('cluster data fetched: ', JSON.stringify(clusterData));
       })
       .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
 
-    fetch('api/stable-data')
+    fetch('api/stable-data', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then(res => res.json())
       .then(data => {
-        setStableData(data);
+        console.log('stable: ', JSON.stringify(data));
+
+        // modify error handling so it doesn't try to assign a string (??)
+        const newData = {};
+        Object.assign(newData, data);
+        setStableData(newData);
         console.log('stable data fetched: ', JSON.stringify(stableData));
       })
       .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
