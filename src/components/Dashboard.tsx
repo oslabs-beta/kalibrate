@@ -1,4 +1,4 @@
-import {Link, Outlet} from 'react-router-dom';
+import {Link, Outlet,useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {
   Box,
@@ -15,6 +15,9 @@ import {
 const drawerWidth = 150;
 
 const Dashboard = props => {
+
+  const navigate = useNavigate();
+
   const {clientId} = props;
 
   const [clusterData, setClusterData] = useState({});
@@ -70,13 +73,15 @@ const Dashboard = props => {
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
           <List>
-            <Link to="/cluster-name" style={{textDecoration: 'none', color: 'inherit'}}>
-              <ListItem key={clientId} disablePadding>
-                <ListItemButton>
-                  <ListItemText primary={clientId} />
+            {['cluster-1', 'cluster-2'].map(text => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton
+                  onClick={() => navigate('/cluster-name', {state: {clusterName: text}})}
+                >
+                  <ListItemText primary={text} />
                 </ListItemButton>
               </ListItem>
-            </Link>
+            ))}
           </List>
         </Box>
       </Drawer>
