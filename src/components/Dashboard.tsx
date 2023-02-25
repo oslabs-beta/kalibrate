@@ -78,7 +78,7 @@ const Dashboard = props => {
                 <ListItemButton
                   onClick={() => {
                     setConnectedCluster(text);
-                    navigate('/' + text, {state: {clusterName: text}})}}
+                    navigate('/' + text)}}
                 >
                   <ListItemText primary={text} />
                 </ListItemButton>

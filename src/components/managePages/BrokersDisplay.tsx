@@ -1,8 +1,7 @@
-import { useLocation } from 'react-router-dom';
+
 
 const BrokersDisplay = props => {
-  const {state} = useLocation();
-  const {clusterName} = state;
+
   // eventual props to use...
   // const { brokers } = props;
 
