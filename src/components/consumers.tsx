@@ -1,12 +1,12 @@
 import React from 'react';
 import ConsumersDisplay from './ConsumersDisplay';
+import {Typography} from '@mui/material';
 
 const Consumers = () => {
   return (
     <div className="wrapper">
       <div className="consumers-heading" data-testid="consumer-1">
-        <h3>Consumers</h3>
-        <input type="text" placeholder="Search" />
+        <Typography variant="h6">Consumer</Typography>
       </div>
       <div className="consumers-display">
         <ConsumersDisplay></ConsumersDisplay>
