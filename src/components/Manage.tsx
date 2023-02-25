@@ -1,4 +1,4 @@
-import {Outlet, useLocation, useNavigate} from 'react-router-dom';
+import {Outlet, useNavigate} from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -17,12 +17,11 @@ import {useState} from 'react';
 const drawerWidth = 150;
 
 const Manage = props => {
-  const navigate = useNavigate();
-  const {clientId} = props;
 
-  const {state} = useLocation();
-  const {clusterName} = state;
-  // console.log('STATE IN MANAGE',state);
+  const navigate = useNavigate();
+
+  const {connectedCluster} = props;
+
 
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
@@ -51,7 +50,7 @@ const Manage = props => {
             <Collapse in={openManage} timeout="auto" unmountOnExit>
               <ListItem key="Brokers" disablePadding>
                 <ListItemButton
-                  onClick={() => navigate('brokers', {state: {clusterName: clusterName}})}
+                  onClick={() => navigate('brokers')}
                 >
                   <ListItemText primary="Brokers" />
                 </ListItemButton>
@@ -60,7 +59,7 @@ const Manage = props => {
 
                 <ListItem key="Topics" disablePadding>
                   <ListItemButton
-                    onClick={() => navigate('topics', {state: {clusterName: clusterName}})}
+                    onClick={() => navigate('topics')}
                   >
                     <ListItemText primary="Topics" />
                   </ListItemButton>
@@ -68,7 +67,7 @@ const Manage = props => {
 
                 <ListItem key="Producers" disablePadding>
                   <ListItemButton
-                    onClick={() => navigate('producers', {state: {clusterName: clusterName}})}
+                    onClick={() => navigate('producers')}
                   >
                     <ListItemText primary="Producers" />
                   </ListItemButton>
@@ -77,7 +76,7 @@ const Manage = props => {
 
               <ListItem key="Consumers" disablePadding>
                 <ListItemButton
-                  onClick={() => navigate('consumers', {state: {clusterName: clusterName}})}
+                  onClick={() => navigate('consumers')}
                 >
                   <ListItemText primary="Consumers" />
                 </ListItemButton>
@@ -92,12 +91,12 @@ const Manage = props => {
             </ListItem>
             <Collapse in={openMonitor} timeout="auto" unmountOnExit>
               <ListItem key="Throughput" disablePadding>
-                <ListItemButton onClick={() => navigate('throughput', {state: {clusterName: clusterName}})}>
+                <ListItemButton onClick={() => navigate('throughput')}>
                   <ListItemText primary="Throughput" />
                 </ListItemButton>
               </ListItem>
               <ListItem key="Lag" disablePadding>
-                <ListItemButton onClick={() => navigate('lag', {state: {clusterName: clusterName}})}>
+                <ListItemButton onClick={() => navigate('lag')}>
                   <ListItemText primary="Lag" />
                 </ListItemButton>
               </ListItem>
@@ -111,12 +110,12 @@ const Manage = props => {
             </ListItem>
             <Collapse in={openTest} timeout="auto" unmountOnExit>
               <ListItem key="Produce" disablePadding>
-                <ListItemButton onClick={() => navigate('produce', {state: {clusterName: clusterName}})}>
+                <ListItemButton onClick={() => navigate('produce')}>
                   <ListItemText primary="Produce" />
                 </ListItemButton>
               </ListItem>
               <ListItem key="Consume" disablePadding>
-                <ListItemButton onClick={() => navigate('consume', {state: {clusterName: clusterName}})}>
+                <ListItemButton onClick={() => navigate('consume')}>
                   <ListItemText primary="Consume" />
                 </ListItemButton>
               </ListItem>
@@ -126,7 +125,7 @@ const Manage = props => {
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        <Typography paragraph>{state.clusterName}</Typography>
+        <Typography paragraph> {connectedCluster}</Typography>
         <Outlet />
       </Box>
     </Box>

@@ -82,7 +82,7 @@ function App() {
             />
           }
         />
-        <Route path=":clusterName" element={<Manage clientId={connectedCluster} />}>
+        <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
           <Route index element={<Overview data={connectedClusterData} />} />
           <Route path="brokers" element={<Brokers data={connectedClusterData.cluster.brokers} />} />
           <Route path="producers" element={<Producers />} />

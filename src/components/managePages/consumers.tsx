@@ -1,10 +1,8 @@
 import ConsumersDisplay from './consumersDisplay';
-import { useLocation } from 'react-router-dom';
+
 
 const Consumers = () => {
 
-  const {state} = useLocation();
-  const {clusterName} = state;
 
   return (
     <div className="wrapper">
@@ -13,9 +11,7 @@ const Consumers = () => {
         <input type="text" placeholder="Search" />
       </div>
       <div className="consumers-display">
-        <ConsumersDisplay
-        clusterName = {clusterName}
-        />
+        <ConsumersDisplay/>
       </div>
     </div>
   );
