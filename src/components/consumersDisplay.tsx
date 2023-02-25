@@ -1,6 +1,10 @@
+import React, {useState, useEffect} from 'react';
 import Box from '@mui/material/Box';
-import {DataGrid, GridColDef, GridRowsProp} from '@mui/x-data-grid';
+import {DataGrid, GridColDef, GridRowsProp, GridPagination} from '@mui/x-data-grid';
 
+//create fetch request to the back to get cosumer info.
+//ssl true
+//sasl:
 const columns: GridColDef[] = [
   {field: 'id', headerName: 'Consumer ID', width: 500},
   {field: 'numOfTopics', headerName: 'Topics Subscribed', width: 150},
@@ -17,20 +21,45 @@ const row = [
   {id: '1234567', numOfTopics: '21', recordsLagMax: '4324', status: 'hoi'},
   {id: '0987654321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
   {id: '544567890', numOfTopics: '21', recordsLagMax: '4324', status: 'hoi'},
-  {id: '0987654321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
+  {id: '09888854321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
 ];
-const ConsumersDisplay = () => {
+const ConsumersDisplay = ({props}) => {
+  // const {clientId} = props;
+
+  // const [consumers, setConsumers] = useState([]);
+  // const [groupId, setGroupId] = useState();
+  // const [consumerId, setConsumerID] = useState();
+  // const [clusterName, setClusterName] = useState();
+
+  // useEffect(() => {
+  //   try {
+  //     const response = fetch('/consumer', {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  //     if (!response) throw new Error();
+
+  //     //if response ok, assumming response is an array of consumers and details
+  //     setConsumers(response);
+  //   } catch {
+  //     console.log('Error in useEffect when fetching consumers');
+  //   }
+  // });
   return (
-    <Box sx={{height: 400, width: '90vw'}}>
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[10]}
-        checkboxSelection
-        disableSelectionOnClick
-      />
-    </Box>
+    <div data-testid="consumerDisplay-1">
+      <Box sx={{height: 400, width: '1000'}}>
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 25]}
+          checkboxSelection
+          disableSelectionOnClick
+        />
+      </Box>
+    </div>
   );
 };
 export default ConsumersDisplay;
