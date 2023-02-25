@@ -24,8 +24,8 @@ const Navbar = () => {
         <Link to="/dashboard" style={{textDecoration: 'none', color: 'inherit'}}>
           <Tab label="Dashboard" />
         </Link>
-        <Link to="/cluster-name" style={{textDecoration: 'none', color: 'inherit'}}>
-          <Tab label="Manage" />
+        <Link to="/connect" style={{textDecoration: 'none', color: 'inherit'}}>
+          <Tab label="Connect" />
         </Link>
         <Tab label="Monitor" />
         <Tab label="Test" />

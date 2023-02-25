@@ -1,4 +1,4 @@
-import {Link, Outlet} from 'react-router-dom';
+import {Link, Outlet,useNavigate} from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -14,8 +14,10 @@ import {
 const drawerWidth = 150;
 
 const Dashboard = props => {
-  const {clientId} = props;
 
+  const navigate = useNavigate();
+
+  const {clientId} = props;
 
   return (
     <Box sx={{display: 'flex'}}>
@@ -31,13 +33,15 @@ const Dashboard = props => {
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
           <List>
-            <Link to="/cluster-name" style={{textDecoration: 'none', color: 'inherit'}}>
-            <ListItem key= {clientId} disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary= {clientId} />
-                  </ListItemButton>
-                </ListItem>
-            </Link>
+            {['cluster-1', 'cluster-2'].map(text => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton
+                  onClick={() => navigate('/cluster-name', {state: {clusterName: text}})}
+                >
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
           </List>
         </Box>
       </Drawer>
