@@ -15,36 +15,34 @@ adminController.getClusterData = async (req, res, next) => {
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
-    console.log(err);
     return next({
       log: 'adminController.getClusterData failed to get cluster details',
       status: 400,
-      message: 'Failed to get static data from cluster',
+      message: err,
     });
   }
 };
 
 adminController.getStable = async (req, res, next) => {
-  console.log('hello from getstable');
-  // set topiclist and metadata to null; new queries should get fresh data
+  // console.log('hello from getstable');
+  // declare variables scoped for access from all try blocks
+  let topicList, topicMetadata, admin;
 
   // get array of topics
   try {
-    // attempt to connect admin to instance of kafka
-    console.log('kafka instance? ', kafkaController.kafka);
-    var admin = kafkaController.kafka.admin();
+    // attempt to connect admin to instance of kafka - use var to escape block scope
+    admin = kafkaController.kafka.admin();
     await admin.connect();
 
     // store topic list on admincontroller because const is block-scoped
-    adminController.topicList = await admin.listTopics();
-    console.log('topiclist: ', adminController.topicList);
+    topicList = await admin.listTopics();
+    // console.log('topiclist: ', topicList);
     // if there are no topics in the cluster, return an empty array
-    if (adminController.topicList.length === 0) {
+    if (topicList.length === 0) {
       res.locals.topicData = [];
       return next();
     }
   } catch (err) {
-    console.log(err);
     return next({
       log: 'adminController.getStable failed to get list of topics',
       status: 400,
@@ -54,50 +52,42 @@ adminController.getStable = async (req, res, next) => {
 
   // use topics array to get metadata
   try {
-    console.log('tl:', adminController.topicList);
-    // const admin = kafkaController.kafka.admin();
-
-    // store topic metadata on admincontroller because const is block-scoped
-    adminController.topicMetadata = await admin.fetchTopicMetadata({
-      topics: adminController.topicList,
+    topicMetadata = await admin.fetchTopicMetadata({
+      topics: topicList,
     });
-    console.log('metadata: ', JSON.stringify(adminController.topicMetadata));
+    // console.log('metadata: ', JSON.stringify(topicMetadata));
   } catch (err) {
-    console.log(err);
     return next({
       log: 'adminController.getStable failed to get topic metadata',
       status: 400,
-      message: 'Failed to get static data from cluster',
+      message: err,
     });
   }
 
   // get array of partitions and offsets for each topic
   // for each object in the topicMetadata array,
-  // use its unique topic ame to fetch offsets for that topic
+  // use its unique topic name to fetch offsets for that topic
   // store the result as a new offsets property on that object
-  // try {
-  //   for (let topic of adminController.topicMetadata.topics) {
-  //     adminController.topicMetadata.topics[topic].offsets = await admin.fetchTopicOffsets(
-  //       adminController.topicMetadata.topics.name
-  //     );
-  //   }
-  // } catch (err) {
-  //   console.log(err);
-  //   return next({
-  //     log: 'adminController.getStable failed to add offset data to topic metadata',
-  //     status: 400,
-  //     message: 'Failed to get static data from cluster',
-  //   });
-  // }
+  try {
+    for (let topic of topicMetadata.topics) {
+      topic.offsets = await admin.fetchTopicOffsets(topic.name);
+    }
+  } catch (err) {
+    return next({
+      log: 'adminController.getStable failed to add offset data to topic metadata',
+      status: 400,
+      message: err,
+    });
+  }
 
   try {
-    res.locals.topicData = adminController.topicMetadata;
+    res.locals.topicData = topicMetadata;
     return next();
   } catch (err) {
     return next({
       log: 'adminController.getStable failed to pass data back on res.local',
       status: 400,
-      message: 'Failed to get static data from cluster',
+      message: err,
     });
   }
 };
