@@ -14,8 +14,9 @@ CONNECTION FORM OPTIONS
 todo: add additional connection mechanisms (oauth, aws, etc), currently just using plain
 */
 
-const Connect = ({setConnectedCluster}) => {
+const Connect = props => {
   const navigate = useNavigate();
+  const {setConnectedCluster, sessionClusters, setSessionClusters} = props;
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -32,7 +33,9 @@ const Connect = ({setConnectedCluster}) => {
     event.preventDefault();
 
     // input validation
-    if (!clientId) return setErrorMessage('Client ID is required.');
+    if (!clientId)
+      return setErrorMessage('Enter a Client ID to identify this cluster within Kalibrate.');
+    if (sessionClusters.includes(clientId)) return setErrorMessage('Client IDs must be unique.');
     if (!brokers) return setErrorMessage('Seed broker is required.');
     if (sasl && !username) return setErrorMessage('Username is required when SASL enabled.');
     if (sasl && !password) return setErrorMessage('Password is required when SASL enabled.');
@@ -55,6 +58,22 @@ const Connect = ({setConnectedCluster}) => {
 
     console.log('Attempting to connect:', connectionConfig);
 
+    // fetch('api/connection', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(connectionConfig),
+    // })
+    //   // don't set new client ID until connection is complete
+    //   // otherwise, clientId updates in state and triggers useEffect in app before connection to Kafka is ready
+    //   .then(response => {
+    //     if (!response.ok) throw new Error();
+    //     setConnectedCluster(clientId);
+    //     navigate('/dashboard');
+    //   })
+    //   .catch(err => console.log(err));
+
     try {
       // Send POST request to connect
       const response = await fetch('api/connection', {
@@ -70,6 +89,11 @@ const Connect = ({setConnectedCluster}) => {
 
       // update global state and redirect
       setConnectedCluster(clientId);
+      const newSessionClusters = [...sessionClusters];
+      console.log(newSessionClusters);
+      newSessionClusters.push(clientId);
+      setSessionClusters(newSessionClusters);
+
       navigate('/dashboard');
     } catch {
       setErrorMessage('Failed to connect.');
@@ -79,17 +103,28 @@ const Connect = ({setConnectedCluster}) => {
   // username and password conditionally rendered based on whether SASL is true
   // error message conditionally rendered based on form submission input validation
   return (
-    <Grid container direction="column" justifyContent="space-evenly" alignItems="center">
-      Connect to a Cluster
+    <Grid
+      container
+      direction="column"
+      justifyContent="space-evenly"
+      alignItems="center"
+      height="100vh"
+      textAlign={'center'}
+    >
       <Box
         component="form"
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
+          padding: '15px',
+          border: '2px solid black',
+          borderRadius: '8px',
         }}
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
       >
+        <h1>Connect to a Cluster</h1>
+
         <Grid>
           <TextField
             id="outlined-basic"
@@ -113,12 +148,12 @@ const Connect = ({setConnectedCluster}) => {
         </Grid>
 
         <Grid>
-          SASL
           <Checkbox
             checked={sasl}
             onChange={() => setSasl(!sasl)}
             inputProps={{'aria-label': 'controlled'}}
           />
+          SASL
         </Grid>
 
         {sasl ? (

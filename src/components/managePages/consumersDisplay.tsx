@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 //consumer dummy column/data imported
-import {consumerColumn, consumerData} from '../../mockData.js';
+import {consumerColumn, consumerData} from '../../../mockData.js';
 //TODO: create fetch request to the back to get cosumer info.
 //ssl true
 //sasl:

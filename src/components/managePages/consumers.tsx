@@ -9,7 +9,7 @@ const Consumers = () => {
         <Typography variant="h6">Consumers List</Typography>
       </div>
       <div className="consumers-display">
-        <ConsumersDisplay></ConsumersDisplay>
+        <ConsumersDisplay />
       </div>
     </div>
   );

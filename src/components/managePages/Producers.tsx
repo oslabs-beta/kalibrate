@@ -1,8 +1,7 @@
-import React from 'react';
 import ProducersDisplay from './ProducersDisplay';
 import {Typography} from '@mui/material';
 
-const Producers = () => {
+const Producers = props => {
   return (
     <div className="wrapper">
       <div className="producers-heading">

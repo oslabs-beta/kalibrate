@@ -1,4 +1,4 @@
-import {Link, Outlet} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {
   Box,
@@ -15,7 +15,9 @@ import {
 const drawerWidth = 150;
 
 const Dashboard = props => {
-  const {clientId} = props;
+  const navigate = useNavigate();
+
+  const {clientId, sessionClusters, setConnectedCluster} = props;
 
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
@@ -30,11 +32,9 @@ const Dashboard = props => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('cluster: ', JSON.stringify(data));
         const newData = {};
         Object.assign(newData, data);
         setClusterData(newData);
-        console.log('cluster data fetched: ', JSON.stringify(clusterData));
       })
       .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
 
@@ -45,16 +45,19 @@ const Dashboard = props => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('stable: ', JSON.stringify(data));
-
-        // modify error handling so it doesn't try to assign a string (??)
         const newData = {};
         Object.assign(newData, data);
         setStableData(newData);
-        console.log('stable data fetched: ', JSON.stringify(stableData));
       })
       .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
   }, []);
+
+  // for testing purposes
+  useEffect(() => {
+    console.log('state updated: ');
+    console.log('cluster: ', clusterData);
+    console.log('stable:', stableData);
+  }, [clusterData, stableData]);
 
   return (
     <Box sx={{display: 'flex'}}>
@@ -70,13 +73,17 @@ const Dashboard = props => {
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
           <List>
-            <Link to="/cluster-name" style={{textDecoration: 'none', color: 'inherit'}}>
-              <ListItem key={clientId} disablePadding>
-                <ListItemButton>
-                  <ListItemText primary={clientId} />
+            {sessionClusters.map(text => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton
+                  onClick={() => {
+                    setConnectedCluster(text);
+                    navigate('/' + text)}}
+                >
+                  <ListItemText primary={text} />
                 </ListItemButton>
               </ListItem>
-            </Link>
+            ))}
           </List>
         </Box>
       </Drawer>
