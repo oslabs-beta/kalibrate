@@ -1,5 +1,4 @@
-import React from 'react';
-import {Link, Outlet, useLocation} from 'react-router-dom';
+import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -18,6 +17,7 @@ import {useState} from 'react';
 const drawerWidth = 150;
 
 const Manage = props => {
+  const navigate = useNavigate();
   const {clientId} = props;
 
   const {state} = useLocation();
@@ -27,7 +27,6 @@ const Manage = props => {
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
-
 
   return (
     <Box sx={{display: 'flex'}}>
@@ -50,34 +49,39 @@ const Manage = props => {
               </ListItemButton>
             </ListItem>
             <Collapse in={openManage} timeout="auto" unmountOnExit>
-              <Link to="brokers" style={{textDecoration: 'none', color: 'inherit'}}>
-                <ListItem key="Brokers" disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary="Brokers" />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-              <Link to="topics" style={{textDecoration: 'none', color: 'inherit'}}>
+              <ListItem key="Brokers" disablePadding>
+                <ListItemButton
+                  onClick={() => navigate('brokers', {state: {clusterName: clusterName}})}
+                >
+                  <ListItemText primary="Brokers" />
+                </ListItemButton>
+              </ListItem>
+
+
                 <ListItem key="Topics" disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    onClick={() => navigate('topics', {state: {clusterName: clusterName}})}
+                  >
                     <ListItemText primary="Topics" />
                   </ListItemButton>
                 </ListItem>
-              </Link>
-              <Link to="producers" style={{textDecoration: 'none', color: 'inherit'}}>
+
                 <ListItem key="Producers" disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    onClick={() => navigate('producers', {state: {clusterName: clusterName}})}
+                  >
                     <ListItemText primary="Producers" />
                   </ListItemButton>
                 </ListItem>
-              </Link>
-              <Link to="consumers" style={{textDecoration: 'none', color: 'inherit'}}>
-                <ListItem key="Consumers" disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary="Consumers" />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
+
+
+              <ListItem key="Consumers" disablePadding>
+                <ListItemButton
+                  onClick={() => navigate('consumers', {state: {clusterName: clusterName}})}
+                >
+                  <ListItemText primary="Consumers" />
+                </ListItemButton>
+              </ListItem>
             </Collapse>
 
             <ListItem key="Monitor" disablePadding>
@@ -87,19 +91,17 @@ const Manage = props => {
               </ListItemButton>
             </ListItem>
             <Collapse in={openMonitor} timeout="auto" unmountOnExit>
-            <ListItem key="Throughput" disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary="Throughput" />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem key="Lag" disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary="Lag" />
-                  </ListItemButton>
-                </ListItem>
-
+              <ListItem key="Throughput" disablePadding>
+                <ListItemButton onClick={() => navigate('throughput', {state: {clusterName: clusterName}})}>
+                  <ListItemText primary="Throughput" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="Lag" disablePadding>
+                <ListItemButton onClick={() => navigate('lag', {state: {clusterName: clusterName}})}>
+                  <ListItemText primary="Lag" />
+                </ListItemButton>
+              </ListItem>
             </Collapse>
-
 
             <ListItem key="Test" disablePadding>
               <ListItemButton onClick={() => setOpenTest(prev => !prev)}>
@@ -108,16 +110,16 @@ const Manage = props => {
               </ListItemButton>
             </ListItem>
             <Collapse in={openTest} timeout="auto" unmountOnExit>
-            <ListItem key="Produce" disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary="Produce" />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem key="Consume" disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary="Consume" />
-                  </ListItemButton>
-                </ListItem>
+              <ListItem key="Produce" disablePadding>
+                <ListItemButton onClick={() => navigate('produce', {state: {clusterName: clusterName}})}>
+                  <ListItemText primary="Produce" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="Consume" disablePadding>
+                <ListItemButton onClick={() => navigate('consume', {state: {clusterName: clusterName}})}>
+                  <ListItemText primary="Consume" />
+                </ListItemButton>
+              </ListItem>
             </Collapse>
           </List>
         </Box>

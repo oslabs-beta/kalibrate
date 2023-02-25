@@ -1,8 +1,11 @@
-import React from 'react';
 import BrokersDisplay from './BrokersDisplay';
+import { useLocation } from 'react-router-dom';
 
 // appropriate props should be passed down to brokers display
 const Brokers = props => {
+  const {state} = useLocation();
+  const {clusterName} = state;
+
   return (
     <div className="wrapper">
       <div className="brokers-heading">
@@ -14,7 +17,9 @@ const Brokers = props => {
         />
       </div>
       <div className="brokers-display">
-        <BrokersDisplay />
+        <BrokersDisplay 
+        clusterName = {clusterName}
+        />
       </div>
     </div>
   );

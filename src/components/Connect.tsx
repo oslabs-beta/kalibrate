@@ -1,7 +1,6 @@
 import {useState} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import { flexbox } from '@mui/system';
 
 /*
 CONNECTION FORM OPTIONS
