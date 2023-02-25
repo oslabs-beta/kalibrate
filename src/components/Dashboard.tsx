@@ -16,9 +16,8 @@ const drawerWidth = 150;
 
 const Dashboard = props => {
   const navigate = useNavigate();
-  const clientIds = ['cluster-1', 'cluster-2'];
 
-  const {clientId} = props;
+  const {clientId, sessionClusters, setConnectedCluster} = props;
 
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
@@ -74,10 +73,12 @@ const Dashboard = props => {
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
           <List>
-            {clientIds.map(text => (
+            {sessionClusters.map(text => (
               <ListItem key={text} disablePadding>
                 <ListItemButton
-                  onClick={() => navigate('/' + text, {state: {clusterName: text}})}
+                  onClick={() => {
+                    setConnectedCluster(text);
+                    navigate('/' + text, {state: {clusterName: text}})}}
                 >
                   <ListItemText primary={text} />
                 </ListItemButton>
