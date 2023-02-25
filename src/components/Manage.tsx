@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, Outlet} from 'react-router-dom';
+import {Link, Outlet,useLocation} from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -17,6 +17,10 @@ const drawerWidth = 150;
 const Manage = (props) => {
 
   const {clientId} = props;
+
+  const { state } = useLocation();
+  const {clusterName} = state;
+  console.log('STATE IN MANAGE',state);
   
   return (
     <Box sx={{display: 'flex'}}>
@@ -74,7 +78,7 @@ const Manage = (props) => {
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        <Typography paragraph>{clientId}</Typography>
+        <Typography paragraph>{state.clusterName}</Typography>
         <Outlet />
       </Box>
     </Box>
