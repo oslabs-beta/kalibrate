@@ -1,11 +1,11 @@
 import ProducersDisplay from './ProducersDisplay';
+import {Typography} from '@mui/material';
 
 const Producers = props => {
   return (
     <div className="wrapper">
       <div className="producers-heading">
-        <h3>Producers</h3>
-        <input type="text" placeholder="Search" />
+        <Typography variant="h6">Producers List</Typography>
       </div>
       <div className="producers-display">
         <ProducersDisplay /*producerData={this.props.producerData*/></ProducersDisplay>
