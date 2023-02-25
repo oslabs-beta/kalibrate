@@ -1,4 +1,3 @@
-import React from 'react';
 import ProducersDisplay from './ProducersDisplay';
 
 const Producers = props => {

@@ -1,9 +1,7 @@
-import Consumers from './Consumers';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import {useState, SyntheticEvent} from 'react';
-import {red} from '@mui/material/colors';
 import {useNavigate, Link} from 'react-router-dom';
 
 const Navbar = () => {
