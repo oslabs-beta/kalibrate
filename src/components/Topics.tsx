@@ -3,6 +3,7 @@ import TopicsDisplay from './TopicsDisplay';
 import PartitionsDisplay from './PartitionsDisplay';
 import MessagesDisplay from './MessagesDisplay';
 
+import {Typography} from '@mui/material';
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
 const Topics = props => {
@@ -46,20 +47,19 @@ const Topics = props => {
   return (
     <div className="wrapper">
       <div className="topics-heading">
+        <Typography variant="h6">Topics List</Typography>
         <div className="text-sm breadcrumbs">
           <ul>
-            <li>
-              <a>Topics</a>
-            </li>
+            <li></li>
             {topicsBreadcrumb}
           </ul>
         </div>
 
-        <input
+        {/* <input
           type="text"
           placeholder="Search"
           className="input input-bordered input-sm w-full max-w-xs mb-5"
-        />
+        /> */}
       </div>
       <div className="topics-display">{topicsComponent}</div>
     </div>

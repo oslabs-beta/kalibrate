@@ -1,4 +1,8 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
+// import {topicColumn, topicData} from '../../mockData.js';
 
 const TopicsDisplay = ({handlePartitionsComponentChange, handleMessagesComponentChange}) => {
   // add in other eventual props to use...
