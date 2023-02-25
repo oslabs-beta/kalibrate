@@ -34,11 +34,9 @@ const Dashboard = props => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('cluster: ', JSON.stringify(data));
         const newData = {};
         Object.assign(newData, data);
         setClusterData(newData);
-        console.log('cluster data fetched: ', JSON.stringify(clusterData));
       })
       .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
 
@@ -49,16 +47,19 @@ const Dashboard = props => {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('stable: ', JSON.stringify(data));
-
-        // modify error handling so it doesn't try to assign a string (??)
         const newData = {};
         Object.assign(newData, data);
         setStableData(newData);
-        console.log('stable data fetched: ', JSON.stringify(stableData));
       })
       .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
   }, []);
+
+  // for testing purposes
+  useEffect(() => {
+    console.log('state updated: ');
+    console.log('cluster: ', clusterData);
+    console.log('stable:', stableData);
+  }, [clusterData, stableData]);
 
   return (
     <Box sx={{display: 'flex'}}>

@@ -32,7 +32,8 @@ const Connect = ({setConnectedCluster}) => {
     event.preventDefault();
 
     // input validation
-    if (!clientId) return setErrorMessage('Client ID is required.');
+    if (!clientId)
+      return setErrorMessage('Enter a Client ID to identify this cluster within Kalibrate.');
     if (!brokers) return setErrorMessage('Seed broker is required.');
     if (sasl && !username) return setErrorMessage('Username is required when SASL enabled.');
     if (sasl && !password) return setErrorMessage('Password is required when SASL enabled.');
