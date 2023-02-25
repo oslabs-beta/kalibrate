@@ -16,6 +16,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 function App() {
   //declare clientId state so other components could access for link & routing
   const [connectedCluster, setConnectedCluster] = useState('');
+  const [sessionClusters, setSessionClusters] = useState([]);
   const [connectedClusterData, setConnectedClusterData] = useState({
     cluster: {brokers: []},
     admin: {topics: []},
@@ -48,6 +49,7 @@ function App() {
     setConnectedClusterData(newData);
   }, [connectedCluster]);
 
+  console.log('session clusters: ', sessionClusters);
   console.log(connectedClusterData);
 
   return (
@@ -56,13 +58,24 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="connect" element={<Connect setConnectedCluster={setConnectedCluster} />} />
+        <Route
+          path="connect"
+          element={
+            <Connect
+              connectedCluster={connectedCluster}
+              setConnectedCluster={setConnectedCluster}
+              sessionClusters={sessionClusters}
+              setSessionClusters={setSessionClusters}
+            />
+          }
+        />
         <Route
           path="dashboard"
           element={
             <Dashboard
-              clientId={connectedCluster}
-              setConnectedClusterData={setConnectedClusterData}
+              connectedCluster={connectedCluster}
+              setConnectedCluster={setConnectedCluster}
+              sessionClusters={sessionClusters}
             />
           }
         />

@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import { flexbox } from '@mui/system';
+import {flexbox} from '@mui/system';
 
 /*
 CONNECTION FORM OPTIONS
@@ -15,8 +15,9 @@ CONNECTION FORM OPTIONS
 todo: add additional connection mechanisms (oauth, aws, etc), currently just using plain
 */
 
-const Connect = ({setConnectedCluster}) => {
+const Connect = props => {
   const navigate = useNavigate();
+  const {setConnectedCluster, sessionClusters, setSessionClusters} = props;
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -29,12 +30,13 @@ const Connect = ({setConnectedCluster}) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   // form submission handler
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     // input validation
     if (!clientId)
       return setErrorMessage('Enter a Client ID to identify this cluster within Kalibrate.');
+    if (sessionClusters.includes(clientId)) return setErrorMessage('Client IDs must be unique.');
     if (!brokers) return setErrorMessage('Seed broker is required.');
     if (sasl && !username) return setErrorMessage('Username is required when SASL enabled.');
     if (sasl && !password) return setErrorMessage('Password is required when SASL enabled.');
@@ -88,6 +90,11 @@ const Connect = ({setConnectedCluster}) => {
 
       // update global state and redirect
       setConnectedCluster(clientId);
+      const newSessionClusters = [...sessionClusters];
+      console.log(newSessionClusters);
+      newSessionClusters.push(clientId);
+      setSessionClusters(newSessionClusters);
+
       navigate('/dashboard');
     } catch {
       setErrorMessage('Failed to connect.');
@@ -97,8 +104,14 @@ const Connect = ({setConnectedCluster}) => {
   // username and password conditionally rendered based on whether SASL is true
   // error message conditionally rendered based on form submission input validation
   return (
-    <Grid container direction="column" justifyContent="space-evenly" alignItems="center" height='100vh' textAlign={'center'}>
-      
+    <Grid
+      container
+      direction="column"
+      justifyContent="space-evenly"
+      alignItems="center"
+      height="100vh"
+      textAlign={'center'}
+    >
       <Box
         component="form"
         sx={{
