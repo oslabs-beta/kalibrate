@@ -24,29 +24,29 @@ const row = [
   {id: '09888854321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
 ];
 const ConsumersDisplay = ({props}) => {
-  const {clientId} = props;
+  // const {clientId} = props;
 
-  const [consumers, setConsumers] = useState([]);
-  const [groupId, setGroupId] = useState();
-  const [consumerId, setConsumerID] = useState();
-  const [clusterName, setClusterName] = useState();
+  // const [consumers, setConsumers] = useState([]);
+  // const [groupId, setGroupId] = useState();
+  // const [consumerId, setConsumerID] = useState();
+  // const [clusterName, setClusterName] = useState();
 
-  useEffect(() => {
-    try {
-      const response = fetch('/consumer', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response) throw new Error();
+  // useEffect(() => {
+  //   try {
+  //     const response = fetch('/consumer', {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  //     if (!response) throw new Error();
 
-      //if response ok, assumming response is an array of consumers and details
-      setConsumers(response);
-    } catch {
-      console.log('Error in useEffect when fetching consumers');
-    }
-  });
+  //     //if response ok, assumming response is an array of consumers and details
+  //     setConsumers(response);
+  //   } catch {
+  //     console.log('Error in useEffect when fetching consumers');
+  //   }
+  // });
   return (
     <div data-testid="consumerDisplay-1">
       <Box sx={{height: 400, width: '1000'}}>
