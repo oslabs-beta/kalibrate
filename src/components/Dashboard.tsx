@@ -18,6 +18,7 @@ const Dashboard = props => {
 
   const navigate = useNavigate();
 
+
   const {clientId} = props;
 
   const [clusterData, setClusterData] = useState({});
