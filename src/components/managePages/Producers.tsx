@@ -1,6 +1,6 @@
 import ProducersDisplay from './ProducersDisplay';
 
-const Producers = () => {
+const Producers = props => {
   return (
     <div className="wrapper">
       <div className="producers-heading">

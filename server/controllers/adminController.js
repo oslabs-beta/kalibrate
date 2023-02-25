@@ -5,7 +5,7 @@ import kafkaController from './kafkaController.js';
 const adminController = {};
 
 adminController.getClusterData = async (req, res, next) => {
-  console.log('hello from get cluster');
+  // console.log('hello from get cluster');
   // get cluster info
   try {
     // attempt to connect admin to instance of kafka
@@ -15,6 +15,7 @@ adminController.getClusterData = async (req, res, next) => {
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
+    console.log(err);
     return next({
       log: 'adminController.getClusterData failed to get cluster details',
       status: 400,
@@ -25,6 +26,7 @@ adminController.getClusterData = async (req, res, next) => {
 
 adminController.getStable = async (req, res, next) => {
   // console.log('hello from getstable');
+  // console.log('hello from getstable');
   // declare variables scoped for access from all try blocks
   let topicList, topicMetadata, admin;
 
@@ -34,9 +36,9 @@ adminController.getStable = async (req, res, next) => {
     admin = kafkaController.kafka.admin();
     await admin.connect();
 
-    // store topic list on admincontroller because const is block-scoped
     topicList = await admin.listTopics();
     // console.log('topiclist: ', topicList);
+
     // if there are no topics in the cluster, return an empty array
     if (topicList.length === 0) {
       res.locals.topicData = [];
@@ -82,6 +84,7 @@ adminController.getStable = async (req, res, next) => {
 
   try {
     res.locals.topicData = topicMetadata;
+    console.log('rlocals: ', res.locals.topicData);
     return next();
   } catch (err) {
     return next({

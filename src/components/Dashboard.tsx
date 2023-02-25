@@ -15,7 +15,6 @@ import {
 const drawerWidth = 150;
 
 const Dashboard = props => {
-
   const navigate = useNavigate();
   const clientIds = ['cluster-1', 'cluster-2'];
 
