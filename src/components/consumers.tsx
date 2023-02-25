@@ -1,7 +1,7 @@
 import React from 'react';
 import ConsumersDisplay from './ConsumersDisplay';
 
-const Consumers = () => {
+const Consumers = props => {
   return (
     <div className="wrapper">
       <div className="consumers-heading" data-testid="consumer-1">

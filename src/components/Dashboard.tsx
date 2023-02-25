@@ -1,4 +1,4 @@
-import {Link, Outlet,useNavigate} from 'react-router-dom';
+import {Link, Outlet, useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {
   Box,
@@ -15,9 +15,7 @@ import {
 const drawerWidth = 150;
 
 const Dashboard = props => {
-
   const navigate = useNavigate();
-
 
   const {clientId} = props;
 
