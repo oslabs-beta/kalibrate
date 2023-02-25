@@ -15,15 +15,15 @@ const Navbar = () => {
   return (
     <Box
       position="fixed"
-      sx={{zIndex: theme => theme.zIndex.drawer + 1, width: '100vw', bgcolor: 'grey'}}
+      sx={{zIndex: theme => theme.zIndex.drawer + 1, width: '100vw', bgcolor: 'turquoise'}}
     >
-      <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
+      <Tabs value={value} onChange={handleChange} aria-label="nav tabs">
         {/* paths will need to be checked */}
-        <Link to="/dashboard" style={{textDecoration: 'none', color: 'inherit'}}>
-          <Tab label="Dashboard" />
-        </Link>
         <Link to="/connect" style={{textDecoration: 'none', color: 'inherit'}}>
           <Tab label="Connect" />
+        </Link>
+        <Link to="/dashboard" style={{textDecoration: 'none', color: 'inherit'}}>
+          <Tab label="Dashboard" />
         </Link>
         <Tab label="Monitor" />
         <Tab label="Test" />
