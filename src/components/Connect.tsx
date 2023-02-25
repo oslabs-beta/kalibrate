@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
+import { flexbox } from '@mui/system';
 
 /*
 CONNECTION FORM OPTIONS
@@ -28,7 +29,7 @@ const Connect = ({setConnectedCluster}) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   // form submission handler
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     // input validation
@@ -96,17 +97,22 @@ const Connect = ({setConnectedCluster}) => {
   // username and password conditionally rendered based on whether SASL is true
   // error message conditionally rendered based on form submission input validation
   return (
-    <Grid container direction="column" justifyContent="space-evenly" alignItems="center">
-      Connect to a Cluster
+    <Grid container direction="column" justifyContent="space-evenly" alignItems="center" height='100vh' textAlign={'center'}>
+      
       <Box
         component="form"
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
+          padding: '15px',
+          border: '2px solid black',
+          borderRadius: '8px',
         }}
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
       >
+        <h1>Connect to a Cluster</h1>
+
         <Grid>
           <TextField
             id="outlined-basic"
@@ -130,12 +136,12 @@ const Connect = ({setConnectedCluster}) => {
         </Grid>
 
         <Grid>
-          SASL
           <Checkbox
             checked={sasl}
             onChange={() => setSasl(!sasl)}
             inputProps={{'aria-label': 'controlled'}}
           />
+          SASL
         </Grid>
 
         {sasl ? (
