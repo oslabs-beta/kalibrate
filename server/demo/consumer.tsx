@@ -10,7 +10,7 @@ import kafka from './testKafkaConfig';
 // }
 
 // create a consumer client with a unique groupId
-const consumer = kafka.consumer({ groupId: 'dev-group' });
+const consumer = kafka.consumer({groupId: 'dev-group'});
 const topic = 'topic-test';
 
 // connect to consumer, subscribe to topics, and read one message at a time
@@ -32,5 +32,5 @@ const consumeMessages = async () => {
     console.log(`[Consumer Error] ${err.message}:`, err);
   }
 };
-
+//run().catch(e => console.error(`Consumer error: ${e.message}`));
 export default consumeMessages;
