@@ -56,6 +56,22 @@ const Connect = ({setConnectedCluster}) => {
 
     console.log('Attempting to connect:', connectionConfig);
 
+    // fetch('api/connection', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(connectionConfig),
+    // })
+    //   // don't set new client ID until connection is complete
+    //   // otherwise, clientId updates in state and triggers useEffect in app before connection to Kafka is ready
+    //   .then(response => {
+    //     if (!response.ok) throw new Error();
+    //     setConnectedCluster(clientId);
+    //     navigate('/dashboard');
+    //   })
+    //   .catch(err => console.log(err));
+
     try {
       // Send POST request to connect
       const response = await fetch('api/connection', {
