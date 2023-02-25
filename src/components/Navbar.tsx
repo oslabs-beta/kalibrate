@@ -6,11 +6,9 @@ import {useState, SyntheticEvent} from 'react';
 import {red} from '@mui/material/colors';
 import {useNavigate, Link} from 'react-router-dom';
 
-
-
 const Navbar = () => {
   const navigate = useNavigate();
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(0);
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };

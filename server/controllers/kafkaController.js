@@ -15,17 +15,18 @@ kafkaController.initiateKafka = (req, res, next) => {
     });
   }
 
-  let kafka;
+  //let kafka;
 
   try {
     if (!sasl) {
-      kafka = new Kafka({
+      // creating kafka instance on the exported controller object so it will be accessible elsewhere
+      kafkaController.kafka = new Kafka({
         clientId,
         brokers,
       });
     } else {
       console.log('connecting with sasl...');
-      kafka = new Kafka({
+      kafkaController.kafka = new Kafka({
         clientId,
         brokers,
         ssl,
