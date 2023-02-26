@@ -1,8 +1,8 @@
 import path from 'path';
 import {fileURLToPath} from 'url';
+import * as dotenv from 'dotenv';
 import express from 'express';
-import adminController from './controllers/adminController.js';
-import kafkaController from './controllers/kafkaController.js';
+
 // import {Kafka} from 'kafkajs';
 // import KAFKA_TEST_CONFIG from '../kafka-test-config.js';
 
@@ -18,6 +18,8 @@ const PORT = 5173;
 // });
 
 // require routers and controllers here
+import adminController from './controllers/adminController.js';
+import kafkaController from './controllers/kafkaController.js';
 
 // handle JSON req/res bodies
 app.use(express.json());
