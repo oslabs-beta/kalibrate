@@ -7,16 +7,6 @@ const kafkaController = {};
 kafkaController.initiateKafka = (req, res, next) => {
   const {clientId, brokers, ssl, sasl} = req.body;
 
-  if (!clientId || !brokers || !sasl.username || !sasl.password) {
-    return next({
-      log: 'kafkaController.initiateKafka failed due to missing form data',
-      status: 403,
-      message: 'Missing form data to connect to Kafka server',
-    });
-  }
-
-  //let kafka;
-
   try {
     if (!sasl) {
       // creating kafka instance on the exported controller object so it will be accessible elsewhere

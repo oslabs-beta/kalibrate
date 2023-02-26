@@ -4,12 +4,10 @@ import kafkaController from './kafkaController.js';
 
 const adminController = {};
 
+// get cluster info
 adminController.getClusterData = async (req, res, next) => {
-  // console.log('hello from get cluster');
-  // get cluster info
   try {
     // attempt to connect admin to instance of kafka
-    console.log('kafka instance? ', kafkaController.kafka);
     const admin = kafkaController.kafka.admin();
     await admin.connect();
     res.locals.clusterData = await admin.describeCluster();
@@ -24,9 +22,8 @@ adminController.getClusterData = async (req, res, next) => {
   }
 };
 
+// get topic metadata
 adminController.getStable = async (req, res, next) => {
-  // console.log('hello from getstable');
-  // console.log('hello from getstable');
   // declare variables scoped for access from all try blocks
   let topicList, topicMetadata, admin;
 
@@ -84,7 +81,6 @@ adminController.getStable = async (req, res, next) => {
 
   try {
     res.locals.topicData = topicMetadata;
-    console.log('rlocals: ', res.locals.topicData);
     return next();
   } catch (err) {
     return next({
