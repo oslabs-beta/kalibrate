@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import TopicsDisplay from './TopicsDisplay';
-import PartitionsDisplay from '../PartitionsDisplay';
+import PartitionsDisplay from './PartitionsDisplay';
 import MessagesDisplay from '../MessagesDisplay';
 
 import {Typography} from '@mui/material';

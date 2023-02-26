@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-import {producerColumn, producerData} from '../../../mockData.js';
+import {producerColumn, producerData} from '../../../../demo/mockData.js';
 
 const ProducersDisplay = (/*props*/) => {
   // placeholder for eventual props

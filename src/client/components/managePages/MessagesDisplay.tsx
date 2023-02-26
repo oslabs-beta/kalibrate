@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-import {messageColumn, messageData} from '../../mockData.js';
+import {messageColumn, messageData} from '../../../demo/mockData.js';
 
 const MessagesDisplay = () => {
   // add in other eventual props to use...
