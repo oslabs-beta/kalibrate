@@ -6,80 +6,143 @@ import ip from 'ip';
 TOPIC FLOW
 
 user producer 
-  -> requested order topic
+  -> unfulfilled order topic
     -> inventory consumer
       -> inventory producer
         -> inventory topic
           -> shipping consumer
-    -> verify payment consumer 
+    -> payment consumer 
       -> verify payment producer 
         -> payments topic
           -> finance consumer
           -> shipping consumer
     
-  -> shipping producer (when payment verified + inventory confirmed)
-    -> confirmed order topic
+  -> shipping producer (when payment + inventory messages received)
+    -> fulfilled order topic
       -> user consumer
 */
 
-console.log('Running services for web store local demo...');
+console.log(`IP: ${ip.address()}`);
+console.log('Running services for web store local demo...\n');
 
 // Connect to server
-console.log(`IP: ${ip.address()}`);
 console.log('Connecting to Kafka server...');
 const kafka = new Kafka({
   clientId: 'webstore-local-demo',
   brokers: [`${ip.address()}:9092`], // your machine's ip
 });
 
-// Create service consumers
-// const paymentConsumer = kafka.consumer();
-// const financeConsumer = kafka.consumer();
+// Create finance service
+const financeConsumer = kafka.consumer({groupId: 'finance-group'});
 
-// Create service producers
-// const paymentProducer = kafka.producer();
+await financeConsumer.connect();
+await financeConsumer.subscribe({topics: ['unfulfilled']});
+await financeConsumer.run({
+  eachMessage: async ({topic, partition, message}) => {
+    console.log(`Finance consumer received a message - ${message.key}: ${message.value}`);
+  },
+});
 
-// Shipping service cache
-const shippingCache = {};
+// Create payments service
+const paymentProducer = kafka.producer();
+const paymentConsumer = kafka.consumer({groupId: 'payment-service'});
+
+// Subscribe to unfulfilled topic and produce message to inventory whenever message is received
+await paymentConsumer.connect();
+await paymentConsumer.subscribe({topics: ['unfulfilled']});
+await paymentConsumer.run({
+  eachMessage: async ({topic, partition, message}) => {
+    console.log(`Payment consumer received a message - ${message.key}: ${message.value}`);
+    const parsedMessageValue = JSON.parse(message.value.toString());
+
+    const status = Math.random() < 0.2 ? 'rejected' : 'verified';
+
+    const newMessage = {
+      key: 'payment',
+      value: JSON.stringify({
+        status,
+        itemId: parsedMessageValue.itemId,
+        orderId: message.key.toString(),
+      }),
+    };
+
+    await paymentProducer.connect();
+    await paymentProducer.send({
+      topic: 'payments',
+      messages: [newMessage],
+    });
+
+    console.log(`Payment producer sent a message - ${newMessage.key}: ${newMessage.value}`);
+    await paymentProducer.disconnect();
+  },
+});
 
 // Create shipping service
 const shippingProducer = kafka.producer();
 const shippingConsumer = kafka.consumer({groupId: 'shipping-group'});
 
+// Shipping service cache
+const shippingCache = {};
+
 // Subscribe to inventory topic and produce message to fulfilled whenever message is received
 await shippingConsumer.connect();
-await shippingConsumer.subscribe({topics: ['inventory']});
+await shippingConsumer.subscribe({topics: ['inventory', 'payments']});
 await shippingConsumer.run({
   eachMessage: async ({topic, partition, message}) => {
     console.log(`Shipping consumer received a message - ${message.key}: ${message.value}`);
+    const parsedMessageValue = JSON.parse(message.value.toString());
 
-    // create message based on cached values
-    // if (message.key === 'inventory' && message.value.status === 'available') {
-    //   if (shippingCache[message.value.orderId]) {
-    //     shippingCache[message.value.orderId].payment ===
-    //   }
-    // }
+    // create an entry for the cache if it doesn't exist
+    if (!shippingCache[parsedMessageValue.orderId]) shippingCache[parsedMessageValue.orderId] = {};
 
-    const status = message.value.status === 'available' ? 'confirmed' : 'rejected';
+    // update shipment status and/or cache based on cached values
+    let status;
+    if (message.key.toString() === 'inventory') {
+      shippingCache[parsedMessageValue.orderId].inventory = parsedMessageValue.status;
 
-    const newMessage = {
-      key: uuidv4(),
-      value: JSON.stringify({
-        status,
-        itemId: message.value.itemId,
-        orderId: message.value.orderId,
-      }),
-    };
+      if (shippingCache[parsedMessageValue.orderId].payment) {
+        status =
+          shippingCache[parsedMessageValue.orderId].payment === 'verified' &&
+          shippingCache[parsedMessageValue.orderId].inventory === 'available'
+            ? 'shipped'
+            : 'cancelled';
+      }
+    } else if (message.key.toString() === 'payment') {
+      shippingCache[parsedMessageValue.orderId].payment = parsedMessageValue.status;
 
-    await shippingProducer.connect();
-    await shippingProducer.send({
-      topic: 'fulfilled',
-      compression: CompressionTypes.GZIP,
-      messages: [newMessage],
-    });
+      if (shippingCache[parsedMessageValue.orderId].inventory) {
+        status =
+          shippingCache[parsedMessageValue.orderId].inventory === 'available' &&
+          shippingCache[parsedMessageValue.orderId].payment === 'verified'
+            ? 'shipped'
+            : 'cancelled';
+      }
+    }
 
-    console.log(`Shipping producer sent a message: ${JSON.stringify(newMessage)}`);
-    await shippingProducer.disconnect();
+    // if there's a shipment status, send message
+    if (status) {
+      const newMessage = {
+        key: uuidv4(),
+        value: JSON.stringify({
+          shippingStatus: status,
+          paymentStatus: shippingCache[parsedMessageValue.orderId].payment,
+          inventoryStatus: shippingCache[parsedMessageValue.orderId].inventory,
+          itemId: parsedMessageValue.itemId,
+          orderId: parsedMessageValue.orderId,
+        }),
+      };
+
+      delete shippingCache[parsedMessageValue.orderId]; // remove order from cache since no longer needs to be tracked
+
+      await shippingProducer.connect();
+      await shippingProducer.send({
+        topic: 'fulfilled',
+        messages: [newMessage],
+      });
+
+      console.log(`Shipping producer sent a message - ${newMessage.key}: ${newMessage.value}`);
+      await shippingProducer.disconnect();
+    }
   },
 });
 
@@ -93,6 +156,7 @@ await inventoryConsumer.subscribe({topics: ['unfulfilled']});
 await inventoryConsumer.run({
   eachMessage: async ({topic, partition, message}) => {
     console.log(`Inventory consumer received a message - ${message.key}: ${message.value}`);
+    const parsedMessageValue = JSON.parse(message.value.toString());
 
     const status = Math.random() < 0.2 ? 'unavailable' : 'available';
 
@@ -100,19 +164,18 @@ await inventoryConsumer.run({
       key: 'inventory',
       value: JSON.stringify({
         status,
-        itemId: message.value.itemId,
-        orderId: message.key,
+        itemId: parsedMessageValue.itemId,
+        orderId: message.key.toString(),
       }),
     };
 
     await inventoryProducer.connect();
     await inventoryProducer.send({
       topic: 'inventory',
-      compression: CompressionTypes.GZIP,
       messages: [newMessage],
     });
 
-    console.log(`Inventory producer sent a message: ${JSON.stringify(newMessage)}`);
+    console.log(`Inventory producer sent a message - ${newMessage.key}: ${newMessage.value}`);
     await inventoryProducer.disconnect();
   },
 });
@@ -126,11 +189,11 @@ await userConsumer.connect();
 await userConsumer.subscribe({topics: ['fulfilled']});
 await userConsumer.run({
   eachMessage: async ({topic, partition, message}) => {
-    console.log(`User consumer received message - ${message.key}: ${message.value}`);
+    console.log(`User consumer received message - ${message.key}: ${message.value}\n`);
   },
 });
 
-// Send a user message at a random interval b/w 0-5 seconds
+// Send a user order at a random interval between 0-5 seconds
 const produceUserMessage = async () => {
   await userProducer.connect();
 
@@ -145,11 +208,10 @@ const produceUserMessage = async () => {
 
   await userProducer.send({
     topic: 'unfulfilled',
-    compression: CompressionTypes.GZIP,
     messages: [newMessage],
   });
 
-  console.log(`User producer sent a message: ${JSON.stringify(newMessage)}`);
+  console.log(`User producer sent a message - ${newMessage.key}: ${newMessage.value}`);
   await userProducer.disconnect();
 
   setTimeout(produceUserMessage, Math.random() * 5000);
