@@ -1,11 +1,40 @@
-# Instructions
+# Local Kafka Demo Server & Services Instructions
 
-## add your ip (mine is 67.245.40.84) to external listener
+## Demo Kafka Server
 
-## To run kafka server:
+The Kafka server is configured with 1 Zookeeper and 3 brokers, to create and spin it up:
 
-## docker-compose -f kafka.yml up
+`npm run demo-kafka`
 
-## To run producee & consumer services
+---
 
-## services.js
+## Demo Services
+
+Once the Kafka server is running, the demo producers and consumers can be ran:
+
+`npm run demo-services`
+
+The current structure of the demo services:
+
+Topics
+
+- Unfulfilled orders
+- Inventory
+- Payments
+- FulFilled orders
+
+Services
+
+- User service (produces to unfulfilled orders, subscribed to fulfilled orders)
+- Inventory Service (subscribed to unfulfilled orders, produces to inventory)
+- Payment Processing Service (subscribed to unfulfilled orders, produces to payments)
+- Shipping Service (subscribed to inventory & payments, produces to fulfilled orders)
+- Finance service (subscribed to payments)
+
+---
+
+## Reset Kafka Server
+
+Remove the Kafka instance with:
+
+`npm run demo-kafka-reset`

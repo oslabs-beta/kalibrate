@@ -2,26 +2,6 @@ import {Kafka, CompressionTypes} from 'kafkajs';
 import {v4 as uuidv4} from 'uuid';
 import ip from 'ip';
 
-/*
-TOPIC FLOW
-
-user producer 
-  -> unfulfilled order topic
-    -> inventory consumer
-      -> inventory producer
-        -> inventory topic
-          -> shipping consumer
-    -> payment consumer 
-      -> verify payment producer 
-        -> payments topic
-          -> finance consumer
-          -> shipping consumer
-    
-  -> shipping producer (when payment + inventory messages received)
-    -> fulfilled order topic
-      -> user consumer
-*/
-
 console.log(`IP: ${ip.address()}`);
 console.log('Running services for web store local demo...\n');
 
@@ -66,14 +46,16 @@ await paymentConsumer.run({
       }),
     };
 
-    await paymentProducer.connect();
-    await paymentProducer.send({
-      topic: 'payments',
-      messages: [newMessage],
-    });
+    setTimeout(async () => {
+      await paymentProducer.connect();
+      await paymentProducer.send({
+        topic: 'payments',
+        messages: [newMessage],
+      });
 
-    console.log(`Payment producer sent a message - ${newMessage.key}: ${newMessage.value}`);
-    await paymentProducer.disconnect();
+      console.log(`Payment producer sent a message - ${newMessage.key}: ${newMessage.value}`);
+      await paymentProducer.disconnect();
+    }, Math.random() * 3000);
   },
 });
 
@@ -134,14 +116,16 @@ await shippingConsumer.run({
 
       delete shippingCache[parsedMessageValue.orderId]; // remove order from cache since no longer needs to be tracked
 
-      await shippingProducer.connect();
-      await shippingProducer.send({
-        topic: 'fulfilled',
-        messages: [newMessage],
-      });
+      setTimeout(async () => {
+        await shippingProducer.connect();
+        await shippingProducer.send({
+          topic: 'fulfilled',
+          messages: [newMessage],
+        });
 
-      console.log(`Shipping producer sent a message - ${newMessage.key}: ${newMessage.value}`);
-      await shippingProducer.disconnect();
+        console.log(`Shipping producer sent a message - ${newMessage.key}: ${newMessage.value}`);
+        await shippingProducer.disconnect();
+      }, Math.random() * 3000);
     }
   },
 });
@@ -169,14 +153,16 @@ await inventoryConsumer.run({
       }),
     };
 
-    await inventoryProducer.connect();
-    await inventoryProducer.send({
-      topic: 'inventory',
-      messages: [newMessage],
-    });
+    setTimeout(async () => {
+      await inventoryProducer.connect();
+      await inventoryProducer.send({
+        topic: 'inventory',
+        messages: [newMessage],
+      });
 
-    console.log(`Inventory producer sent a message - ${newMessage.key}: ${newMessage.value}`);
-    await inventoryProducer.disconnect();
+      console.log(`Inventory producer sent a message - ${newMessage.key}: ${newMessage.value}`);
+      await inventoryProducer.disconnect();
+    }, Math.random() * 3000);
   },
 });
 
@@ -189,7 +175,7 @@ await userConsumer.connect();
 await userConsumer.subscribe({topics: ['fulfilled']});
 await userConsumer.run({
   eachMessage: async ({topic, partition, message}) => {
-    console.log(`User consumer received message - ${message.key}: ${message.value}\n`);
+    console.log(`User consumer received message - ${message.key}: ${message.value}`);
   },
 });
 
