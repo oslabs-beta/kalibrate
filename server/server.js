@@ -7,6 +7,7 @@ import express from 'express';
 import KAFKA_TEST_CONFIG from '../kafka-test-config.js';
 
 const app = express();
+const PORT = 5173;
 
 // handle kafka connections here?
 // wherever handled, the resulting instances of kafka .admin, .consumer, .producer need to be exported
@@ -60,8 +61,8 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(process.env.PORT, () => {
-  console.log(`Server listening on port: ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
 });
 
 export default app;
