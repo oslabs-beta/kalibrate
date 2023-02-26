@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 
 // import {Kafka} from 'kafkajs';
-import KAFKA_TEST_CONFIG from '../kafka-test-config.js';
+// import KAFKA_TEST_CONFIG from '../kafka-test-config.js';
 
 const app = express();
 const PORT = 5173;
