@@ -1,5 +1,7 @@
 # Local Kafka Demo Server & Services Instructions
 
+The setup requires that docker and docker-compose be installed.
+
 ## Demo Kafka Server
 
 The Kafka server is configured with 1 Zookeeper and 3 brokers, to create and spin it up:
