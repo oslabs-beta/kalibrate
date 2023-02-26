@@ -1,4 +1,4 @@
-const Overview = () => {
+const Overview = props => {
   // Eventual props to use...
   // {clusterName, clusterVersion, brokerNumber, topicNumber, partitionNumber, messageNumber, production, consumption} = props
 

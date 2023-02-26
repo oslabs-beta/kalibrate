@@ -1,8 +1,9 @@
-import React from 'react';
 import BrokersDisplay from './BrokersDisplay';
+
 
 // appropriate props should be passed down to brokers display
 const Brokers = props => {
+
   return (
     <div className="wrapper">
       <div className="brokers-heading">

@@ -3,9 +3,12 @@
 
 import * as dotenv from 'dotenv';
 dotenv.config();
+import {logLevel} from 'kafkajs';
 
 // pass this as an argument to new Kafka()
 const KAFKA_TEST_CONFIG = {
+  logLevel: logLevel.DEBUG,
+  clientId: 'example',
   brokers: ['pkc-419q3.us-east4.gcp.confluent.cloud:9092'],
   ssl: true,
   sasl: {

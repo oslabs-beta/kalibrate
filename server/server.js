@@ -34,11 +34,11 @@ app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
   res.sendStatus(201);
 });
 
-app.get('api/stable-data', adminController.getStable, (req, res) => {
+app.get('/api/stable-data', adminController.getStable, (req, res) => {
   res.status(200).json(res.locals.topicData);
 });
 
-app.get('api/cluster-info', adminController.getClusterData, (req, res) => {
+app.get('/api/cluster-info', adminController.getClusterData, (req, res) => {
   res.status(200).json(res.locals.clusterData);
 });
 

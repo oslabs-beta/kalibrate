@@ -15,6 +15,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.10",
     "@mui/x-data-grid": "^5.17.24",
     "daisyui": "^2.50.2",
@@ -36,6 +37,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/ip": "^1.1.0",
     "@types/jest": "^29.4.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

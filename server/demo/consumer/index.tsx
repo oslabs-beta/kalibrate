@@ -1,4 +1,5 @@
 const {Kafka} = require('kafkajs');
+import KAFKA_TEST_CONFIG from '../../../kafka-test-config';
 
 //GET request to /cluster-info should get back object shaped like this
 // {
@@ -10,9 +11,7 @@ const {Kafka} = require('kafkajs');
 // }
 //need to double check clientID, brokers, and if need groupID
 const kafka = new Kafka({
-  clientId: 'f8QmWTB8SQSLE6C99G4qzA',
-  //where
-  brokers: ['localhost:9092'],
+  KAFKA_TEST_CONFIG,
 });
 
 const consumer = kafka.consumer();

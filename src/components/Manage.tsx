@@ -1,5 +1,4 @@
-import React from 'react';
-import {Link, Outlet} from 'react-router-dom';
+import {Outlet, useNavigate} from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -10,14 +9,24 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Collapse,
 } from '@mui/material';
+import {ExpandLess, ExpandMore} from '@mui/icons-material';
+import {useState} from 'react';
 
 const drawerWidth = 150;
 
-const Manage = (props) => {
+const Manage = props => {
 
-  const {clientId} = props;
-  
+  const navigate = useNavigate();
+
+  const {connectedCluster} = props;
+
+
+  const [openManage, setOpenManage] = useState(false);
+  const [openMonitor, setOpenMonitor] = useState(false);
+  const [openTest, setOpenTest] = useState(false);
+
   return (
     <Box sx={{display: 'flex'}}>
       <CssBaseline />
@@ -32,49 +41,91 @@ const Manage = (props) => {
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
           <List>
-            <Link to="brokers" style={{textDecoration: 'none', color: 'inherit'}}>
+            <ListItem key="Manage" disablePadding>
+              <ListItemButton onClick={() => setOpenManage(prev => !prev)}>
+                <ListItemText primary="Manage" />
+                {openManage ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openManage} timeout="auto" unmountOnExit>
               <ListItem key="Brokers" disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  onClick={() => navigate('brokers')}
+                >
                   <ListItemText primary="Brokers" />
                 </ListItemButton>
               </ListItem>
-            </Link>
 
-            <Link to="topics" style={{textDecoration: 'none', color: 'inherit'}}>
-              <ListItem key="Topics" disablePadding>
-                <ListItemButton>
-                  <ListItemText primary="Topics" />
-                </ListItemButton>
-              </ListItem>
-            </Link>
 
-            <Link to="producers" style={{textDecoration: 'none', color: 'inherit'}}>
-              <ListItem key="Producers" disablePadding>
-                <ListItemButton>
-                  <ListItemText primary="Producers" />
-                </ListItemButton>
-              </ListItem>
-            </Link>
+                <ListItem key="Topics" disablePadding>
+                  <ListItemButton
+                    onClick={() => navigate('topics')}
+                  >
+                    <ListItemText primary="Topics" />
+                  </ListItemButton>
+                </ListItem>
 
-            <Link to="consumers" style={{textDecoration: 'none', color: 'inherit'}}>
+                <ListItem key="Producers" disablePadding>
+                  <ListItemButton
+                    onClick={() => navigate('producers')}
+                  >
+                    <ListItemText primary="Producers" />
+                  </ListItemButton>
+                </ListItem>
+
+
               <ListItem key="Consumers" disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  onClick={() => navigate('consumers')}
+                >
                   <ListItemText primary="Consumers" />
                 </ListItemButton>
               </ListItem>
-            </Link>
+            </Collapse>
 
-            <ListItem key="etc" disablePadding>
-              <ListItemButton>
-                <ListItemText primary="etc" />
+            <ListItem key="Monitor" disablePadding>
+              <ListItemButton onClick={() => setOpenMonitor(prev => !prev)}>
+                <ListItemText primary="Monitor" />
+                {openMonitor ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
+            <Collapse in={openMonitor} timeout="auto" unmountOnExit>
+              <ListItem key="Throughput" disablePadding>
+                <ListItemButton onClick={() => navigate('throughput')}>
+                  <ListItemText primary="Throughput" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="Lag" disablePadding>
+                <ListItemButton onClick={() => navigate('lag')}>
+                  <ListItemText primary="Lag" />
+                </ListItemButton>
+              </ListItem>
+            </Collapse>
+
+            <ListItem key="Test" disablePadding>
+              <ListItemButton onClick={() => setOpenTest(prev => !prev)}>
+                <ListItemText primary="Test" />
+                {openTest ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openTest} timeout="auto" unmountOnExit>
+              <ListItem key="Produce" disablePadding>
+                <ListItemButton onClick={() => navigate('produce')}>
+                  <ListItemText primary="Produce" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="Consume" disablePadding>
+                <ListItemButton onClick={() => navigate('consume')}>
+                  <ListItemText primary="Consume" />
+                </ListItemButton>
+              </ListItem>
+            </Collapse>
           </List>
         </Box>
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        <Typography paragraph>{clientId}</Typography>
+        <Typography paragraph> {connectedCluster}</Typography>
         <Outlet />
       </Box>
     </Box>

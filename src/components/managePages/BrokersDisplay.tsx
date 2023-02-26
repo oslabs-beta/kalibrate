@@ -1,6 +1,7 @@
-import React from 'react';
+
 
 const BrokersDisplay = props => {
+
   // eventual props to use...
   // const { brokers } = props;
 
