@@ -80,9 +80,9 @@ function App() {
         />
         <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
           <Route index element={<Overview data={connectedClusterData} />} />
-          <Route path="brokers" element={<Brokers data={clusterData.brokers} />} />
-          <Route path="producers" element={<Producers data={groupData.groups} />} />
-          <Route path="consumers" element={<Consumers data={groupData.groups} />} />
+          <Route path="brokers" element={<Brokers data={clusterData} />} />
+          <Route path="producers" element={<Producers data={groupData} />} />
+          <Route path="consumers" element={<Consumers data={groupData} />} />
           <Route path="topics" element={<Topics data={topicData.topics} />} />
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
@@ -95,3 +95,6 @@ function App() {
 }
 
 export default App;
+/*TODO:
+- as of 1st attempt brokers: data is not drilled properly unless all of connectedClusterData is passe through.
+*/
