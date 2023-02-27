@@ -100,9 +100,7 @@ const Connect = props => {
       // update global state and redirect
       setIsConnected(true);
       setConnectedCluster(clientId);
-      const newSessionClusters = [...sessionClusters];
-      console.log(newSessionClusters);
-      newSessionClusters.push(clientId);
+      const newSessionClusters = [...sessionClusters, clientId];
       setSessionClusters(newSessionClusters);
 
       navigate('/dashboard');
