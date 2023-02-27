@@ -5,7 +5,6 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Producers from './components/managePages/Producers';
 import Brokers from './components/managePages/Brokers';
-import {useState, useEffect} from 'react';
 import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
@@ -14,19 +13,22 @@ import Throughput from './components/monitorPages/Throughput';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
 
+import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
-function App() {
-  //declare clientId state so other components could access for link & routing
+const App = () => {
+  // declare clientId state so other components could access for link & routing
   const [connectedCluster, setConnectedCluster] = useState('');
   const [sessionClusters, setSessionClusters] = useState([]);
   const [connectedClusterData, setConnectedClusterData] = useState({
     cluster: {brokers: []},
     admin: {topics: []},
   });
+  const [isConnected, setIsConnected] = useState(false);
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
+    console.log('Fetching cluster & admin data');
     const newData = {cluster: {brokers: []}, admin: {topics: []}};
     fetch('api/cluster-info', {
       headers: {
@@ -52,28 +54,28 @@ function App() {
     setConnectedClusterData(newData);
   }, [connectedCluster]);
 
-  console.log('session clusters: ', sessionClusters);
-  console.log(connectedClusterData);
+  // console.log('session clusters: ', sessionClusters);
+  console.log('Connected Cluster Data:', connectedClusterData);
 
   return (
     <BrowserRouter>
-      <Navbar />
-
+      <Navbar isConnected={isConnected} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path='/' element={<Home />} />
         <Route
-          path="connect"
+          path='connect'
           element={
             <Connect
               connectedCluster={connectedCluster}
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
               setSessionClusters={setSessionClusters}
+              setIsConnected={setIsConnected}
             />
           }
         />
         <Route
-          path="dashboard"
+          path='dashboard'
           element={
             <Dashboard
               connectedCluster={connectedCluster}
@@ -82,16 +84,16 @@ function App() {
             />
           }
         />
-        <Route path=":clusterName" element={<Manage clientId={connectedCluster} />}>
+        <Route path=':clusterName' element={<Manage />}>
           <Route index element={<Overview data={connectedClusterData} />} />
-          <Route path="brokers" element={<Brokers data={connectedClusterData.cluster.brokers} />} />
-          <Route path="producers" element={<Producers />} />
-          <Route path="consumers" element={<Consumers />} />
-          <Route path="topics" element={<Topics data={connectedClusterData.admin.topics} />} />
-          <Route path="lag" element = {<Lag />} />
-          <Route path="throughput" element = {<Throughput />} />
-          <Route path="consume" element = {<Consume />} />
-          <Route path="Produce" element = {<Produce />} />
+          <Route path='brokers' element={<Brokers data={connectedClusterData.cluster.brokers} />} />
+          <Route path='producers' element={<Producers />} />
+          <Route path='consumers' element={<Consumers />} />
+          <Route path='topics' element={<Topics data={connectedClusterData.admin.topics} />} />
+          <Route path='lag' element = {<Lag />} />
+          <Route path='throughput' element = {<Throughput />} />
+          <Route path='consume' element = {<Consume />} />
+          <Route path='produce' element = {<Produce />} />
         </Route>
       </Routes>
     </BrowserRouter>
