@@ -3,23 +3,12 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
+//REMEMBER TO CHANGE BETWEEN MOCK DATA (brokersData) AND REAL KAFKA DATA (rows)
 import {brokerColumn, brokerData} from '../../../../demo/mockData.js';
 
 const BrokersDisplay = props => {
-  // eventual props to use...
   const {brokers} = props.data;
-  // eventual list to generate...
-  // const brokersList = brokers.map(broker => {
-  //   return (
-  //     <tr className="hover">
-  //       <th>broker.id</th>
-  //       <td>broker.host</td>
-  //       <td>broker.port</td>
-  //     </tr>
-  //   );
-  // });
-  /* ASSUMING INCOMING INFO is array with nesteed broker obj, w/ id, host, port
-   */
+
   console.log('Attempting to map Broker Data...', brokers);
   const rows = brokers.map((broker, index) => {
     return {
@@ -68,6 +57,17 @@ const BrokersDisplay = props => {
 
 export default BrokersDisplay;
 /*//old
+  // eventual list to generate...
+  // const brokersList = brokers.map(broker => {
+  //   return (
+  //     <tr className="hover">
+  //       <th>broker.id</th>
+  //       <td>broker.host</td>
+  //       <td>broker.port</td>
+  //     </tr>
+  //   );
+  // });
+  /* ASSUMING INCOMING INFO is array with nesteed broker obj, w/ id, host, port
     <div className="overflow-x-auto">
       <table className="table w-full">
         <thead>

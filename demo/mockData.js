@@ -1,31 +1,31 @@
 //CONSUMER DATA
 export const consumerColumn = [
-  {field: 'id', headerName: 'Consumer ID', width: 250},
+  {field: 'consumerId', headerName: 'Consumer ID', width: 250},
   {field: 'numOfTopics', headerName: 'Topics Subscribed', width: 150},
   {field: 'recordsLagMax', headerName: 'Records Lag (Max)', width: 150},
-  {field: 'status', headerName: 'Status', width: 100},
+  {field: 'connectionStatus', headerName: 'Status', width: 100},
 ];
 export const consumerData = [
-  {id: '1234567890', numOfTopics: '21', recordsLagMax: '4324', status: 'hoi'},
-  {id: '0987654321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
-  {id: '12345670', numOfTopics: '21', recordsLagMax: '4324', status: 'hoi'},
-  {id: '09854321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
-  {id: '1234567', numOfTopics: '21', recordsLagMax: '4324', status: 'hoi'},
-  {id: '0987654321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
-  {id: '544567890', numOfTopics: '21', recordsLagMax: '4324', status: 'hoi'},
-  {id: '09888854321', numOfTopics: '43', recordsLagMax: '8114', status: 'ioh'},
+  {consumerId: '1234567890', numOfTopics: '21', recordsLagMax: '4324', connectionStatus: 'hoi'},
+  {consumerId: '0987654321', numOfTopics: '43', recordsLagMax: '8114', connectionStatus: 'ioh'},
+  {consumerId: '12345670', numOfTopics: '21', recordsLagMax: '4324', connectionStatus: 'hoi'},
+  {consumerId: '09854321', numOfTopics: '43', recordsLagMax: '8114', connectionStatus: 'ioh'},
+  {consumerId: '1234567', numOfTopics: '21', recordsLagMax: '4324', connectionStatus: 'hoi'},
+  {consumerId: '0987654321', numOfTopics: '43', recordsLagMax: '8114', connectionStatus: 'ioh'},
+  {consumerId: '544567890', numOfTopics: '21', recordsLagMax: '4324', connectionStatus: 'hoi'},
+  {consumerId: '09888854321', numOfTopics: '43', recordsLagMax: '8114', connectionStatus: 'ioh'},
 ];
 
 //PRODUCER DATA
 export const producerColumn = [
-  {field: 'id', headerName: 'Topic Id', width: 100},
+  {field: 'topicId', headerName: 'Topic Id', width: 100},
   {field: 'topicName', headerName: 'Topic Name', width: 250},
   {field: 'topicRole', headerName: 'Topic Role', width: 100},
 ];
 export const producerData = [
-  {id: '1', topicName: 'food', topicRole: 'life'},
-  {id: '2', topicName: 'game', topicRole: 'life'},
-  {id: '3', topicName: 'work', topicRole: 'money'},
+  {topicId: '2', topicName: 'game', topicRole: 'life'},
+  {topicId: '1', topicName: 'food', topicRole: 'life'},
+  {topicId: '3', topicName: 'work', topicRole: 'money'},
 ];
 
 //TOPIC DATA
@@ -69,6 +69,7 @@ export const brokerData = [{id: 0, host: 'localhost', port: 9091}];
 - have table reize with window size
 - specifically topic column: add two column to hold links/routes to partition and messages
 - isConnected !== connected xd
+-consumers' connection status to be toggle?!
 REMEMBER
 - all rows need an 'id' 
 */

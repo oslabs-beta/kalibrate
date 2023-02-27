@@ -97,4 +97,5 @@ function App() {
 export default App;
 /*TODO:
 - as of 1st attempt brokers: data is not drilled properly unless all of connectedClusterData is passe through.
+- props for groupData does not specify producers or consumers
 */
