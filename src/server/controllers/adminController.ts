@@ -5,14 +5,16 @@ const adminController: controller = {};
 
 // get cluster info
 adminController.getClusterData = async (req, res, next) => {
+  let admin;
   try {
     // attempt to connect admin to instance of kafka
-    const admin = kafkaController.kafka.admin();
+    admin = kafkaController.kafka.admin();
     await admin.connect();
 
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
+    await admin.disconnect();
     return next({
       log: 'adminController.getClusterData failed to get cluster details',
       status: 400,
@@ -22,7 +24,7 @@ adminController.getClusterData = async (req, res, next) => {
 };
 
 // get topic metadata
-adminController.getStable = async (req, res, next) => {
+adminController.getTopicData = async (req, res, next) => {
   // declare variables scoped for access from all try blocks
   let topicList, topicMetadata, admin;
 
@@ -40,8 +42,9 @@ adminController.getStable = async (req, res, next) => {
       return next();
     }
   } catch (err) {
+    await admin.disconnect();
     return next({
-      log: 'adminController.getStable failed to get list of topics',
+      log: 'adminController.getTopicData failed to get list of topics',
       status: 400,
       message: err,
     });
@@ -53,8 +56,9 @@ adminController.getStable = async (req, res, next) => {
       topics: topicList,
     });
   } catch (err) {
+    await admin.disconnect();
     return next({
-      log: 'adminController.getStable failed to get topic metadata',
+      log: 'adminController.getTopicData failed to get topic metadata',
       status: 400,
       message: err,
     });
@@ -69,8 +73,9 @@ adminController.getStable = async (req, res, next) => {
       topic.offsets = await admin.fetchTopicOffsets(topic.name);
     }
   } catch (err) {
+    await admin.disconnect();
     return next({
-      log: 'adminController.getStable failed to add offset data to topic metadata',
+      log: 'adminController.getTopicData failed to add offset data to topic metadata',
       status: 400,
       message: err,
     });
@@ -78,10 +83,11 @@ adminController.getStable = async (req, res, next) => {
 
   try {
     res.locals.topicData = topicMetadata;
+    await admin.disconnect();
     return next();
   } catch (err) {
     return next({
-      log: 'adminController.getStable failed to pass data back on res.local',
+      log: 'adminController.getTopicData failed to pass data back on res.local',
       status: 400,
       message: err,
     });
@@ -107,5 +113,56 @@ The resulting array should consist of objects of this form:
   }],
 }
 */
+
+// get group data
+adminController.getGroupData = async (req, res, next) => {
+  let admin;
+  try {
+    // attempt to connect admin to instance of kafka
+    admin = kafkaController.kafka.admin();
+    await admin.connect();
+    const listObj = await admin.listGroups();
+    res.locals.groupList = listObj.groups;
+    // if there are no groups present, return nothing
+    if (res.locals.groupList.length === 0) {
+      res.locals.groups = [];
+      return next();
+    } else {
+      //list of groups of the form [{groupId: string, protocolType: string}]
+      const groupIds: string[] = [];
+      for (const el of res.locals.groupList) {
+        groupIds.push(el.groupId);
+      }
+      res.locals.groupData = await admin.describeGroups(groupIds);
+      return next();
+    }
+  } catch (err) {
+    await admin.disconnect();
+    return next({
+      log: 'adminController.describeGroups failed to get cluster details',
+      status: 400,
+      message: err,
+    });
+  }
+};
+
+// {
+//   groups: [{
+//     errorCode: 0,
+//     groupId: 'testgroup',
+//     members: [
+//       {
+//         clientHost: '/172.19.0.1',
+//         clientId: 'test-3e93246fe1f4efa7380a',
+//         memberAssignment: Buffer,
+//         memberId: 'test-3e93246fe1f4efa7380a-ff87d06d-5c87-49b8-a1f1-c4f8e3ffe7eb',
+//         memberMetadata: Buffer,
+//       },
+//     ],
+//     protocol: 'RoundRobinAssigner',
+//     protocolType: 'consumer',
+//     state: 'Stable',
+//   }]
+// }
 
 export default adminController;
