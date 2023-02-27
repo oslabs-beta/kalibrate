@@ -28,7 +28,6 @@ const Navbar = (props: Props) => {
   //   setValue(newValue);
   // };
   const {isConnected} = props;
-  console.log('isConnected', isConnected);
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
