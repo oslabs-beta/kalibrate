@@ -30,7 +30,7 @@ function App() {
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
-      const newData = {cluster: {brokers: []}, admin: {topics: []}};
+      const newData = {cluster: {brokers: []}, admin: {topics: []}, groups: []};
       fetch('api/cluster-info', {
         headers: {
           'Content-Type': 'application/json',
@@ -52,6 +52,18 @@ function App() {
           newData.admin = data;
         })
         .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
+
+      console.log('preparing to fetch groups');
+      fetch('api/describe-groups', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          newData.groups = data;
+        })
+        .catch(err => console.log(`from dashboard loading group data: ${err}`));
       setConnectedClusterData(newData);
     }
   }, [connectedCluster]);

@@ -1,5 +1,6 @@
 import kafkaController from './kafkaController';
 import {controller} from './../types';
+import {AssignerProtocol} from 'kafkajs';
 
 const adminController: controller = {};
 
@@ -78,6 +79,7 @@ adminController.getStable = async (req, res, next) => {
 
   try {
     res.locals.topicData = topicMetadata;
+    await admin.disconnect();
     return next();
   } catch (err) {
     return next({
@@ -107,5 +109,56 @@ The resulting array should consist of objects of this form:
   }],
 }
 */
+
+// get group data
+adminController.describeGroups = async (req, res, next) => {
+  console.log('hello from describegroups');
+  try {
+    // attempt to connect admin to instance of kafka
+    const admin = kafkaController.kafka.admin();
+    await admin.connect();
+    const listObj = await admin.listGroups();
+    res.locals.groupList = listObj.groups;
+    console.log('list: ', res.locals.groupList);
+    // if there are no groups present, return nothing
+    if (res.locals.groupList.length === 0) {
+      res.locals.groups = [];
+      return next();
+    } else {
+      //list of groups of the form [{groupId: string, protocolType: string}]
+      const groupIds: string[] = [];
+      for (const el of res.locals.groupList) {
+        groupIds.push(el.groupId);
+      }
+      res.locals.groups = await admin.describeGroups(groupIds);
+      return next();
+    }
+  } catch (err) {
+    return next({
+      log: 'adminController.describeGroups failed to get cluster details',
+      status: 400,
+      message: err,
+    });
+  }
+};
+
+// {
+//   groups: [{
+//     errorCode: 0,
+//     groupId: 'testgroup',
+//     members: [
+//       {
+//         clientHost: '/172.19.0.1',
+//         clientId: 'test-3e93246fe1f4efa7380a',
+//         memberAssignment: Buffer,
+//         memberId: 'test-3e93246fe1f4efa7380a-ff87d06d-5c87-49b8-a1f1-c4f8e3ffe7eb',
+//         memberMetadata: Buffer,
+//       },
+//     ],
+//     protocol: 'RoundRobinAssigner',
+//     protocolType: 'consumer',
+//     state: 'Stable',
+//   }]
+// }
 
 export default adminController;
