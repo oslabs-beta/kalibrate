@@ -30,41 +30,41 @@ function App() {
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
-      const newData = {cluster: {brokers: []}, admin: {topics: []}, groups: []};
-      fetch('api/cluster-info', {
+      fetch('api/get-data', {
         headers: {
           'Content-Type': 'application/json',
         },
       })
         .then(res => res.json())
         .then(data => {
-          newData.cluster = data;
+          console.log(data);
+          setConnectedClusterData(data);
         })
-        .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
+        .catch(err => console.log(`from app loading cluster data: ${err}`));
 
-      fetch('api/stable-data', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
-        .then(data => {
-          newData.admin = data;
-        })
-        .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
+      //   fetch('api/stable-data', {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   })
+      //     .then(res => res.json())
+      //     .then(data => {
+      //       newData.admin = data;
+      //     })
+      //     .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
 
-      console.log('preparing to fetch groups');
-      fetch('api/describe-groups', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
-        .then(data => {
-          newData.groups = data;
-        })
-        .catch(err => console.log(`from dashboard loading group data: ${err}`));
-      setConnectedClusterData(newData);
+      //   console.log('preparing to fetch groups')
+      //   fetch('api/describe-groups', {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   })
+      //     .then(res => res.json())
+      //     .then(data => {
+      //       newData.groups = data;
+      //     })
+      //     .catch(err => console.log(`from dashboard loading group data: ${err}`));
+      // }
     }
   }, [connectedCluster]);
   console.log('Received Cluster Data:', connectedClusterData);

@@ -1,6 +1,5 @@
 import kafkaController from './kafkaController';
 import {controller} from './../types';
-import {AssignerProtocol} from 'kafkajs';
 
 const adminController: controller = {};
 
@@ -23,7 +22,7 @@ adminController.getClusterData = async (req, res, next) => {
 };
 
 // get topic metadata
-adminController.getStable = async (req, res, next) => {
+adminController.getTopicData = async (req, res, next) => {
   // declare variables scoped for access from all try blocks
   let topicList, topicMetadata, admin;
 
@@ -42,7 +41,7 @@ adminController.getStable = async (req, res, next) => {
     }
   } catch (err) {
     return next({
-      log: 'adminController.getStable failed to get list of topics',
+      log: 'adminController.getTopicData failed to get list of topics',
       status: 400,
       message: err,
     });
@@ -55,7 +54,7 @@ adminController.getStable = async (req, res, next) => {
     });
   } catch (err) {
     return next({
-      log: 'adminController.getStable failed to get topic metadata',
+      log: 'adminController.getTopicData failed to get topic metadata',
       status: 400,
       message: err,
     });
@@ -71,7 +70,7 @@ adminController.getStable = async (req, res, next) => {
     }
   } catch (err) {
     return next({
-      log: 'adminController.getStable failed to add offset data to topic metadata',
+      log: 'adminController.getTopicData failed to add offset data to topic metadata',
       status: 400,
       message: err,
     });
@@ -83,7 +82,7 @@ adminController.getStable = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'adminController.getStable failed to pass data back on res.local',
+      log: 'adminController.getTopicData failed to pass data back on res.local',
       status: 400,
       message: err,
     });
@@ -111,7 +110,7 @@ The resulting array should consist of objects of this form:
 */
 
 // get group data
-adminController.describeGroups = async (req, res, next) => {
+adminController.getGroupData = async (req, res, next) => {
   console.log('hello from describegroups');
   try {
     // attempt to connect admin to instance of kafka
@@ -130,7 +129,7 @@ adminController.describeGroups = async (req, res, next) => {
       for (const el of res.locals.groupList) {
         groupIds.push(el.groupId);
       }
-      res.locals.groups = await admin.describeGroups(groupIds);
+      res.locals.groupData = await admin.describeGroups(groupIds);
       return next();
     }
   } catch (err) {
