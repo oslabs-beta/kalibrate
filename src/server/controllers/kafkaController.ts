@@ -5,7 +5,7 @@ const kafkaController: controller = {};
 
 // use connection form data to connect to the KafkaJS server
 // two connection types: 1. with ssl & sasl | 2. without ssl & sasl
-kafkaController.initiateKafka = (req, res, next) => {
+kafkaController.initiateKafka = async (req, res, next) => {
   const {clientId, brokers, ssl, sasl} = req.body;
 
   try {
@@ -24,6 +24,9 @@ kafkaController.initiateKafka = (req, res, next) => {
         sasl,
       });
     }
+    const testAdmin = kafkaController.kafka.admin();
+    await testAdmin.connect();
+    await testAdmin.disconnect();
 
     return next();
   } catch (err) {

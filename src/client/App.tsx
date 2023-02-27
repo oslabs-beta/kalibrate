@@ -24,6 +24,7 @@ function App() {
     cluster: {brokers: []},
     admin: {topics: []},
   });
+  const [isConnected, setIsConnected] = useState(false);
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -54,10 +55,11 @@ function App() {
       setConnectedClusterData(newData);
     }
   }, [connectedCluster]);
+  console.log('Received Cluster Data:', connectedClusterData);
 
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar isConnected={isConnected} />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -69,6 +71,7 @@ function App() {
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
               setSessionClusters={setSessionClusters}
+              setIsConnected={setIsConnected}
             />
           }
         />
