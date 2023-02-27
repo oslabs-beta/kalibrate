@@ -1,5 +1,3 @@
-// import path from 'path';
-// import {fileURLToPath} from 'url';
 import express, {Request, Response, NextFunction} from 'express';
 import {errorObject} from './types';
 import dotenv from 'dotenv';
@@ -39,7 +37,14 @@ app.use('*', (req, res) => {
 });
 
 // Global error handler
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
+  // if kafkaController instance is connected when an error is thrown, disconnect it
+  try {
+    await kafkaController.kafka.admin.disconnect();
+    console.log('KafkaJS admin disconnected due to middleware error.');
+  } catch (err) {
+    console.log(`You may have an instance of KafkaJS still connected to your cluster: ${err}`);
+  }
   const defaultErr: errorObject = {
     log: 'Express error handler caught unknown middleware error',
     status: 400,
