@@ -55,9 +55,20 @@ export const messageColumn = [
 ];
 export const messageData = [{key: 'hi', val: 'ho', offset: 100, partition: 0}];
 
+//BROKER DATA
+export const brokerColumn = [
+  {field: 'id', headerName: 'Node ID', width: 100},
+  {field: 'host', headerName: 'Host', width: 200},
+  {field: 'port', headerName: 'Port', width: 100},
+];
+
+export const brokerData = [{id: 0, host: 'localhost', port: 9091}];
 /* TO DO
 - topics data grid to be done last!!!!
 - set width to NOT a static number
 - have table reize with window size
 - specifically topic column: add two column to hold links/routes to partition and messages
+- isConnected !== connected xd
+REMEMBER
+- all rows need an 'id' 
 */
