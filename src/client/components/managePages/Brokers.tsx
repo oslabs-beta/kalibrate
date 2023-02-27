@@ -1,7 +1,7 @@
 import BrokersDisplay from './BrokersDisplay';
 import {Typography} from '@mui/material';
 
-// appropriate props should be passed down to brokers display
+// appropriate props should be passed down to brokers display  // eventual props to use...
 const Brokers = props => {
   return (
     <div className="wrapper">
@@ -9,7 +9,7 @@ const Brokers = props => {
         <Typography variant="h6">Brokers List</Typography>
       </div>
       <div className="brokers-display">
-        <BrokersDisplay />
+        <BrokersDisplay brokerProps={props} />
       </div>
     </div>
   );

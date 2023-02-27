@@ -31,6 +31,7 @@ const Topics = props => {
     default:
       topicsComponent = (
         <TopicsDisplay
+          topicProps={props}
           handlePartitionsComponentChange={handlePartitionsComponentChange}
           handleMessagesComponentChange={handleMessagesComponentChange}
         />

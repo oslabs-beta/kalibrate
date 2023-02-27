@@ -5,9 +5,8 @@ import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 import {brokerColumn, brokerData} from '../../../../demo/mockData.js';
 
-const BrokersDisplay = () => {
+const BrokersDisplay = props => {
   // eventual props to use...
-  // const { brokers } = props;
 
   // eventual list to generate...
   // const brokersList = brokers.map(broker => {
@@ -19,9 +18,20 @@ const BrokersDisplay = () => {
   //     </tr>
   //   );
   // });
-  //default num of rows on a page
-  const [pageSize, setPageSize] = useState<number>(5);
+  /* ASSUMING INCOMING INFO is array with nesteed broker obj, w/ id, host, port
+   */
+  // const {brokers} = props;
 
+  // const rows = brokers.map(broker => {
+  //   return {
+  //     id: broker.id,
+  //     host: broker.host,
+  //     port: broker.port,
+  //   };
+  // });
+
+  //default num of rows on a page of data grid
+  const [pageSize, setPageSize] = useState<number>(5);
   // hardcoded values are used as example, remove hardcoded example and render list instead when data available
   return (
     <div className="wrapper">
