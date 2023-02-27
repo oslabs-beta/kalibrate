@@ -7,7 +7,7 @@ import {brokerColumn, brokerData} from '../../../../demo/mockData.js';
 
 const BrokersDisplay = props => {
   // eventual props to use...
-
+  const {brokers} = props.data;
   // eventual list to generate...
   // const brokersList = brokers.map(broker => {
   //   return (
@@ -20,16 +20,16 @@ const BrokersDisplay = props => {
   // });
   /* ASSUMING INCOMING INFO is array with nesteed broker obj, w/ id, host, port
    */
-  // const {brokers} = props;
-
-  // const rows = brokers.map(broker => {
-  //   return {
-  //     id: broker.id,
-  //     host: broker.host,
-  //     port: broker.port,
-  //   };
-  // });
-
+  console.log('Attempting to map Broker Data...', brokers);
+  const rows = brokers.map((broker, index) => {
+    return {
+      id: index,
+      nodeId: broker.nodeId,
+      host: broker.host,
+      port: broker.port,
+    };
+  });
+  console.log(rows);
   //default num of rows on a page of data grid
   const [pageSize, setPageSize] = useState<number>(5);
   // hardcoded values are used as example, remove hardcoded example and render list instead when data available
@@ -41,7 +41,7 @@ const BrokersDisplay = props => {
             <DataGrid
               //better alt for autoHeight? DataGrid inherits height of parent, even if have data
               autoHeight
-              rows={brokerData}
+              rows={rows}
               columns={brokerColumn}
               pageSize={pageSize}
               onPageSizeChange={newPageSize => setPageSize(newPageSize)}

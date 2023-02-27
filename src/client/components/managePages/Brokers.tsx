@@ -1,15 +1,18 @@
 import BrokersDisplay from './BrokersDisplay';
 import {Typography} from '@mui/material';
 
-// appropriate props should be passed down to brokers display  // eventual props to use...
+//props takes in the connectedClusterData
 const Brokers = props => {
+  console.log('Passing to brokers display', props.data.cluster);
+  const {clusterId} = props.data.cluster;
   return (
     <div className="wrapper">
       <div className="brokers-heading">
         <Typography variant="h6">Brokers List</Typography>
       </div>
       <div className="brokers-display">
-        <BrokersDisplay brokerProps={props} />
+        <Typography>{clusterId}</Typography>
+        <BrokersDisplay data={props.data.cluster} />
       </div>
     </div>
   );
