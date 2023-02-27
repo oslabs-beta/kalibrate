@@ -1,14 +1,13 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5173',
+      '/api': 'http://localhost:5173', // proxy for our express server
     },
-    open: 'http://localhost:5712/',
+    open: '/', // open the app on the root path URL
     port: 5712,
   },
 });
