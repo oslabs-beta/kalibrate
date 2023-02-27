@@ -56,7 +56,6 @@ function App() {
     }
   }, [connectedCluster]);
   console.log('Received Cluster Data:', connectedClusterData);
-  console.log('BrokerData:', connectedClusterData.cluster);
 
   return (
     <BrowserRouter>

@@ -57,7 +57,7 @@ export const messageData = [{key: 'hi', val: 'ho', offset: 100, partition: 0}];
 
 //BROKER DATA
 export const brokerColumn = [
-  {field: 'id', headerName: 'Node ID', width: 100},
+  {field: 'nodeId', headerName: 'Node ID', width: 100},
   {field: 'host', headerName: 'Host', width: 200},
   {field: 'port', headerName: 'Port', width: 100},
 ];

@@ -3,7 +3,7 @@ import TopicsDisplay from './TopicsDisplay';
 import PartitionsDisplay from './PartitionsDisplay';
 import MessagesDisplay from './MessagesDisplay';
 
-import {Typography} from '@mui/material';
+import {Box, Breadcrumbs, Link, Typography} from '@mui/material';
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
 const Topics = props => {
