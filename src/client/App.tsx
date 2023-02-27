@@ -38,6 +38,7 @@ function App() {
       })
         .then(res => res.json())
         .then(data => {
+          console.log('(APP) fetched cluster data', data)
           newData.cluster = data;
         })
         .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
@@ -49,13 +50,13 @@ function App() {
       })
         .then(res => res.json())
         .then(data => {
+          console.log('(APP) fetched stable data', data)
           newData.admin = data;
         })
         .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
       setConnectedClusterData(newData);
     }
   }, [connectedCluster]);
-  console.log('Received Cluster Data:', connectedClusterData);
 
   return (
     <BrowserRouter>
