@@ -27,33 +27,33 @@ function App() {
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
-    const newData = {cluster: {brokers: []}, admin: {topics: []}};
-    fetch('api/cluster-info', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        newData.cluster = data;
+    // only runs if a cluster has been connected to the app
+    if (connectedCluster.length) {
+      const newData = {cluster: {brokers: []}, admin: {topics: []}};
+      fetch('api/cluster-info', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
-      .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
+        .then(res => res.json())
+        .then(data => {
+          newData.cluster = data;
+        })
+        .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
 
-    fetch('api/stable-data', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        newData.admin = data;
+      fetch('api/stable-data', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
-      .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
-    setConnectedClusterData(newData);
+        .then(res => res.json())
+        .then(data => {
+          newData.admin = data;
+        })
+        .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
+      setConnectedClusterData(newData);
+    }
   }, [connectedCluster]);
-
-  console.log('session clusters: ', sessionClusters);
-  console.log(connectedClusterData);
 
   return (
     <BrowserRouter>
@@ -88,10 +88,10 @@ function App() {
           <Route path="producers" element={<Producers />} />
           <Route path="consumers" element={<Consumers />} />
           <Route path="topics" element={<Topics data={connectedClusterData.admin.topics} />} />
-          <Route path="lag" element = {<Lag />} />
-          <Route path="throughput" element = {<Throughput />} />
-          <Route path="consume" element = {<Consume />} />
-          <Route path="Produce" element = {<Produce />} />
+          <Route path="lag" element={<Lag />} />
+          <Route path="throughput" element={<Throughput />} />
+          <Route path="consume" element={<Consume />} />
+          <Route path="Produce" element={<Produce />} />
         </Route>
       </Routes>
     </BrowserRouter>

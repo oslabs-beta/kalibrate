@@ -1,12 +1,12 @@
 import jest from 'jest';
 import React from 'react';
-import { render, screen } from "@testing-library/react";
-import { Producer } from "../components/Producer.jsx";
+import {render, screen} from '@testing-library/react';
+import {Producer} from '../client/components/Producer.jsx.js';
 
 describe('Producer', () => {
   it('that jest is working', () => {
     expect(true).toBe(true);
-  })
+  });
 });
 
 // Create tests for Kafka producer clients
@@ -16,7 +16,7 @@ describe('Producer', () => {
     render(<Producer />);
     expect(screen.getByText('Producer')).toBeInTheDocument();
     // screen.getByRole('button', {name: /submit/i})
-  })
+  });
 });
 
 // test('Producer renders on page', () => {});

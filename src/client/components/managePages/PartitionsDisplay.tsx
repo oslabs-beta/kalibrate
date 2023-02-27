@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-import {partitionColumn, partitionData} from '../../mockData.js';
+import {partitionColumn, partitionData} from '../../../../demo/mockData.js';
 
 const PartitionsDisplay = () => {
   // add in other eventual props to use...

@@ -3,8 +3,8 @@ import jest from 'jest';
 
 import '@testing-library/user-event';
 import {render, screen, cleanup} from '@testing-library/react';
-import Consumers from '../components/managePages/consumers';
-import ConsumersDisplay from '../components/managePages/consumersDisplay';
+import Consumers from '../src/client/components/managePages/consumers';
+import ConsumersDisplay from '../src/client/components/managePages/consumersDisplay';
 
 describe('Consumer React', () => {
   it('should render consumer component', () => {

@@ -2,15 +2,14 @@
   "name": "kalibrate",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"nodemon server/server.js\"",
+    "dev": "concurrently \"vite\" \"ts-node-dev -P tsconfig.server.json src/server/server.ts\"",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest",
-    "demo-kafka": "export KAFKA_HOST_IP=$(ifconfig | grep -E '([0-9]{1,3}\\.){3}[0-9]{1,3}' | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1) && docker-compose -f local-kafka-demo/kafka.yml up",
-    "demo-services": "node local-kafka-demo/services.js",
-    "demo-kafka-reset": "docker-compose -f local-kafka-demo/kafka.yml down"
+    "demo-kafka": "export KAFKA_HOST_IP=$(ifconfig | grep -E '([0-9]{1,3}\\.){3}[0-9]{1,3}' | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1) && docker-compose -f demo/local/kafka.yml up",
+    "demo-services": "node demo/local/services.mjs",
+    "demo-kafka-reset": "docker-compose -f demo/local/kafka.yml down"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -18,6 +17,8 @@
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.10",
     "@mui/x-data-grid": "^5.17.24",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.14.2",
     "daisyui": "^2.50.2",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -55,6 +56,8 @@
     "supertest": "^6.3.3",
     "tailwindcss": "^3.2.7",
     "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
   },

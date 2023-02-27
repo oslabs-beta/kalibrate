@@ -1,5 +1,5 @@
 const {Kafka} = require('kafkajs');
-import KAFKA_TEST_CONFIG from '../../../kafka-test-config';
+import KAFKA_TEST_CONFIG from '../kafka-test-config';
 
 //GET request to /cluster-info should get back object shaped like this
 // {

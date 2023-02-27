@@ -1,6 +1,7 @@
 import {Kafka} from 'kafkajs';
+import {controller} from './../types';
 
-const kafkaController = {};
+const kafkaController: controller = {};
 
 // use connection form data to connect to the KafkaJS server
 // two connection types: 1. with ssl & sasl | 2. without ssl & sasl

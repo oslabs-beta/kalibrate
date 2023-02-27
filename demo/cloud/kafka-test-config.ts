@@ -1,11 +1,8 @@
-// config for initial test functionality
-// eventually this will all need to be configurable by a user
-
+import {logLevel} from 'kafkajs';
 import * as dotenv from 'dotenv';
 dotenv.config();
-import {logLevel} from 'kafkajs';
 
-// pass this as an argument to new Kafka()
+// Pass this as an argument to new Kafka()
 const KAFKA_TEST_CONFIG = {
   logLevel: logLevel.DEBUG,
   clientId: 'example',
@@ -13,7 +10,6 @@ const KAFKA_TEST_CONFIG = {
   ssl: true,
   sasl: {
     mechanism: 'plain',
-
     // for purposes of an eventual user, look into how a granular API key might be different from a global one
     username: process.env.KAFKA_TEST_CONFIG_USERNAME,
     password: process.env.KAFKA_TEST_CONFIG_PASSWORD,

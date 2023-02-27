@@ -1,8 +1,7 @@
-// coding under the assumption that an instance of kafka.admin gets connected and exported as part of server startup
-// IMPORT STATEMENT HERE:
-import kafkaController from './kafkaController.js';
+import kafkaController from './kafkaController';
+import {controller} from './../types';
 
-const adminController = {};
+const adminController: controller = {};
 
 // get cluster info
 adminController.getClusterData = async (req, res, next) => {
@@ -10,10 +9,10 @@ adminController.getClusterData = async (req, res, next) => {
     // attempt to connect admin to instance of kafka
     const admin = kafkaController.kafka.admin();
     await admin.connect();
+
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
-    console.log(err);
     return next({
       log: 'adminController.getClusterData failed to get cluster details',
       status: 400,
@@ -34,7 +33,6 @@ adminController.getStable = async (req, res, next) => {
     await admin.connect();
 
     topicList = await admin.listTopics();
-    // console.log('topiclist: ', topicList);
 
     // if there are no topics in the cluster, return an empty array
     if (topicList.length === 0) {
@@ -54,7 +52,6 @@ adminController.getStable = async (req, res, next) => {
     topicMetadata = await admin.fetchTopicMetadata({
       topics: topicList,
     });
-    // console.log('metadata: ', JSON.stringify(topicMetadata));
   } catch (err) {
     return next({
       log: 'adminController.getStable failed to get topic metadata',
@@ -93,22 +90,22 @@ adminController.getStable = async (req, res, next) => {
 
 /*
 The resulting array should consist of objects of this form:
-{name: String,
-partitions: [{
-  partitionErrorCode: Number,
-  partitionId: Number,
-  leader: Number,
-  replicas: [Numbers],
-  isr: [Numbers]
-},
-offsets: [{
-  partition: Number,
-  offset: String,
-  high: String,
-  low: String
-}]
-]}
-
+{
+  name: String,
+  partitions: [{
+    partitionErrorCode: Number,
+    partitionId: Number,
+    leader: Number,
+    replicas: [Numbers],
+    isr: [Numbers]
+  }],
+  offsets: [{
+    partition: Number,
+    offset: String,
+    high: String,
+    low: String
+  }],
+}
 */
 
 export default adminController;

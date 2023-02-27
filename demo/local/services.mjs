@@ -1,4 +1,4 @@
-import {Kafka, CompressionTypes} from 'kafkajs';
+import {Kafka} from 'kafkajs';
 import {v4 as uuidv4} from 'uuid';
 import ip from 'ip';
 
