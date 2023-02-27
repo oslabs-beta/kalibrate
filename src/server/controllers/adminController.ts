@@ -5,14 +5,16 @@ const adminController: controller = {};
 
 // get cluster info
 adminController.getClusterData = async (req, res, next) => {
+  let admin;
   try {
     // attempt to connect admin to instance of kafka
-    const admin = kafkaController.kafka.admin();
+    admin = kafkaController.kafka.admin();
     await admin.connect();
 
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
+    await admin.disconnect();
     return next({
       log: 'adminController.getClusterData failed to get cluster details',
       status: 400,
@@ -40,6 +42,7 @@ adminController.getTopicData = async (req, res, next) => {
       return next();
     }
   } catch (err) {
+    await admin.disconnect();
     return next({
       log: 'adminController.getTopicData failed to get list of topics',
       status: 400,
@@ -53,6 +56,7 @@ adminController.getTopicData = async (req, res, next) => {
       topics: topicList,
     });
   } catch (err) {
+    await admin.disconnect();
     return next({
       log: 'adminController.getTopicData failed to get topic metadata',
       status: 400,
@@ -69,6 +73,7 @@ adminController.getTopicData = async (req, res, next) => {
       topic.offsets = await admin.fetchTopicOffsets(topic.name);
     }
   } catch (err) {
+    await admin.disconnect();
     return next({
       log: 'adminController.getTopicData failed to add offset data to topic metadata',
       status: 400,
@@ -111,14 +116,13 @@ The resulting array should consist of objects of this form:
 
 // get group data
 adminController.getGroupData = async (req, res, next) => {
-  console.log('hello from describegroups');
+  let admin;
   try {
     // attempt to connect admin to instance of kafka
-    const admin = kafkaController.kafka.admin();
+    admin = kafkaController.kafka.admin();
     await admin.connect();
     const listObj = await admin.listGroups();
     res.locals.groupList = listObj.groups;
-    console.log('list: ', res.locals.groupList);
     // if there are no groups present, return nothing
     if (res.locals.groupList.length === 0) {
       res.locals.groups = [];
@@ -133,6 +137,7 @@ adminController.getGroupData = async (req, res, next) => {
       return next();
     }
   } catch (err) {
+    await admin.disconnect();
     return next({
       log: 'adminController.describeGroups failed to get cluster details',
       status: 400,

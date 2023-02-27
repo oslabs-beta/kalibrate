@@ -21,8 +21,10 @@ function App() {
   const [connectedCluster, setConnectedCluster] = useState('');
   const [sessionClusters, setSessionClusters] = useState([]);
   const [connectedClusterData, setConnectedClusterData] = useState({
-    cluster: {brokers: []},
-    admin: {topics: []},
+    clusterData: {brokers: []},
+    topicData: {topics: []},
+    groupList: [],
+    groupData: {groups: []},
   });
   const [isConnected, setIsConnected] = useState(false);
 
@@ -41,33 +43,12 @@ function App() {
           setConnectedClusterData(data);
         })
         .catch(err => console.log(`from app loading cluster data: ${err}`));
-
-      //   fetch('api/stable-data', {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   })
-      //     .then(res => res.json())
-      //     .then(data => {
-      //       newData.admin = data;
-      //     })
-      //     .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
-
-      //   console.log('preparing to fetch groups')
-      //   fetch('api/describe-groups', {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   })
-      //     .then(res => res.json())
-      //     .then(data => {
-      //       newData.groups = data;
-      //     })
-      //     .catch(err => console.log(`from dashboard loading group data: ${err}`));
-      // }
     }
   }, [connectedCluster]);
-  console.log('Received Cluster Data:', connectedClusterData);
+
+  console.log('Received Data:', connectedClusterData);
+
+  const {clusterData, topicData, groupList, groupData} = connectedClusterData;
 
   return (
     <BrowserRouter>
@@ -99,10 +80,10 @@ function App() {
         />
         <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
           <Route index element={<Overview data={connectedClusterData} />} />
-          <Route path="brokers" element={<Brokers data={connectedClusterData.cluster.brokers} />} />
-          <Route path="producers" element={<Producers />} />
-          <Route path="consumers" element={<Consumers />} />
-          <Route path="topics" element={<Topics data={connectedClusterData.admin.topics} />} />
+          <Route path="brokers" element={<Brokers data={clusterData.brokers} />} />
+          <Route path="producers" element={<Producers data={groupData.groups} />} />
+          <Route path="consumers" element={<Consumers data={groupData.groups} />} />
+          <Route path="topics" element={<Topics data={topicData.topics} />} />
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
           <Route path="consume" element={<Consume />} />
