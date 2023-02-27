@@ -14,9 +14,19 @@ CONNECTION FORM OPTIONS
 todo: add additional connection mechanisms (oauth, aws, etc), currently just using plain
 */
 
+// interface Props {
+//   setConnectedCluster: React.Dispatch<React.SetStateAction<{
+//     cluster: {brokers: []},
+//     admin: {topics: []},
+//   }>>, 
+//   sessionClusters: string[], 
+//   setSessionClusters: React.Dispatch<React.SetStateAction<boolean>>,
+//   setIsConnected: React.Dispatch<React.SetStateAction<boolean>>,
+// }
+
 const Connect = props => {
   const navigate = useNavigate();
-  const {setConnectedCluster, sessionClusters, setSessionClusters} = props;
+  const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected} = props;
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -88,6 +98,7 @@ const Connect = props => {
       if (!response.ok) throw new Error();
 
       // update global state and redirect
+      setIsConnected(true);
       setConnectedCluster(clientId);
       const newSessionClusters = [...sessionClusters];
       console.log(newSessionClusters);
