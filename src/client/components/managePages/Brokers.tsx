@@ -3,8 +3,8 @@ import {Typography} from '@mui/material';
 
 //props takes in the connectedClusterData
 const Brokers = props => {
-  console.log('Passing to brokers display', props.data.cluster);
-  const {clusterId} = props.data.cluster;
+  console.log('Passing to brokers display', props.data);
+  const {clusterId} = props;
   return (
     <div className="wrapper">
       <div className="brokers-heading">
@@ -12,7 +12,7 @@ const Brokers = props => {
       </div>
       <div className="brokers-display">
         <Typography>{clusterId}</Typography>
-        <BrokersDisplay data={props.data.cluster} />
+        <BrokersDisplay data={props.data} />
       </div>
     </div>
   );
