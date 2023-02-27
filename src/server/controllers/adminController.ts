@@ -3,9 +3,10 @@ import {controller} from './../types';
 
 const adminController: controller = {};
 
+// get cluster info
 adminController.getClusterData = async (req, res, next) => {
-  // attempt to connect admin to instance of kafka
   try {
+    // attempt to connect admin to instance of kafka
     const admin = kafkaController.kafka.admin();
     await admin.connect();
 
@@ -20,6 +21,7 @@ adminController.getClusterData = async (req, res, next) => {
   }
 };
 
+// get topic metadata
 adminController.getStable = async (req, res, next) => {
   // declare variables scoped for access from all try blocks
   let topicList, topicMetadata, admin;
@@ -76,7 +78,6 @@ adminController.getStable = async (req, res, next) => {
 
   try {
     res.locals.topicData = topicMetadata;
-    console.log('rlocals: ', res.locals.topicData);
     return next();
   } catch (err) {
     return next({
