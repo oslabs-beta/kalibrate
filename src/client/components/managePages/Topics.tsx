@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import TopicsDisplay from './TopicsDisplay';
 import PartitionsDisplay from './PartitionsDisplay';
-import MessagesDisplay from '../MessagesDisplay';
+import MessagesDisplay from './MessagesDisplay';
 
 import {Typography} from '@mui/material';
 // appropriate props from fetch should be passed down to the appropriate displays
