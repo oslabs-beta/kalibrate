@@ -1,3 +1,5 @@
+import {Link} from '@mui/material';
+
 //CONSUMER DATA
 export const consumerColumn = [
   {field: 'consumerId', headerName: 'Consumer ID', width: 250},
@@ -34,18 +36,20 @@ export const topicColumn = [
   {field: 'replication', headerName: 'Replication Factor', width: 50},
   {field: 'numPartitions', headerName: 'Num of Paritions', width: 50},
   {field: 'numMessages', headerName: 'Num of Messages', width: 50},
+  {field: 'linkToPart', headerName: 'See Partitions', width: 150, renderCell: () => <Link></Link>},
+  {field: 'linkToMsg', headerName: 'See Messages', width: 150, renderCell: () => <Link></Link>},
 ];
 export const topicData = [];
 
 //PARTITION DATA
 export const partitionColumn = [
-  {field: 'id', headerName: 'Partition ID', width: 100},
+  {field: 'partId', headerName: 'Partition ID', width: 100},
   {field: 'leader', headerName: 'Leader', width: 50},
   {field: 'offset', headerName: 'Offset', width: 50},
   {field: 'high', headerName: 'High', width: 50},
   {field: 'low', headerName: 'low', width: 50},
 ];
-export const partitionData = [{id: 0, leader: 0, offset: 100, high: 50, low: 150}];
+export const partitionData = [{partId: 0, leader: 0, offset: 100, high: 50, low: 150}];
 //MESSAGE DATA
 export const messageColumn = [
   {field: 'key', headerName: 'Key', width: 100},

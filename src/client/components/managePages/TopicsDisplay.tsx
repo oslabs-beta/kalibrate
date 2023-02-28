@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 // import {topicColumn, topicData} from '../../../mockData.js';
 
-const TopicsDisplay = ({handlePartitionsComponentChange, handleMessagesComponentChange}) => {
+const TopicsDisplay = ({handleComponentChange}) => {
   // add in other eventual props to use...
   // const { topics } = props;
 
@@ -51,7 +51,7 @@ const TopicsDisplay = ({handlePartitionsComponentChange, handleMessagesComponent
               <button
                 name="Topic 1"
                 className="btn btn-ghost btn-sm"
-                onClick={handlePartitionsComponentChange}
+                onClick={handleComponentChange}
               >
                 Partitions
               </button>
@@ -60,7 +60,7 @@ const TopicsDisplay = ({handlePartitionsComponentChange, handleMessagesComponent
               <button
                 name="Topic 1"
                 className="btn btn-ghost btn-sm"
-                onClick={handleMessagesComponentChange}
+                onClick={handleComponentChange}
               >
                 Messages
               </button>
@@ -76,7 +76,7 @@ const TopicsDisplay = ({handlePartitionsComponentChange, handleMessagesComponent
               <button
                 name="Topic 2"
                 className="btn btn-ghost btn-sm"
-                onClick={handlePartitionsComponentChange}
+                onClick={handleComponentChange}
               >
                 Partitions
               </button>
@@ -85,7 +85,7 @@ const TopicsDisplay = ({handlePartitionsComponentChange, handleMessagesComponent
               <button
                 name="Topic 2"
                 className="btn btn-ghost btn-sm"
-                onClick={handleMessagesComponentChange}
+                onClick={handleComponentChange}
               >
                 Messages
               </button>
