@@ -30,8 +30,9 @@ export type offsets = {
 
 export type TopicsDisplayProps = {
   topics: topics[];
-  setActiveTopicsComponent: (component: string) => void;
-  setSelectedTopic: (component: string) => void;
+  selectedTopic: string;
+  topicComponent: string;
+  setSelectedTopic?: (component: string) => void;
   handleComponentChange: clickHandler;
 };
 
