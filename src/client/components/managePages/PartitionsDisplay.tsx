@@ -6,26 +6,11 @@ import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid'
 import {partitionData, partitionColumn} from '../../../../demo/mockData';
 
 const PartitionsDisplay = props => {
-  // add in other eventual props to use..
-
-  // eventual list to generate...
-  // const partitionsList = partitions.map(partition => {
-  //   return (
-  //     <tr key=partition.id className="hover">
-  //       <th>partition.id</th>
-  //       <td>partition.leader</td>
-  //       <td>partition.offset</td>
-  //       <td>partition.high</td>
-  //       <td>partition.low</td>
-  //     </tr>
-  //   );
-  // });
-  //GETPROPS
   const {partitions} = props;
   const rows = partitionData.map((partition, index) => {
     return {
       id: index,
-      partId: partition.id,
+      partId: partition.partId,
       leader: partition.leader,
       offset: partition.offset,
       high: partition.high,
@@ -69,6 +54,20 @@ const PartitionsDisplay = props => {
 
 export default PartitionsDisplay;
 /*
+  // add in other eventual props to use..
+
+  // eventual list to generate...
+  // const partitionsList = partitions.map(partition => {
+  //   return (
+  //     <tr key=partition.id className="hover">
+  //       <th>partition.id</th>
+  //       <td>partition.leader</td>
+  //       <td>partition.offset</td>
+  //       <td>partition.high</td>
+  //       <td>partition.low</td>
+  //     </tr>
+  //   );
+  // });
     <div className="overflow-x-auto">
       <table className="table w-full">
         <thead>
