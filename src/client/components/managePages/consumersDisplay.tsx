@@ -10,39 +10,20 @@ import {consumerColumn, consumerData} from '../../../../demo/mockData.js';
 //sasl:
 
 const ConsumersDisplay = props => {
-  const {clientId} = props;
-  // //consumers should be an array of objects with key properties that match column
-  const [consumers, setConsumers] = useState([]);
-
-  // useEffect(() => {
-  //   try {
-  //     const fetchConsumers = async () => {
-  //       const response = await fetch('/consumer', {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //       });
-  //       if (!response) throw new Error();
-  //       //if response ok, assumming response is an array of consumers and details
-  //       // setConsumers(response);
-  //       const resp = await response.json();
-  //       console.log(resp);
-  //     };
-  //     fetchConsumers();
-  //   } catch {
-  //     console.log('Error in useEffect when fetching consumers');
-  //   }
-  // });
-
-  //GET PROPER PROPERTY NAME
-  // const rows = consumers.map(consumer => {return
-  //   {id: consumerID,
-  //     numOfTopics: topicNum,
-  //     recordsLagMax:records,
-  //     status: statuss
-  //   }
-  // });
+  const consumers = props.data.groups;
+  console.log('Mapping consumers...', consumers);
+  let rows;
+  if (consumers) {
+    rows = consumers.map((consumer, index) => {
+      return {
+        id: index,
+        consumerId: consumer.consumerId,
+        numOfTopics: consumer.numOfTopics,
+        recordsLagMax: consumer.recordsLagMax,
+        connectionStatus: consumer.connectionStatus,
+      };
+    });
+  }
   const [pageSize, setPageSize] = useState<number>(5);
   return (
     <div className="display-table" data-testid="consumerDisplay-1">
@@ -51,7 +32,8 @@ const ConsumersDisplay = props => {
           <DataGrid
             //better alt for autoHeight? DataGrid inherits height of parent, even if have data
             autoHeight
-            rows={consumerData}
+            // rows={consumerData}
+            rows={rows}
             columns={consumerColumn}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}

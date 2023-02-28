@@ -88,29 +88,3 @@ const MessagesDisplay = ({topic}: MessageDisplayProps) => {
 };
 
 export default MessagesDisplay;
-
-/*
-    <div className="overflow-x-auto">
-      <table className="table w-full">
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-            <th>Offset</th>
-            <th>Partition</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr className="hover">
-            <th>myKey</th>
-            <td>myVal</td>
-            <td>100</td>
-            <td>0</td>
-          </tr>
-
-          {messagesList}
-          </tbody>
-          </table>
-        </div>
-*/
