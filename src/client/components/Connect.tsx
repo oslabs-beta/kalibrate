@@ -27,6 +27,7 @@ todo: add additional connection mechanisms (oauth, aws, etc), currently just usi
 const Connect = props => {
   const navigate = useNavigate();
   const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected} = props;
+  console.log('(CONNECT) session clusters', sessionClusters);
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -81,7 +82,7 @@ const Connect = props => {
       // handle failed connection
       if (!response.ok) throw new Error();
 
-      // update global state and redirect
+      // update global state and navigate to dashboard
       setIsConnected(true);
       setConnectedCluster(clientId);
       const newSessionClusters = [...sessionClusters, clientId];

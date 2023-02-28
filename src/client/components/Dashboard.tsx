@@ -24,11 +24,10 @@ const Dashboard = props => {
 
   // for testing purposes
   useEffect(() => {
-    console.log('state updated: ');
-    console.log('cluster: ', clusterData);
-    console.log('stable:', stableData);
+    console.log('(DASHBOARD) fetched cluster data: ', clusterData);
+    console.log('(DASHBOARD) fetched stabled data:', stableData);
   }, [clusterData, stableData]);
-
+  console.log('(DASHBOARD) session clusters', sessionClusters);
   return (
     <Box sx={{display: 'flex'}}>
       <CssBaseline />
