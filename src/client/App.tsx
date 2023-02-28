@@ -18,6 +18,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
   //declare clientId state so other components could access for link & routing
+  const [isConnected, setIsConnected] = useState(false);
   const [connectedCluster, setConnectedCluster] = useState('');
   const [sessionClusters, setSessionClusters] = useState([]);
   const [connectedClusterData, setConnectedClusterData] = useState({
@@ -69,6 +70,7 @@ function App() {
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
               setSessionClusters={setSessionClusters}
+              setIsConnected={setIsConnected}
             />
           }
         />
@@ -79,6 +81,7 @@ function App() {
               connectedCluster={connectedCluster}
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
+              isConnected={isConnected}
             />
           }
         />

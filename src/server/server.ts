@@ -8,6 +8,7 @@ dotenv.config();
 // Controller imports
 import adminController from './controllers/adminController';
 import kafkaController from './controllers/kafkaController';
+import topicController from './controllers/topicController';
 
 const app = express();
 
@@ -31,6 +32,10 @@ app.get('/api/stable-data', adminController.getStable, (req, res) => {
 
 app.get('/api/cluster-info', adminController.getClusterData, (req, res) => {
   res.status(200).json(res.locals.clusterData);
+});
+
+app.get('/api/:topic/messages', topicController.getMessages, (req, res) => {
+  res.status(200).json(res.locals.topicMessages);
 });
 
 // Catch all handler

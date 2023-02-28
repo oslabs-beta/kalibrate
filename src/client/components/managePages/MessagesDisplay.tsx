@@ -20,12 +20,32 @@ const MessagesDisplay = () => {
   //     </tr>
   //   );
   // });
+
   const [pageSize, setPageSize] = useState<number>(5);
+
+  // Fetch messages on mount
+  useEffect(() => {
+    fetchTopicMessages();
+  }, []);
+
+  // Fetch messages
+  // todo: should also add handler for refresh button
+  const fetchTopicMessages = async () => {
+    try {
+      const response = await fetch('/api/fulfilled/messages'); // replace route param with given topic prop
+      if (!response.ok) throw new Error();
+
+      const data = await response.json();
+      console.log(data); // asign to state and render
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // hardcoded value used as example, remove hardcoded example and update/render list instead when data available
   return (
     <div className="wrapper">
-      <div className="message-table">
+      {/* <div className="message-table">
         <Box sx={{height: 400, width: '1000'}}>
           <Paper elevation={6}>
             <DataGrid
@@ -51,7 +71,7 @@ const MessagesDisplay = () => {
             />
           </Paper>
         </Box>
-      </div>
+      </div> */}
     </div>
   );
 };

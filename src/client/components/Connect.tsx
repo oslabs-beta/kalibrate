@@ -18,8 +18,8 @@ todo: add additional connection mechanisms (oauth, aws, etc), currently just usi
 //   setConnectedCluster: React.Dispatch<React.SetStateAction<{
 //     cluster: {brokers: []},
 //     admin: {topics: []},
-//   }>>, 
-//   sessionClusters: string[], 
+//   }>>,
+//   sessionClusters: string[],
 //   setSessionClusters: React.Dispatch<React.SetStateAction<boolean>>,
 //   setIsConnected: React.Dispatch<React.SetStateAction<boolean>>,
 // }
@@ -99,6 +99,7 @@ const Connect = props => {
 
       // update global state and redirect
       setIsConnected(true);
+
       setConnectedCluster(clientId);
       const newSessionClusters = [...sessionClusters];
       console.log(newSessionClusters);
