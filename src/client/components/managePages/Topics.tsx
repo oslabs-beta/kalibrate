@@ -4,15 +4,17 @@ import TopicsDisplay from './TopicsDisplay';
 import PartitionsDisplay from './PartitionsDisplay';
 import MessagesDisplay from './MessagesDisplay';
 import {topicColumn} from '../../../../demo/mockData';
-import {Box, Breadcrumbs, Link, Typography} from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import {Box, Breadcrumbs, Link, Typography} from '@mui/material';
+import {TopicsProps, clickHandler} from './types';
 
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
-const Topics = props => {
-  const [activeTopicsComponent, setActiveTopicsComponent] = useState(null);
-  const [selectedTopic, setSelectedTopic] = useState(null);
+const Topics = ({topics}: TopicsProps) => {
+  const [activeTopicsComponent, setActiveTopicsComponent] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('');
 
+  //    setSelectedTopic((e.target as HTMLButtonElement).name);
   const handleComponentChange = e => {
     const topicName = e.target.name;
     const topicComponent = e.target.innerHTML;
@@ -29,8 +31,8 @@ const Topics = props => {
       activeComponent = <MessagesDisplay topic={selectedTopic} />;
       break;
     default:
-      activeComponent = (
-        <TopicsDisplay data={props.data} handleComponentChange={handleComponentChange} />
+      topicsComponent = (
+        <TopicsDisplay topics={topics} handleComponentChange={handleComponentChange} />
       );
   }
 

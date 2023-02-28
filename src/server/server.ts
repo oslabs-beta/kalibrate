@@ -5,6 +5,7 @@ dotenv.config();
 
 // Controller imports
 import kafkaController from './controllers/kafkaController';
+import topicController from './controllers/topicController';
 import adminController from './controllers/adminController';
 
 const app = express();
@@ -39,6 +40,10 @@ app.get('/api/get-data', getClusterData, getTopicData, getGroupData, (req, res) 
 // app.get('/api/describe-groups', adminController.getGroupData, (req, res) => {
 //   res.status(200).json(res.locals.groups);
 // });
+
+app.get('/api/:topic/messages', topicController.getMessages, (req, res) => {
+  res.status(200).json(res.locals.topicMessages);
+});
 
 // Catch all handler
 app.use('*', (req, res) => {

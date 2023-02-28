@@ -15,9 +15,11 @@ import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import PartitionsDisplay from './components/managePages/PartitionsDisplay';
 
 function App() {
   //declare clientId state so other components could access for link & routing
+  const [isConnected, setIsConnected] = useState(false);
   const [connectedCluster, setConnectedCluster] = useState('');
   const [sessionClusters, setSessionClusters] = useState([]);
   const [connectedClusterData, setConnectedClusterData] = useState({
@@ -26,7 +28,6 @@ function App() {
     groupList: [],
     groupData: {groups: []},
   });
-  const [isConnected, setIsConnected] = useState(false);
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -39,7 +40,7 @@ function App() {
       })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
+          console.log('(APP) fetched all data', data);
           setConnectedClusterData(data);
         })
         .catch(err => console.log(`from app loading cluster data: ${err}`));
@@ -75,16 +76,29 @@ function App() {
               connectedCluster={connectedCluster}
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
+              isConnected={isConnected}
             />
           }
-        />
+        >
+          <Route
+            index
+            element={
+              //pass in all the data needed for the overview data here
+              //clustername, version, brokers count, partitions, topics, production
+              <Overview
+                data={connectedClusterData}
+                connectedCluster={connectedCluster}
+                sessionClusters={sessionClusters}
+              />
+            }
+          />
+        </Route>
         <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
-          <Route index element={<Overview data={connectedClusterData} />} />
           <Route path="brokers" element={<Brokers data={clusterData} />} />
           <Route path="producers" element={<Producers data={groupData} />} />
           <Route path="consumers" element={<Consumers data={groupData} />} />
           <Route path="topics" element={<Topics data={topicData} />}>
-            <Route />
+            <Route path={`:topicName/partitions`} element={<PartitionsDisplay />} />
             <Route />
           </Route>
           <Route path="lag" element={<Lag />} />
