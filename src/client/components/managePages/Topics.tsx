@@ -2,22 +2,23 @@ import React, {useState} from 'react';
 import TopicsDisplay from './TopicsDisplay';
 import PartitionsDisplay from './PartitionsDisplay';
 import MessagesDisplay from './MessagesDisplay';
-
 import {Box, Breadcrumbs, Link, Typography} from '@mui/material';
+import {TopicsProps, clickHandler} from './types';
+
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
-const Topics = props => {
-  const [activeTopicsComponent, setActiveTopicsComponent] = useState(null);
-  const [selectedTopic, setSelectedTopic] = useState(null);
+const Topics = ({topics}: TopicsProps) => {
+  const [activeTopicsComponent, setActiveTopicsComponent] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('');
 
-  const handlePartitionsComponentChange = e => {
+  const handlePartitionsComponentChange: clickHandler = e => {
     setActiveTopicsComponent('Partitions');
-    setSelectedTopic(e.target.name);
+    setSelectedTopic((e.target as HTMLButtonElement).name);
   };
 
-  const handleMessagesComponentChange = e => {
+  const handleMessagesComponentChange: clickHandler = e => {
     setActiveTopicsComponent('Messages');
-    setSelectedTopic(e.target.name);
+    setSelectedTopic((e.target as HTMLButtonElement).name);
   };
 
   let topicsComponent;
@@ -31,7 +32,7 @@ const Topics = props => {
     default:
       topicsComponent = (
         <TopicsDisplay
-          topicProps={props}
+          topics={topics}
           handlePartitionsComponentChange={handlePartitionsComponentChange}
           handleMessagesComponentChange={handleMessagesComponentChange}
         />

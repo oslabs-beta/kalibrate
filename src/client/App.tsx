@@ -18,6 +18,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
   //declare clientId state so other components could access for link & routing
+  const [isConnected, setIsConnected] = useState(false);
   const [connectedCluster, setConnectedCluster] = useState('');
   const [sessionClusters, setSessionClusters] = useState([]);
   const [connectedClusterData, setConnectedClusterData] = useState({
@@ -26,7 +27,6 @@ function App() {
     groupList: [],
     groupData: {groups: []},
   });
-  const [isConnected, setIsConnected] = useState(false);
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -39,7 +39,7 @@ function App() {
       })
         .then(res => res.json())
         .then(data => {
-          console.log('(APP) fetched all data', data)
+          console.log('(APP) fetched all data', data);
           setConnectedClusterData(data);
         })
         .catch(err => console.log(`from app loading cluster data: ${err}`));
@@ -75,6 +75,7 @@ function App() {
               connectedCluster={connectedCluster}
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
+              isConnected={isConnected}
             />
           }
         >
@@ -95,7 +96,7 @@ function App() {
           <Route path="brokers" element={<Brokers data={clusterData} />} />
           <Route path="producers" element={<Producers data={groupData} />} />
           <Route path="consumers" element={<Consumers data={groupData} />} />
-          <Route path="topics" element={<Topics data={topicData.topics} />} />
+          <Route path="topics" element={<Topics topics={topicData.topics} />} />
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
           <Route path="consume" element={<Consume />} />
