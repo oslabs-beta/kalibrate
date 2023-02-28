@@ -1,4 +1,4 @@
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Outlet} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {
   Box,
@@ -17,7 +17,7 @@ const drawerWidth = 150;
 const Dashboard = props => {
   const navigate = useNavigate();
 
-  const {clientId, sessionClusters, setConnectedCluster} = props;
+  const {connectedCluster, sessionClusters, setConnectedCluster} = props;
 
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
@@ -55,11 +55,20 @@ const Dashboard = props => {
               </ListItem>
             ))}
           </List>
+          <List>
+            <ListItem key="Connect" disablePadding sx={{position: 'fixed', bottom: 0}}>
+              <ListItemButton onClick={() => navigate('/connect')}>
+                <ListItemText primary="Connect" />
+              </ListItemButton>
+            </ListItem>
+          </List>
         </Box>
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        <Typography paragraph>Toplevel info</Typography>
+        {/* <Typography paragraph></Typography> */}
+        {/* added outlet to render the table on the right of the sidebar */}
+        <Outlet />
       </Box>
     </Box>
   );

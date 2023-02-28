@@ -77,9 +77,21 @@ function App() {
               sessionClusters={sessionClusters}
             />
           }
-        />
+        >
+          <Route
+            index
+            element={
+              //pass in all the data needed for the overview data here
+              //clustername, version, brokers count, partitions, topics, production
+              <Overview
+                data={connectedClusterData}
+                connectedCluster={connectedCluster}
+                sessionClusters={sessionClusters}
+              />
+            }
+          />
+        </Route>
         <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
-          <Route index element={<Overview data={connectedClusterData} />} />
           <Route path="brokers" element={<Brokers data={clusterData} />} />
           <Route path="producers" element={<Producers data={groupData} />} />
           <Route path="consumers" element={<Consumers data={groupData} />} />
