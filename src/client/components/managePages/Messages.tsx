@@ -1,23 +1,20 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import MessagesDisplay from './MessagesDisplay';
+import {Typography} from '@mui/material';
 
 // container for displaying message details
+// note: is this component no longer being used? if so we should delete the file
 const Messages = props => {
   return (
     <div className="wrapper">
       <div className="messages-heading">
-        <h3 className="mb-5">Messages</h3>
-        <input
-          type="text"
-          placeholder="Search"
-          className="input input-bordered input-sm w-full max-w-xs mb-5"
-        />
+        <Typography variant="h6">Messages List</Typography>
       </div>
       <div className="messages-display">
         <MessagesDisplay />
       </div>
     </div>
   );
-}
+};
 
 export default Messages;

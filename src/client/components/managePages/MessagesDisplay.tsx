@@ -3,48 +3,49 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-import {messageColumn, messageData} from '../../../../demo/mockData.js';
+// import {messageColumn, messageData} from '../../../../demo/mockData.js';
+import {MessageDisplayProps, message} from './types';
 
-const MessagesDisplay = () => {
-  // add in other eventual props to use...
-  // const { messages } = props;
-
-  // eventual list to generate...
-  // const messagesList = messages.map(message => {
-  //   return (
-  //     <tr className="hover">
-  //       <th>partition.key</th>
-  //       <td>partition.value</td>
-  //       <td>partition.offset</td>
-  //       <td>partition.partition</td>
-  //     </tr>
-  //   );
-  // });
-
+const MessagesDisplay = ({topic}: MessageDisplayProps) => {
+  // State
   const [pageSize, setPageSize] = useState<number>(5);
+  const [messages, setMessages] = useState<message[]>([]); // see type file for message structure
 
-  // Fetch messages on mount
+  // Fetch messages and update state on mount
   useEffect(() => {
     fetchTopicMessages();
   }, []);
 
-  // Fetch messages
-  // todo: should also add handler for refresh button
+  // Fetches all messages for a given topic and sets the state of messages
+  // todo: this func can also be used in a handler function for a refresh button
+  // todo: render a loading wheel since it takes a while
   const fetchTopicMessages = async () => {
     try {
-      const response = await fetch('/api/fulfilled/messages'); // replace route param with given topic prop
+      const response = await fetch(`/api/${topic}/messages`); // replace the route param with topic prop
       if (!response.ok) throw new Error();
 
-      const data = await response.json();
-      console.log(data); // asign to state and render
+      const messages = await response.json();
+      setMessages(messages);
     } catch (err) {
       console.log(err);
     }
   };
 
+  // rendering list of messages as a test...
+  // todo: replace with MUI table
+  // todo: will likely need to incorporate pagination since there can be too many messages to load in one go
+  const testList = messages.map(message => {
+    return (
+      <p
+        key={message.key}
+      >{`${message.topic} - ${message.partition} - ${message.timestamp} - ${message.offset} - ${message.key} - ${message.value}`}</p>
+    );
+  });
+
   // hardcoded value used as example, remove hardcoded example and update/render list instead when data available
   return (
     <div className="wrapper">
+      {testList}
       {/* <div className="message-table">
         <Box sx={{height: 400, width: '1000'}}>
           <Paper elevation={6}>

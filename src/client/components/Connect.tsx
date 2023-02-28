@@ -27,6 +27,7 @@ todo: add additional connection mechanisms (oauth, aws, etc), currently just usi
 const Connect = props => {
   const navigate = useNavigate();
   const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected} = props;
+  console.log('(CONNECT) session clusters', sessionClusters);
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -34,6 +35,7 @@ const Connect = props => {
   const [sasl, setSasl] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginInProgress, setLoginInProgress] = useState(false);
 
   // state for displaying form input errors
   const [errorMessage, setErrorMessage] = useState('');
@@ -67,23 +69,7 @@ const Connect = props => {
     }
 
     console.log('Attempting to connect:', connectionConfig);
-
-    // fetch('api/connection', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(connectionConfig),
-    // })
-    //   // don't set new client ID until connection is complete
-    //   // otherwise, clientId updates in state and triggers useEffect in app before connection to Kafka is ready
-    //   .then(response => {
-    //     if (!response.ok) throw new Error();
-    //     setConnectedCluster(clientId);
-    //     navigate('/dashboard');
-    //   })
-    //   .catch(err => console.log(err));
-
+    setLoginInProgress(true);
     try {
       // Send POST request to connect
       const response = await fetch('api/connection', {
@@ -93,22 +79,21 @@ const Connect = props => {
         },
         body: JSON.stringify(connectionConfig),
       });
-
       // handle failed connection
       if (!response.ok) throw new Error();
 
-      // update global state and redirect
+      // update global state and navigate to dashboard
       setIsConnected(true);
 
       setConnectedCluster(clientId);
-      const newSessionClusters = [...sessionClusters];
-      console.log(newSessionClusters);
-      newSessionClusters.push(clientId);
+      const newSessionClusters = [...sessionClusters, clientId];
       setSessionClusters(newSessionClusters);
 
       navigate('/dashboard');
     } catch {
-      setErrorMessage('Failed to connect.');
+      setErrorMessage('Failed to connect. Verify credentials.');
+    } finally {
+      setLoginInProgress(false);
     }
   };
 
@@ -196,7 +181,7 @@ const Connect = props => {
 
         <Grid>
           <Button variant="outlined" size="medium" type="submit">
-            Connect
+            {loginInProgress ? 'Connecting...' : 'Connect'}
           </Button>
         </Grid>
 

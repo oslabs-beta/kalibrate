@@ -23,7 +23,7 @@ topicController.getMessages = async (req, res, next) => {
     await messageAdmin.disconnect();
 
     // fetch all messages from topic as of the moment of request
-    // https://github.com/tulios/kafkajs/issues/825
+    // modified the approach from here: https://github.com/tulios/kafkajs/issues/825
     let consumedTopicPartitions: consumedTopicPartitions = {};
 
     // object to track whether messages have been consumed per given partition
@@ -47,7 +47,7 @@ topicController.getMessages = async (req, res, next) => {
       consumedTopicPartitions[`${topic}-${partition}`] = offsetLag === '0';
 
       if (Object.values(consumedTopicPartitions).every(consumed => Boolean(consumed))) {
-        res.locals.topicMessages = topicMessages;
+        res.locals.topicMessages = topicMessages.reverse();
         await messageConsumer.disconnect();
         return next();
       }
@@ -70,6 +70,9 @@ topicController.getMessages = async (req, res, next) => {
       },
     });
   } catch (err) {
+    await messageAdmin.disconnect();
+    await messageConsumer.disconnect();
+
     next({
       log: `ERROR - topicController.getMessages: ${err}`,
       status: 400,

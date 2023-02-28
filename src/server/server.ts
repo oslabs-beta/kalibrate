@@ -1,14 +1,12 @@
-// import path from 'path';
-// import {fileURLToPath} from 'url';
 import express, {Request, Response, NextFunction} from 'express';
 import {errorObject} from './types';
 import dotenv from 'dotenv';
 dotenv.config();
 
 // Controller imports
-import adminController from './controllers/adminController';
 import kafkaController from './controllers/kafkaController';
 import topicController from './controllers/topicController';
+import adminController from './controllers/adminController';
 
 const app = express();
 
@@ -26,13 +24,22 @@ app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
   res.sendStatus(201);
 });
 
-app.get('/api/stable-data', adminController.getStable, (req, res) => {
-  res.status(200).json(res.locals.topicData);
+const {getClusterData, getTopicData, getGroupData} = adminController;
+app.get('/api/get-data', getClusterData, getTopicData, getGroupData, (req, res) => {
+  res.status(200).json(res.locals);
 });
 
-app.get('/api/cluster-info', adminController.getClusterData, (req, res) => {
-  res.status(200).json(res.locals.clusterData);
-});
+// app.get('/api/stable-data', adminController.getTopicData, (req, res) => {
+//   res.status(200).json(res.locals.topicData);
+// });
+
+// app.get('/api/cluster-info', adminController.getClusterData, (req, res) => {
+//   res.status(200).json(res.locals.clusterData);
+// });
+
+// app.get('/api/describe-groups', adminController.getGroupData, (req, res) => {
+//   res.status(200).json(res.locals.groups);
+// });
 
 app.get('/api/:topic/messages', topicController.getMessages, (req, res) => {
   res.status(200).json(res.locals.topicMessages);
@@ -44,7 +51,8 @@ app.use('*', (req, res) => {
 });
 
 // Global error handler
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
+  // if kafkaController instance is connected when an error is thrown, disconnect it
   const defaultErr: errorObject = {
     log: 'Express error handler caught unknown middleware error',
     status: 400,

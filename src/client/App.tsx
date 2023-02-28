@@ -22,43 +22,37 @@ function App() {
   const [connectedCluster, setConnectedCluster] = useState('');
   const [sessionClusters, setSessionClusters] = useState([]);
   const [connectedClusterData, setConnectedClusterData] = useState({
-    cluster: {brokers: []},
-    admin: {topics: []},
+    clusterData: {brokers: []},
+    topicData: {topics: []},
+    groupList: [],
+    groupData: {groups: []},
   });
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
-      const newData = {cluster: {brokers: []}, admin: {topics: []}};
-      fetch('api/cluster-info', {
+      fetch('api/get-data', {
         headers: {
           'Content-Type': 'application/json',
         },
       })
         .then(res => res.json())
         .then(data => {
-          newData.cluster = data;
+          console.log('(APP) fetched all data', data);
+          setConnectedClusterData(data);
         })
-        .catch(err => console.log(`from dashboard loading cluster data: ${err}`));
-
-      fetch('api/stable-data', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
-        .then(data => {
-          newData.admin = data;
-        })
-        .catch(err => console.log(`from dashboard loading other admin data: ${err}`));
-      setConnectedClusterData(newData);
+        .catch(err => console.log(`from app loading cluster data: ${err}`));
     }
   }, [connectedCluster]);
 
+  console.log('Received Data:', connectedClusterData);
+
+  const {clusterData, topicData, groupList, groupData} = connectedClusterData;
+
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar isConnected={isConnected} />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -84,13 +78,25 @@ function App() {
               isConnected={isConnected}
             />
           }
-        />
+        >
+          <Route
+            index
+            element={
+              //pass in all the data needed for the overview data here
+              //clustername, version, brokers count, partitions, topics, production
+              <Overview
+                data={connectedClusterData}
+                connectedCluster={connectedCluster}
+                sessionClusters={sessionClusters}
+              />
+            }
+          />
+        </Route>
         <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
-          <Route index element={<Overview data={connectedClusterData} />} />
-          <Route path="brokers" element={<Brokers data={connectedClusterData.cluster.brokers} />} />
-          <Route path="producers" element={<Producers />} />
-          <Route path="consumers" element={<Consumers />} />
-          <Route path="topics" element={<Topics data={connectedClusterData.admin.topics} />} />
+          <Route path="brokers" element={<Brokers data={clusterData} />} />
+          <Route path="producers" element={<Producers data={groupData} />} />
+          <Route path="consumers" element={<Consumers data={groupData} />} />
+          <Route path="topics" element={<Topics topics={topicData.topics} />} />
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
           <Route path="consume" element={<Consume />} />
@@ -102,3 +108,6 @@ function App() {
 }
 
 export default App;
+/*TODO:
+- as of 1st attempt brokers: data is not drilled properly unless all of connectedClusterData is passe through.
+*/

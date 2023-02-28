@@ -5,9 +5,8 @@ import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 import {partitionColumn, partitionData} from '../../../../demo/mockData.js';
 
-const PartitionsDisplay = () => {
-  // add in other eventual props to use...
-  // const { partitions } = props;
+const PartitionsDisplay = props => {
+  // add in other eventual props to use..
 
   // eventual list to generate...
   // const partitionsList = partitions.map(partition => {
@@ -21,8 +20,18 @@ const PartitionsDisplay = () => {
   //     </tr>
   //   );
   // });
+  //GETPROPS
+  const {partitions} = props;
+  const rows = partitions.map(partition => {
+    return {
+      id: partition.id,
+      leader: partition.leader,
+      offset: partition.offset,
+      high: partition.high,
+      low: partition.low,
+    };
+  });
   const [pageSize, setPageSize] = useState<number>(5);
-
   // hardcoded value used as example, remove hardcoded example and update/render list instead when data available
   return (
     <div className="wrapper">
