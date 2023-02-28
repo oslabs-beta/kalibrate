@@ -32,7 +32,6 @@ export type TopicsDisplayProps = {
   topics: topics[];
   selectedTopic: string;
   topicComponent: string;
-  setSelectedTopic?: (component: string) => void;
   handleComponentChange: clickHandler;
 };
 

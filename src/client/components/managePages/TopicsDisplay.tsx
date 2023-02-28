@@ -1,14 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Box, Paper} from '@mui/material';
-import {topicData} from '../../../../demo/mockData';
-import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
+import {useNavigate, useOutletContext} from 'react-router-dom';
 import {TopicsDisplayProps} from './types';
-import {Link, Outlet, useNavigate} from 'react-router-dom';
-import PartitionsDisplay from './PartitionsDisplay';
-import MessagesDisplay from './MessagesDisplay';
+import {topicData} from '../../../../demo/mockData';
+import {Button, Box, Paper} from '@mui/material';
+import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 
 const TopicsDisplay = (props: TopicsDisplayProps) => {
-  const {topics, topicComponent, handleComponentChange} = props;
+  const context = useOutletContext();
+
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState<number>(5);
 
@@ -21,12 +20,13 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
       field: 'linkToPart',
       headerName: 'See Partitions',
       width: 110,
-      renderCell: () => (
+      renderCell: (params: GridValueGetterParams) => (
         <Box>
           <Button
             onClick={e => {
-              handleComponentChange(e);
-              navigate('topic2/partitions');
+              // const topicName = getTopicName(),
+              context.handleComponentChange(e, params.row.topicName);
+              navigate('partitions');
             }}
           >
             Partitions
@@ -38,12 +38,12 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
       field: 'linkToMsg',
       headerName: 'See Messages',
       width: 110,
-      renderCell: () => (
+      renderCell: (params: GridValueGetterParams) => (
         <Box>
           <Button
             onClick={e => {
-              handleComponentChange(e);
-              navigate('topic2/messages');
+              context.handleComponentChange(e, params.row.topicName);
+              navigate('messages');
             }}
           >
             Messages
@@ -69,7 +69,7 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
       <Box sx={{height: 400, width: '1000'}}>
         <Paper elevation={6}>
           <DataGrid
-            //                 //better alt for autoHeight? DataGrid inherits height of parent, even if have data
+            //better alt for autoHeight? DataGrid inherits height of parent, even if have data
             autoHeight
             rows={rows}
             columns={topicColumn}

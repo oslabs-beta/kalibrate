@@ -52,7 +52,12 @@ export const topicData = [
     replication: '21',
     numPartitions: '54',
     numMessages: '77',
-    linkToPart: 'partitions',
+  },
+  {
+    topicName: 'topicd1',
+    replication: '2',
+    numPartitions: '234',
+    numMessages: '1337',
   },
 ];
 
