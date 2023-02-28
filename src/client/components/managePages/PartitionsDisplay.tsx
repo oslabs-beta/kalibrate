@@ -6,7 +6,12 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {partitionData, partitionColumn} from '../../../../demo/mockData';
 
 const PartitionsDisplay = props => {
-  const {partitions} = props;
+  console.log('(PARTITIONS: ', props);
+  const context = useOutletContext();
+  const selectedTopic = context.select[0];
+  console.log(selectedTopic);
+  const selectedData = props.data.find(el => el.name === selectedTopic);
+  console.log(selectedData);
   const rows = partitionData.map((partition, index) => {
     return {
       id: index,
