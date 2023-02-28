@@ -88,6 +88,11 @@ const Connect = props => {
       setConnectedCluster(clientId);
       const newSessionClusters = [...sessionClusters, clientId];
       setSessionClusters(newSessionClusters);
+      setPassword('');
+      setClientId('');
+      setSasl(false);
+      setUsername('');
+      setBrokers('');
 
       navigate('/dashboard');
     } catch {
