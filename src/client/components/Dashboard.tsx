@@ -18,17 +18,11 @@ const drawerWidth = 150;
 const Dashboard = props => {
   const navigate = useNavigate();
 
-  const {connectedCluster, sessionClusters, setConnectedCluster} = props;
+  const { sessionClusters, setConnectedCluster} = props;
 
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
 
-  // for testing purposes
-  useEffect(() => {
-    console.log('(DASHBOARD) fetched cluster data: ', clusterData);
-    console.log('(DASHBOARD) fetched stabled data:', stableData);
-  }, [clusterData, stableData]);
-  console.log('(DASHBOARD) session clusters', sessionClusters);
   return (
     <Box sx={{display: 'flex'}}>
       <CssBaseline />
@@ -56,7 +50,7 @@ const Dashboard = props => {
               </ListItem>
             ))}
           </List>
-          <Button 
+          {/* <Button 
           variant ='contained'
           style={{position: 'absolute', bottom: 10, marginLeft: 20}}
           color = 'inherit'
@@ -65,7 +59,7 @@ const Dashboard = props => {
           }}
           >
             Connect
-          </Button>
+          </Button> */}
         </Box>
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
