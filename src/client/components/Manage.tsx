@@ -125,7 +125,7 @@ const Manage = props => {
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        <Typography paragraph> {connectedCluster}</Typography>
+        {/* <Typography paragraph> {connectedCluster}</Typography> */}
         <Outlet />
       </Box>
     </Box>
