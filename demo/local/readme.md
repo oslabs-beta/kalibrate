@@ -12,7 +12,8 @@ The Kafka server is configured with 1 Zookeeper and 3 brokers, to create and spi
 
 ## Demo Services
 
-Once the Kafka server is running, the demo producers and consumers can be ran:
+Once the Kafka server is running, the demo producers and consumers can be run in a separate
+terminal:
 
 `npm run demo-services`
 
