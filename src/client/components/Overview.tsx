@@ -19,8 +19,17 @@ const Overview = props => {
   ) {
     return { clusterName, version, brokers, partitions, topics, production };
   }
+
+  interface DataRow {
+    clusterName: string;
+    version: number;
+    brokers: number;
+    partitions: number;
+    topics: number;
+    production: string;
+  }
   
-  const rows = [];
+  const rows : DataRow[]= [];
 
   //this for loop will push new row into the table whenever there is a new cluster added
   //data for each row will need to follow the order of createData above

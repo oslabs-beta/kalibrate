@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Button
 } from '@mui/material';
 
 const drawerWidth = 150;
@@ -55,13 +56,16 @@ const Dashboard = props => {
               </ListItem>
             ))}
           </List>
-          <List>
-            <ListItem key="Connect" disablePadding sx={{position: 'fixed', bottom: 0}}>
-              <ListItemButton onClick={() => navigate('/connect')}>
-                <ListItemText primary="Connect" />
-              </ListItemButton>
-            </ListItem>
-          </List>
+          <Button 
+          variant ='contained'
+          style={{position: 'absolute', bottom: 10, marginLeft: 20}}
+          color = 'inherit'
+          onClick = {()=> {
+            navigate('/connect');
+          }}
+          >
+            Connect
+          </Button>
         </Box>
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
