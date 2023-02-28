@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
-import {Button, Box, Paper} from '@mui/material';
-import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-import {topicData} from '../../../../demo/mockData';
+import React, {useState, useEffect} from 'react';
+import {useNavigate, useOutletContext} from 'react-router-dom';
 import {TopicsDisplayProps} from './types';
-import {Link, Outlet, useNavigate} from 'react-router-dom';
-import PartitionsDisplay from './PartitionsDisplay';
+import {topicData} from '../../../../demo/mockData';
+import {Button, Box, Paper} from '@mui/material';
+import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 
 const TopicsDisplay = (props: TopicsDisplayProps) => {
-  const {handleComponentChange, topics} = props;
+  const context = useOutletContext();
+
   const navigate = useNavigate();
+  const [pageSize, setPageSize] = useState<number>(5);
 
   const topicColumn = [
     {field: 'topicName', headername: 'Name', width: 225},
@@ -19,12 +20,13 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
       field: 'linkToPart',
       headerName: 'See Partitions',
       width: 110,
-      renderCell: () => (
+      renderCell: (params: GridValueGetterParams) => (
         <Box>
           <Button
             onClick={e => {
-              handleComponentChange(e);
-              navigate('topic2/partitions');
+              // const topicName = getTopicName(),
+              context.handleComponentChange(e, params.row.topicName);
+              navigate('partitions');
             }}
           >
             Partitions
@@ -36,12 +38,12 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
       field: 'linkToMsg',
       headerName: 'See Messages',
       width: 110,
-      renderCell: () => (
+      renderCell: (params: GridValueGetterParams) => (
         <Box>
           <Button
             onClick={e => {
-              handleComponentChange(e);
-              navigate('topic2/messages');
+              context.handleComponentChange(e, params.row.topicName);
+              navigate('messages');
             }}
           >
             Messages
@@ -60,7 +62,7 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
       numMessages: topic.numMessages,
     };
   });
-  const [pageSize, setPageSize] = useState<number>(5);
+
   // two hardcoded values are used as example, remove hardcoded example and update/render list instead when data available
   return (
     <div>
@@ -89,37 +91,8 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
           />
         </Paper>
       </Box>
-      <Outlet />
     </div>
   );
 };
 
 export default TopicsDisplay;
-// eventual list to generate...
-// const topicsList = topics.map(topic => {
-//   return (
-//     <tr key={topic.name} className="hover">
-//       <th>{topic.name}</th>
-//       <td>{topic.partitions.length}</td>
-//       <td>{Math.max(...topic.offsets.map(offset => Number(offset.high)))}</td>
-//       <td>
-//         <button
-//           name={topic.name}
-//           className="btn btn-ghost btn-sm"
-//           onClick={handleComponentChange}
-//         >
-//           Partitions
-//         </button>
-//       </td>
-//       <td>
-//         <button
-//           name={topic.name}
-//           className="btn btn-ghost btn-sm"
-//           onClick={handleComponentChange}
-//         >
-//           Messages
-//         </button>
-//       </td>
-//     </tr>
-//   );
-// });

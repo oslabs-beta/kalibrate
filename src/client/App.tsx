@@ -107,8 +107,9 @@ function App() {
           <Route path="brokers" element={<Brokers data={clusterData} />} />
           <Route path="consumers" element={<Consumers data={groupData} />} />
           <Route path="topics" element={<Topics data={topicData} />}>
-            <Route path={`:topicName/partitions`} element={<PartitionsDisplay />} />
-            <Route path={':topicName/messages'} element={<MessagesDisplay topic={'topicname'} />} />
+            <Route index element={<TopicsDisplay data={topicData} />} />
+            <Route path=":partitions" element={<PartitionsDisplay />} />
+            <Route path=":messages" element={<MessagesDisplay topic={'topicname'} />} />
           </Route>
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />

@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
+import {useOutletContext} from 'react-router-dom';
+import {Box, Paper} from '@mui/material';
 import {Button, Grid, Pagination} from '@mui/material';
-import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
+import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {partitionData, partitionColumn} from '../../../../demo/mockData';
 
 const PartitionsDisplay = props => {
@@ -17,6 +17,12 @@ const PartitionsDisplay = props => {
       low: partition.low,
     };
   });
+
+  const topicCrumb = document.getElementById('topicCrumb');
+  /*topicCrumb = setAttribute("onClick", )
+  onClick={() => {
+    navigate(-1);
+  }}*/
   const [pageSize, setPageSize] = useState<number>(5);
   // hardcoded value used as example, remove hardcoded example and update/render list instead when data available
   return (
@@ -53,43 +59,3 @@ const PartitionsDisplay = props => {
 };
 
 export default PartitionsDisplay;
-/*
-  // add in other eventual props to use..
-
-  // eventual list to generate...
-  // const partitionsList = partitions.map(partition => {
-  //   return (
-  //     <tr key=partition.id className="hover">
-  //       <th>partition.id</th>
-  //       <td>partition.leader</td>
-  //       <td>partition.offset</td>
-  //       <td>partition.high</td>
-  //       <td>partition.low</td>
-  //     </tr>
-  //   );
-  // });
-    <div className="overflow-x-auto">
-      <table className="table w-full">
-        <thead>
-          <tr>
-            <th>Partition ID</th>
-            <th>Leader</th>
-            <th>Offset</th>
-            <th>High</th>
-            <th>Low</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr className="hover">
-            <th>0</th>
-            <td>0</td>
-            <td>100</td>
-            <td>50</td>
-            <td>150</td>
-          </tr>
-
-    {partitionsList}
-          </tbody>
-          </table>
-        </div>*/
