@@ -1,9 +1,3 @@
-/*
-TODO: 
-date conversion
-timeout for fetch (15s?) + performance tuning
-*/
-
 import {useState, useEffect} from 'react';
 import {Box, Paper, CircularProgress, Button, Alert} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
@@ -55,15 +49,15 @@ const MessagesDisplay = ({topic}: MessageDisplayProps) => {
 
   // Generate messages rows
   const messageRows = messages.map((message, index) => {
-    const convertedTimestamp = new Date(message.timestamp); // ???
-    console.log(new Date(message.timestamp));
+    const convertedTimestamp = new Date(Number(message.timestamp)).toLocaleString();
+
     return {
       id: index,
       key: message.key,
       value: message.value,
       partition: message.partition,
       offset: message.offset,
-      timestamp: convertedTimestamp, // convert UTC string
+      timestamp: convertedTimestamp, // converted from UTC string
     };
   });
 
