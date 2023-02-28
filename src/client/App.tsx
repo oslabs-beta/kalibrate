@@ -39,7 +39,7 @@ function App() {
       })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
+          console.log('(APP) fetched all data', data)
           setConnectedClusterData(data);
         })
         .catch(err => console.log(`from app loading cluster data: ${err}`));

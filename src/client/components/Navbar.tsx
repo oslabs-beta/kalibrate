@@ -64,7 +64,7 @@ const Navbar = (props: Props) => {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            onClick={() => navigate('/')}
             sx={{
               mr: 2,
               display: {xs: 'none', md: 'flex'},
@@ -73,6 +73,7 @@ const Navbar = (props: Props) => {
               letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
+              cursor: 'pointer'
             }}
           >
             KALIBRATE
@@ -153,64 +154,3 @@ const Navbar = (props: Props) => {
 };
 
 export default Navbar;
-
-{
-  /* <Box
-  position="fixed"
-  sx={{zIndex: theme => theme.zIndex.drawer + 1, width: '100vw', bgcolor: 'skyblue'}}
->
-  <Tabs
-    value={value}
-    onChange={handleChange}
-    aria-label="nav tabs"
-    TabIndicatorProps={{
-      style: {background: 'none'},
-    }}
-  >
-    <Link to="/" style={{color: 'inherit'}}>
-      <Tab label="Kalibrate" />
-    </Link>
-    <Link to="/dashboard" style={{textDecoration: 'none', color: 'inherit'}}>
-      <Tab label="Dashboard" />
-    </Link>
-    <Link to="/alerts" style={{textDecoration: 'none', color: 'inherit'}}>
-      <IconButton size="large" color="inherit">
-        <Badge badgeContent={4} color="error">
-          <NotificationsIcon aria-label="notification" />
-        </Badge>
-      </IconButton>
-    </Link> */
-}
-
-{
-  /* when Settings is clicked, connect popover menu to settings element via anchorEl */
-}
-{
-  /* <IconButton size="large" color="inherit" onClick={handleOpenUserMenu}>
-      <SettingsIcon aria-label="settings" />
-    </IconButton>
-    <Menu
-      sx={{mt: '25px'}}
-      id="settings-menu"
-      anchorEl={anchorElUser}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={Boolean(anchorElUser)}
-      onClose={handleCloseUserMenu}
-    >
-      {settings.map(setting => (
-        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-          <Typography textAlign="center">{setting}</Typography>
-        </MenuItem>
-      ))}
-    </Menu>
-  </Tabs>
-</Box> */
-}
