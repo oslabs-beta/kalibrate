@@ -5,9 +5,8 @@ import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 import {messageColumn, messageData} from '../../../../demo/mockData.js';
 
-const MessagesDisplay = () => {
+const MessagesDisplay = props => {
   // add in other eventual props to use...
-  // const { messages } = props;
 
   // eventual list to generate...
   // const messagesList = messages.map(message => {
@@ -20,8 +19,19 @@ const MessagesDisplay = () => {
   //     </tr>
   //   );
   // });
-  const [pageSize, setPageSize] = useState<number>(5);
+  //GET  PROPERTIES
+  // const {messages} = props;
+  // const rows = messages.map(message => {
+  //   return {
+  //     key: message.key,
+  //     val: message.val,
+  //     offset: message.offset,
+  //     high: message.high,
+  //     low: message.low,
+  //   };
+  // });
 
+  const [pageSize, setPageSize] = useState<number>(5);
   // hardcoded value used as example, remove hardcoded example and update/render list instead when data available
   return (
     <div className="wrapper">

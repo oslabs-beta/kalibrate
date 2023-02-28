@@ -5,7 +5,7 @@ import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 import {producerColumn, producerData} from '../../../../demo/mockData.js';
 
-const ProducersDisplay = (/*props*/) => {
+const ProducersDisplay = props => {
   // placeholder for eventual props
 
   // once backdata data shape received, maybe refactor to loop like:
@@ -13,6 +13,14 @@ const ProducersDisplay = (/*props*/) => {
   // for (const el of props.producerData) {
   //   displayElements.push(<td>producerData[el]</td>)
   // }
+  // const {producers} = props;
+  // const rows = producers.map(producer => {
+  //   return {
+  //     id: producer.id,
+  //     topicName: producer.name,
+  //     topicRole: producer.role,
+  //   };
+  // });
   const [pageSize, setPageSize] = useState<number>(5);
   return (
     <div className="wrapper">

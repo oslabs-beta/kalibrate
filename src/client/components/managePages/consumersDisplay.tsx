@@ -9,28 +9,38 @@ import {consumerColumn, consumerData} from '../../../../demo/mockData.js';
 //ssl true
 //sasl:
 
-const ConsumersDisplay = (/*{props}*/) => {
-  // const {clientId} = props;
-  //consumers should be an array of objects with key properties that match column
-  // const [consumers, setConsumers] = useState([]);
-  // const [groupId, setGroupId] = useState();
-  // const [consumerId, setConsumerID] = useState();
-  // const [clusterName, setClusterName] = useState();
+const ConsumersDisplay = props => {
+  const {clientId} = props;
+  // //consumers should be an array of objects with key properties that match column
+  const [consumers, setConsumers] = useState([]);
 
   // useEffect(() => {
   //   try {
-  //     const response = fetch('/consumer', {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  //     if (!response) throw new Error();
-
-  //     //if response ok, assumming response is an array of consumers and details
-  //     setConsumers(response);
+  //     const fetchConsumers = async () => {
+  //       const response = await fetch('/consumer', {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       });
+  //       if (!response) throw new Error();
+  //       //if response ok, assumming response is an array of consumers and details
+  //       // setConsumers(response);
+  //       const resp = await response.json();
+  //       console.log(resp);
+  //     };
+  //     fetchConsumers();
   //   } catch {
   //     console.log('Error in useEffect when fetching consumers');
+  //   }
+  // });
+
+  //GET PROPER PROPERTY NAME
+  // const rows = consumers.map(consumer => {return
+  //   {id: consumerID,
+  //     numOfTopics: topicNum,
+  //     recordsLagMax:records,
+  //     status: statuss
   //   }
   // });
   const [pageSize, setPageSize] = useState<number>(5);

@@ -1,23 +1,18 @@
 import React from 'react';
 import MessagesDisplay from './MessagesDisplay';
-
+import {Typography} from '@mui/material';
 // container for displaying message details
 const Messages = props => {
   return (
     <div className="wrapper">
       <div className="messages-heading">
-        <h3 className="mb-5">Messages</h3>
-        <input
-          type="text"
-          placeholder="Search"
-          className="input input-bordered input-sm w-full max-w-xs mb-5"
-        />
+        <Typography variant="h6">Messages List</Typography>
       </div>
       <div className="messages-display">
-        <MessagesDisplay />
+        <MessagesDisplay msgProp={props} />
       </div>
     </div>
   );
-}
+};
 
 export default Messages;
