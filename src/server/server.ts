@@ -29,18 +29,6 @@ app.get('/api/get-data', getClusterData, getTopicData, getGroupData, (req, res) 
   res.status(200).json(res.locals);
 });
 
-// app.get('/api/stable-data', adminController.getTopicData, (req, res) => {
-//   res.status(200).json(res.locals.topicData);
-// });
-
-// app.get('/api/cluster-info', adminController.getClusterData, (req, res) => {
-//   res.status(200).json(res.locals.clusterData);
-// });
-
-// app.get('/api/describe-groups', adminController.getGroupData, (req, res) => {
-//   res.status(200).json(res.locals.groups);
-// });
-
 app.get('/api/:topic/messages', topicController.getMessages, (req, res) => {
   res.status(200).json(res.locals.topicMessages);
 });
