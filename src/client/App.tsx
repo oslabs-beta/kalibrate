@@ -16,6 +16,8 @@ import Consume from './components/testPages/Consume';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
+import MessagesDisplay from './components/managePages/MessagesDisplay';
+import TopicsDisplay from './components/managePages/TopicsDisplay';
 
 function App() {
   //declare clientId state so other components could access for link & routing
@@ -50,7 +52,6 @@ function App() {
   console.log('Received Data:', connectedClusterData);
 
   const {clusterData, topicData, groupList, groupData} = connectedClusterData;
-
   return (
     <BrowserRouter>
       <Navbar isConnected={isConnected} />
@@ -99,7 +100,7 @@ function App() {
           <Route path="consumers" element={<Consumers data={groupData} />} />
           <Route path="topics" element={<Topics data={topicData} />}>
             <Route path={`:topicName/partitions`} element={<PartitionsDisplay />} />
-            <Route />
+            <Route path={':topicName/messages'} element={<MessagesDisplay topic={'topicname'} />} />
           </Route>
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />

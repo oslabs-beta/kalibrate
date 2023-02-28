@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-import {partitionColumn, partitionData} from '../../../../demo/mockData.js';
+import {partitionData, partitionColumn} from '../../../../demo/mockData';
 
 const PartitionsDisplay = props => {
   // add in other eventual props to use..
@@ -22,9 +22,10 @@ const PartitionsDisplay = props => {
   // });
   //GETPROPS
   const {partitions} = props;
-  const rows = partitions.map(partition => {
+  const rows = partitionData.map((partition, index) => {
     return {
-      id: partition.id,
+      id: index,
+      partId: partition.id,
       leader: partition.leader,
       offset: partition.offset,
       high: partition.high,
@@ -41,7 +42,7 @@ const PartitionsDisplay = props => {
             <DataGrid
               //better alt for autoHeight? DataGrid inherits height of parent, even if have data
               autoHeight
-              rows={partitionData}
+              rows={rows}
               columns={partitionColumn}
               pageSize={pageSize}
               onPageSizeChange={newPageSize => setPageSize(newPageSize)}

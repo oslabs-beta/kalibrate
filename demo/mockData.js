@@ -1,5 +1,7 @@
 import {Link} from '@mui/material';
-
+import React from 'react';
+import {useNavigate} from 'react-router-dom';
+import PartitionsDisplay from '../src/client/components/managePages/PartitionsDisplay';
 //CONSUMER DATA
 export const consumerColumn = [
   {field: 'consumerId', headerName: 'Consumer ID', width: 250},
@@ -36,10 +38,23 @@ export const topicColumn = [
   {field: 'replication', headerName: 'Replication Factor', width: 50},
   {field: 'numPartitions', headerName: 'Num of Paritions', width: 50},
   {field: 'numMessages', headerName: 'Num of Messages', width: 50},
-  {field: 'linkToPart', headerName: 'See Partitions', width: 150, renderCell: () => <Link></Link>},
-  {field: 'linkToMsg', headerName: 'See Messages', width: 150, renderCell: () => <Link></Link>},
+  {
+    field: 'linkToPart',
+    headerName: 'See Partitions',
+    width: 150,
+    // renderCell: () => <PartitionsDisplay />,
+  },
+  // {field: 'linkToMsg', headerName: 'See Messages', width: 150, renderCell: () => <Link></Link>},
 ];
-export const topicData = [];
+export const topicData = [
+  {
+    topicName: 'disname',
+    replication: '21',
+    numPartitions: '54',
+    numMessages: '77',
+    linkToPart: 'partitions',
+  },
+];
 
 //PARTITION DATA
 export const partitionColumn = [
