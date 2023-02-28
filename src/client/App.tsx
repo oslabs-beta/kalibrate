@@ -15,6 +15,9 @@ import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import PartitionsDisplay from './components/managePages/PartitionsDisplay';
+import MessagesDisplay from './components/managePages/MessagesDisplay';
+import TopicsDisplay from './components/managePages/TopicsDisplay';
 
 function App() {
   //declare clientId state so other components could access for link & routing
@@ -49,7 +52,6 @@ function App() {
   console.log('Received Data:', connectedClusterData);
 
   const {clusterData, topicData, groupList, groupData} = connectedClusterData;
-
   return (
     <BrowserRouter>
       <Navbar isConnected={isConnected} />
@@ -96,7 +98,10 @@ function App() {
           <Route path="brokers" element={<Brokers data={clusterData} />} />
           <Route path="producers" element={<Producers data={groupData} />} />
           <Route path="consumers" element={<Consumers data={groupData} />} />
-          <Route path="topics" element={<Topics topics={topicData.topics} />} />
+          <Route path="topics" element={<Topics data={topicData} />}>
+            <Route path={`:topicName/partitions`} element={<PartitionsDisplay />} />
+            <Route path={':topicName/messages'} element={<MessagesDisplay topic={'topicname'} />} />
+          </Route>
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
           <Route path="consume" element={<Consume />} />
@@ -110,4 +115,5 @@ function App() {
 export default App;
 /*TODO:
 - as of 1st attempt brokers: data is not drilled properly unless all of connectedClusterData is passe through.
+- props for groupData does not specify producers or consumers
 */
