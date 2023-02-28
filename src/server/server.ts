@@ -25,7 +25,7 @@ app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
 });
 
 const {getClusterData, getTopicData, getGroupData} = adminController;
-app.get('/api/get-data', getClusterData, getTopicData, getGroupData, (req, res) => {
+app.get('/api/data', getClusterData, getTopicData, getGroupData, (req, res) => {
   res.status(200).json(res.locals);
 });
 

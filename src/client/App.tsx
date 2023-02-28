@@ -3,7 +3,6 @@ import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import Producers from './components/managePages/Producers';
 import Brokers from './components/managePages/Brokers';
 import {useState, useEffect} from 'react';
 import Overview from './components/Overview';
@@ -35,7 +34,7 @@ function App() {
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
-      fetch('api/get-data', {
+      fetch('api/data', {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -84,8 +83,20 @@ function App() {
           <Route
             index
             element={
-              //pass in all the data needed for the overview data here
-              //clustername, version, brokers count, partitions, topics, production
+              <Connect
+                connectedCluster={connectedCluster}
+                setConnectedCluster={setConnectedCluster}
+                sessionClusters={sessionClusters}
+                setSessionClusters={setSessionClusters}
+                setIsConnected={setIsConnected}
+              />
+            }
+          />
+        </Route>
+        <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
+          <Route
+            index
+            element={
               <Overview
                 data={connectedClusterData}
                 connectedCluster={connectedCluster}
@@ -93,10 +104,7 @@ function App() {
               />
             }
           />
-        </Route>
-        <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
           <Route path="brokers" element={<Brokers data={clusterData} />} />
-          <Route path="producers" element={<Producers data={groupData} />} />
           <Route path="consumers" element={<Consumers data={groupData} />} />
           <Route path="topics" element={<Topics data={topicData} />}>
             <Route path={`:topicName/partitions`} element={<PartitionsDisplay />} />
