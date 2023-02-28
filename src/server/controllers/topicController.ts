@@ -12,6 +12,10 @@ topicController.getMessages = async (req, res, next) => {
   const topicMessages: topicMessage[] = [];
 
   try {
+    // attempt to disconnect in case a client was left connected from a failed previous request
+    await messageAdmin.disconnect();
+    await messageConsumer.disconnect();
+
     // reset offsets for consumer group 'kalibrate'
     // necessary to fetch all messages from the earliest offset on repeated requests
     await messageAdmin.connect();
@@ -70,9 +74,6 @@ topicController.getMessages = async (req, res, next) => {
       },
     });
   } catch (err) {
-    await messageAdmin.disconnect();
-    await messageConsumer.disconnect();
-
     next({
       log: `ERROR - topicController.getMessages: ${err}`,
       status: 400,
