@@ -7,7 +7,7 @@ import Breadcrumb from './Breadcrumbs';
 
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
-const Topics = ({data}: TopicsProps) => {
+const Topics = ({connectedCluster}) => {
   const navigate = useNavigate();
   const [activeTopicsComponent, setActiveTopicsComponent] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -26,7 +26,7 @@ const Topics = ({data}: TopicsProps) => {
   return (
     <div className="wrapper">
       <div className="topics-heading">
-        <Typography variant="h6">Topics List</Typography>
+        <Typography variant="h4">{`${connectedCluster}`}</Typography>
         <Box m={2}>
           <Breadcrumb topicName={selectedTopic} topicComp={activeTopicsComponent}></Breadcrumb>
         </Box>
