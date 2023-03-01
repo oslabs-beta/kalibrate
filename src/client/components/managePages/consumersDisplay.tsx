@@ -9,8 +9,8 @@ import {ConsumerProps} from './types';
 
 const ConsumersDisplay = (props: ConsumerProps) => {
   const {groupData} = props;
-  const fields = ['id', 'members', 'subscribedTopics', 'msgsBehind', 'status'];
-  const headers = ['GroupId', 'Members', 'Topics Subscribed', 'Messages Behind', 'Status'];
+  const fields = ['id', 'members', 'subscribedTopics', 'recordsLag', 'status'];
+  const headers = ['GroupId', 'Members', 'Topics Subscribed', 'Records Lag', 'Status'];
 
   const [pageSize, setPageSize] = useState(5);
 
