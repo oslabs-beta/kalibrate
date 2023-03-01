@@ -12,6 +12,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {useState, SyntheticEvent} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
+import crow from './assets/crow.png';
 
 interface Props {
   isConnected: boolean;
@@ -55,10 +56,14 @@ const Navbar = (props: Props) => {
           position: 'fixed',
           zIndex: theme => theme.zIndex.drawer + 1,
           width: '100vw',
-          bgcolor: 'skyblue',
+          bgcolor: '#9db4c0',
         }}
       >
         <Toolbar disableGutters>
+          <Typography>
+            <img src={crow} length="30" width="50"></img>
+          </Typography>
+
           {/* link kalibrate logo to home page */}
           <Typography
             variant="h6"
@@ -78,7 +83,7 @@ const Navbar = (props: Props) => {
           >
             KALIBRATE
           </Typography>
-
+          
           {/* link dashboard button to dashboard page */}
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (
