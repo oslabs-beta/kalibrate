@@ -56,7 +56,6 @@
     "nodemon": "^2.0.20",
     "prettier": "^2.8.4",
     "supertest": "^6.3.3",
-    "tailwindcss": "^3.2.7",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",

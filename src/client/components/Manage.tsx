@@ -27,7 +27,7 @@ const Manage = props => {
 
   return (
     <Box sx={{display: 'flex'}}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <Drawer
         variant="permanent"
         sx={{

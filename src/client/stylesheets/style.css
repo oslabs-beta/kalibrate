@@ -4,8 +4,17 @@
   --blue: #9db4c0;
   --darkerBlue: #5c6b73;
   --darkestBlue: #253237;
-  --white: #f6f7eb;
+  --white: #FEFFEF;
   --black: #393e41;
   --error: #e17160;
 }
 
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--white)
+}
+
+.logo {
+  margin-left: 1px;
+}
