@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {Link, Outlet, useNavigate} from 'react-router-dom';
 import {TopicsProps, clickHandler} from './types';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {Box, Breadcrumbs, Typography} from '@mui/material';
+import {Box, Typography} from '@mui/material';
+import Breadcrumb from './Breadcrumbs';
 
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
@@ -27,13 +28,7 @@ const Topics = ({data}: TopicsProps) => {
       <div className="topics-heading">
         <Typography variant="h6">Topics List</Typography>
         <Box m={2}>
-          <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small" />}>
-            <Typography className="topicCrumb" onClick={() => navigate(-1)}>
-              Topics
-            </Typography>
-            {selectedTopic && <div>{selectedTopic}</div>}
-            {activeTopicsComponent && <div>{activeTopicsComponent}</div>}
-          </Breadcrumbs>
+          <Breadcrumb topicName={selectedTopic} topicComp={activeTopicsComponent}></Breadcrumb>
         </Box>
       </div>
       <div className="topics-display">
