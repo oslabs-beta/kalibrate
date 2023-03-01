@@ -24,9 +24,10 @@ function App() {
   const [connectedClusterData, setConnectedClusterData] = useState({
     clusterData: {brokers: []},
     topicData: {topics: []},
-    groupList: [],
-    groupData: {groups: []},
+    groupData: [],
   });
+
+  const {clusterData, topicData, groupData} = connectedClusterData;
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -47,8 +48,6 @@ function App() {
   }, [connectedCluster]);
 
   console.log('Received Data:', connectedClusterData);
-
-  const {clusterData, topicData, groupList, groupData} = connectedClusterData;
 
   return (
     <BrowserRouter>
@@ -94,8 +93,8 @@ function App() {
         </Route>
         <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
           <Route path="brokers" element={<Brokers data={clusterData} />} />
-          <Route path="producers" element={<Producers data={groupData} />} />
-          <Route path="consumers" element={<Consumers data={groupData} />} />
+          <Route path="producers" element={<Producers groupData={groupData} />} />
+          <Route path="consumers" element={<Consumers groupData={groupData} />} />
           <Route path="topics" element={<Topics topics={topicData.topics} />} />
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
