@@ -25,7 +25,7 @@ const Dashboard = props => {
 
   return (
     <Box sx={{display: 'flex'}}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <Drawer
         variant="permanent"
         sx={{
