@@ -83,16 +83,24 @@ function App() {
           <Route
             index
             element={
-              <Overview
-                data={connectedClusterData}
-                connectedCluster={connectedCluster}
-                sessionClusters={sessionClusters}
-              />
+              <div className="overview">
+                <Overview
+                  data={connectedClusterData}
+                  connectedCluster={connectedCluster}
+                  sessionClusters={sessionClusters}
+                />
+              </div>
             }
           />
-          <Route path="brokers" element={<Brokers clusterData={clusterData} />} />
-          <Route path="consumers" element={<Consumers groupData={groupData} />} />
-          <Route path="topics" element={<Topics />}>
+          <Route
+            path="brokers"
+            element={<Brokers clusterData={clusterData} connectedCluster={connectedCluster} />}
+          />
+          <Route
+            path="consumers"
+            element={<Consumers groupData={groupData} connectedCluster={connectedCluster} />}
+          />
+          <Route path="topics" element={<Topics connectedCluster={connectedCluster} />}>
             <Route index element={<TopicsDisplay topicData={topicData} />} />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
             <Route path=":topic/messages" element={<MessagesDisplay />} />

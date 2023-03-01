@@ -60,10 +60,11 @@ const Navbar = (props: Props) => {
         }}
       >
         <Toolbar disableGutters>
-          <Typography>
-            <img src={crow} length="30" width="50"></img>
-          </Typography>
-
+          <div className="logo">
+            <Typography noWrap sx={{display: {xs: 'none', md: 'flex'}}}>
+              <img src={crow} length="30" width="50"></img>
+            </Typography>
+          </div>
           {/* link kalibrate logo to home page */}
           <Typography
             variant="h6"
@@ -83,7 +84,7 @@ const Navbar = (props: Props) => {
           >
             KALIBRATE
           </Typography>
-          
+
           {/* link dashboard button to dashboard page */}
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (

@@ -1,10 +1,12 @@
 import {useState} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {Box, Breadcrumbs, Typography} from '@mui/material';
+import {Box, Typography} from '@mui/material';
+import Breadcrumb from './Breadcrumbs';
 import {clickHandler, partitions} from './types';
 
-const Topics = () => {
+// appropriate props from fetch should be passed down to the appropriate displays
+// todo: needs to be integrated with React Router
+const Topics = ({connectedCluster}) => {
   const navigate = useNavigate();
   const [activeTopicsComponent, setActiveTopicsComponent] = useState<string>('');
   const [selectedTopic, setSelectedTopic] = useState<string>('');
@@ -21,19 +23,14 @@ const Topics = () => {
   return (
     <div className="wrapper">
       <div className="topics-heading">
-        <Typography variant="h6">Topics List</Typography>
+        <Typography variant="h4">{`${connectedCluster}`}</Typography>
         <Box m={2}>
-          <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small" />}>
-            <Typography className="topicCrumb" onClick={() => navigate(-1)}>
-              Topics
-            </Typography>
-            {selectedTopic && <div>{selectedTopic}</div>}
-            {activeTopicsComponent && <div>{activeTopicsComponent}</div>}
-          </Breadcrumbs>
+          <Breadcrumb topicName={selectedTopic} topicComp={activeTopicsComponent}></Breadcrumb>
         </Box>
       </div>
       <div className="topics-display">
         <Outlet
+          // these props are passed to sibling components that are navigated to from here
           context={{
             selectedTopic: selectedTopic,
             topicPartitions: topicPartitions,
