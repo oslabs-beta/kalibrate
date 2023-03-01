@@ -25,6 +25,9 @@ const Manage = props => {
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
 
+  const lightBlue = 'c8d6de';
+  //edf8fe
+  //bfd4e0
   return (
     <Box sx={{display: 'flex'}}>
       {/* <CssBaseline /> */}
@@ -33,14 +36,21 @@ const Manage = props => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            background: '#edf8fe',
+          },
         }}
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto'}}>
-          <List>
-            <ListItem key="Manage" disablePadding>
-              <ListItemButton onClick={() => setOpenManage(prev => !prev)}>
+        <Box sx={{overflow: 'auto', background: lightBlue}}>
+          <List className="no-padding-list">
+            <ListItem key="Manage" disablePadding sx={{background: '#edf8fe'}}>
+              <ListItemButton
+                onClick={() => setOpenManage(prev => !prev)}
+                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+              >
                 <ListItemText primary="Manage" />
                 {openManage ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -65,8 +75,11 @@ const Manage = props => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Monitor" disablePadding>
-              <ListItemButton onClick={() => setOpenMonitor(prev => !prev)}>
+            <ListItem key="Monitor" disablePadding sx={{background: lightBlue}}>
+              <ListItemButton
+                onClick={() => setOpenMonitor(prev => !prev)}
+                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+              >
                 <ListItemText primary="Monitor" />
                 {openMonitor ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -84,8 +97,11 @@ const Manage = props => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Test" disablePadding>
-              <ListItemButton onClick={() => setOpenTest(prev => !prev)}>
+            <ListItem key="Test" disablePadding sx={{background: lightBlue}}>
+              <ListItemButton
+                onClick={() => setOpenTest(prev => !prev)}
+                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+              >
                 <ListItemText primary="Test" />
                 {openTest ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>

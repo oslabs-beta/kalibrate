@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Button
+  Button,
 } from '@mui/material';
 
 const drawerWidth = 150;
@@ -18,7 +18,7 @@ const drawerWidth = 150;
 const Dashboard = props => {
   const navigate = useNavigate();
 
-  const { sessionClusters, setConnectedCluster} = props;
+  const {sessionClusters, setConnectedCluster} = props;
 
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
@@ -31,14 +31,26 @@ const Dashboard = props => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            background: '#edf8fe',
+          },
         }}
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto'}}>
+        <Box sx={{overflow: 'auto', background: '#edf8fe'}}>
           <List>
             {sessionClusters.map(text => (
-              <ListItem key={text} disablePadding>
+              <ListItem
+                key={text}
+                sx={{
+                  background: '#edf8fe',
+                  border: '1px outset #c2dfe3',
+                  borderRadius: '5px',
+                }}
+                disablePadding
+              >
                 <ListItemButton
                   onClick={() => {
                     setConnectedCluster(text);

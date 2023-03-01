@@ -1,6 +1,8 @@
 import {useState} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
+import '../stylesheets/style.css';
+import crow from './assets/crow2.png';
 
 /*
 CONNECTION FORM OPTIONS
@@ -49,8 +51,8 @@ const Connect = props => {
       return setErrorMessage('Enter a Client ID to identify this cluster within Kalibrate.');
     if (sessionClusters.includes(clientId)) return setErrorMessage('Client IDs must be unique.');
     if (!brokers) return setErrorMessage('Seed broker is required.');
-    if (sasl && !username) return setErrorMessage('Username is required when SASL enabled.');
-    if (sasl && !password) return setErrorMessage('Password is required when SASL enabled.');
+    if (sasl && !username) return setErrorMessage('Username is required when SASL is selected.');
+    if (sasl && !password) return setErrorMessage('Password is required when SASL is selected.');
 
     // create config object to send in request
     const connectionConfig = {
@@ -81,6 +83,7 @@ const Connect = props => {
       });
       // handle failed connection
       if (!response.ok) throw new Error();
+      if (response.ok) setErrorMessage('');
 
       // update global state and navigate to dashboard
       setIsConnected(true);
@@ -118,8 +121,9 @@ const Connect = props => {
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
           padding: '15px',
-          border: '2px solid black',
+          border: '2px outset #253237',
           borderRadius: '8px',
+          background: 'white',
         }}
         noValidate
         autoComplete="off"
@@ -185,14 +189,17 @@ const Connect = props => {
         ) : null}
 
         <Grid>
-          <Button variant="outlined" size="medium" type="submit">
-            {loginInProgress ? 'Connecting...' : 'Connect'}
-          </Button>
+          <span className="loadingSpan">
+            {loginInProgress ? <img className="rotocrow" src={crow}></img> : null}
+            <Button variant="outlined" size="medium" type="submit">
+              {loginInProgress ? 'Connecting...' : 'Connect'}
+            </Button>
+          </span>
         </Grid>
 
-        {errorMessage ? (
+        {errorMessage.length ? (
           <Grid>
-            <h3>{errorMessage}</h3>
+            <h3 className="err">{errorMessage}</h3>
           </Grid>
         ) : null}
       </Box>
