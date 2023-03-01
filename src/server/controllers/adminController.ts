@@ -147,6 +147,31 @@ adminController.getGroupData = async (req, res, next) => {
   }
 };
 
+// adminController.getCommittedOffsets = async (req, res, next) => {
+//   const consumer = kafkaController.kafka.consumer({groupId: 'kalibrate'});
+//   console.log('Kafka Consumer', consumer);
+//   try {
+//     // await consumer.connect();
+//     console.log('Enter getCommittedOffsets middleware');
+//     // disconnect in case a client was left connected from a failed previous request
+//     // await consumer.disconnect();
+
+//     // receive commit offset data
+//     // payload: { groupId, memberId, groupGenerationId, topics }
+//     consumer.on(consumer.events.COMMIT_OFFSETS, ({payload}: any) =>
+//       console.log('Commit Offsets Payload', payload)
+//     );
+//     return next();
+//   } catch (err) {
+//     await consumer.disconnect;
+//     return next({
+//       log: 'adminController.getCommittedOffsets failed to get committed offsets',
+//       status: 440,
+//       message: err,
+//     });
+//   }
+// };
+
 // List of groups
 // groups: [
 //   {groupId: 'test-group', protocolType: 'consumer'}
