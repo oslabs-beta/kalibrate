@@ -25,6 +25,9 @@ const Manage = props => {
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
 
+  const lightBlue = '#c1d4de';
+  //edf8fe
+  //bfd4e0
   return (
     <Box sx={{display: 'flex'}}>
       {/* <CssBaseline /> */}
@@ -33,23 +36,26 @@ const Manage = props => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            background: '#edf8fe',
+          },
         }}
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto'}}>
-          <List>
-            <ListItem key="Manage" disablePadding>
+        <Box sx={{overflow: 'auto', background: lightBlue}}>
+          <List className="no-padding-list">
+            <ListItem key="Manage" disablePadding sx={{background: lightBlue}}>
               <ListItemButton
                 onClick={() => setOpenManage(prev => !prev)}
                 sx={
                   openManage
                     ? {
-                        background: 'white',
-                        border: '1px outset #c2dfe3',
                         borderRadius: '5px',
+                        border: '1px outset #c2dfe3',
                       }
-                    : {}
+                    : {borderRadius: '5px'}
                 }
               >
                 <ListItemText primary="Manage" />
@@ -76,13 +82,12 @@ const Manage = props => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Monitor" disablePadding>
+            <ListItem key="Monitor" disablePadding sx={{background: lightBlue}}>
               <ListItemButton
                 onClick={() => setOpenMonitor(prev => !prev)}
                 sx={
                   openMonitor
                     ? {
-                        background: 'white',
                         border: '1px outset #c2dfe3',
                         borderRadius: '5px',
                       }
@@ -106,13 +111,12 @@ const Manage = props => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Test" disablePadding>
+            <ListItem key="Test" disablePadding sx={{background: lightBlue}}>
               <ListItemButton
                 onClick={() => setOpenTest(prev => !prev)}
                 sx={
                   openTest
                     ? {
-                        background: 'white',
                         border: '1px outset #c2dfe3',
                         borderRadius: '5px',
                       }

@@ -1,10 +1,12 @@
 :root {
-  --lightestBlue: #e0fbfc;
+  --lightestBlue: #e8ffff;
   --lighterBlue: #c2dfe3;
   --blue: #9db4c0;
+  --altblue: #afc4d0;
+
   --darkerBlue: #5c6b73;
   --darkestBlue: #253237;
-  --white: #feffef;
+  --white: #fcfcfc;
   --black: #393e41;
   --error: #e17160;
 }
@@ -49,4 +51,8 @@ body {
 
 .logo {
   margin-left: 1px;
+}
+
+.no-padding-list {
+  padding-top: 0px;
 }
