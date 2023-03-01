@@ -4,27 +4,35 @@ import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 //consumer dummy column/data imported
-import {consumerColumn, consumerData} from '../../../../demo/mockData.js';
-//TODO: create fetch request to the back to get cosumer info.
-//ssl true
-//sasl:
+// import {consumerColumn, consumerData} from '../../../../demo/mockData.js';
+import {ConsumerProps} from './types';
 
-const ConsumersDisplay = props => {
-  const consumers = props.data.groups;
-  console.log('Mapping consumers...', consumers);
-  let rows;
-  if (consumers) {
-    rows = consumers.map((consumer, index) => {
-      return {
-        id: index,
-        consumerId: consumer.consumerId,
-        numOfTopics: consumer.numOfTopics,
-        recordsLagMax: consumer.recordsLagMax,
-        connectionStatus: consumer.connectionStatus,
-      };
-    });
-  }
-  const [pageSize, setPageSize] = useState<number>(5);
+const ConsumersDisplay = (props: ConsumerProps) => {
+  const {groupData} = props;
+  const fields = ['id', 'members', 'subscribedTopics', 'msgsBehind', 'status'];
+  const headers = ['GroupId', 'Members', 'Topics Subscribed', 'Messages Behind', 'Status'];
+
+  const [pageSize, setPageSize] = useState(5);
+
+  // create array of objects
+  const consumerCol = headers.map((header, i) => {
+    return {
+      field: fields[i],
+      headerName: header,
+      width: 250,
+    };
+  });
+
+  const consumerD = groupData.map(group => {
+    return {
+      id: group.groupId,
+      members: group.members.length,
+      subscribedTopics: 6,
+      messagesBehind: 0,
+      status: group.state,
+    };
+  });
+
   return (
     <div className="display-table" data-testid="consumerDisplay-1">
       <Box sx={{height: 400, width: '1000'}}>
@@ -32,9 +40,8 @@ const ConsumersDisplay = props => {
           <DataGrid
             //better alt for autoHeight? DataGrid inherits height of parent, even if have data
             autoHeight
-            // rows={consumerData}
-            rows={rows}
-            columns={consumerColumn}
+            rows={consumerD}
+            columns={consumerCol}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}
@@ -56,6 +63,7 @@ const ConsumersDisplay = props => {
     </div>
   );
 };
+
 export default ConsumersDisplay;
 
 /*attempts at pagination with custom footer
