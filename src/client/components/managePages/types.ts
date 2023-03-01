@@ -48,5 +48,6 @@ export type message = {
   value: string;
 };
 export interface ConsumerProps {
-  groupData: { [k: string]: any }[];
+  groupData: {[k: string]: any}[];
+  connectedCluster: string;
 }
