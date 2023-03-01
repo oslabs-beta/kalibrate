@@ -4,46 +4,35 @@ import Paper from '@mui/material/Paper';
 import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
 //consumer dummy column/data imported
-import {consumerColumn, consumerData} from '../../../../demo/mockData.js';
-//TODO: create fetch request to the back to get cosumer info.
-//ssl true
-//sasl:
+// import {consumerColumn, consumerData} from '../../../../demo/mockData.js';
+import {ConsumerProps} from './types';
 
-const ConsumersDisplay = props => {
-  const {clientId} = props;
-  // //consumers should be an array of objects with key properties that match column
-  const [consumers, setConsumers] = useState([]);
+const ConsumersDisplay = (props: ConsumerProps) => {
+  const {groupData} = props;
+  const fields = ['id', 'members', 'subscribedTopics', 'msgsBehind', 'status'];
+  const headers = ['GroupId', 'Members', 'Topics Subscribed', 'Messages Behind', 'Status'];
 
-  // useEffect(() => {
-  //   try {
-  //     const fetchConsumers = async () => {
-  //       const response = await fetch('/consumer', {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //       });
-  //       if (!response) throw new Error();
-  //       //if response ok, assumming response is an array of consumers and details
-  //       // setConsumers(response);
-  //       const resp = await response.json();
-  //       console.log(resp);
-  //     };
-  //     fetchConsumers();
-  //   } catch {
-  //     console.log('Error in useEffect when fetching consumers');
-  //   }
-  // });
+  const [pageSize, setPageSize] = useState(5);
 
-  //GET PROPER PROPERTY NAME
-  // const rows = consumers.map(consumer => {return
-  //   {id: consumerID,
-  //     numOfTopics: topicNum,
-  //     recordsLagMax:records,
-  //     status: statuss
-  //   }
-  // });
-  const [pageSize, setPageSize] = useState<number>(5);
+  // create array of objects
+  const consumerCol = headers.map((header, i) => {
+    return {
+      field: fields[i],
+      headerName: header,
+      width: 250,
+    };
+  });
+
+  const consumerD = groupData.map(group => {
+    return {
+      id: group.groupId,
+      members: group.members.length,
+      subscribedTopics: 6,
+      messagesBehind: 0,
+      status: group.state,
+    };
+  });
+
   return (
     <div className="display-table" data-testid="consumerDisplay-1">
       <Box sx={{height: 400, width: '1000'}}>
@@ -51,8 +40,8 @@ const ConsumersDisplay = props => {
           <DataGrid
             //better alt for autoHeight? DataGrid inherits height of parent, even if have data
             autoHeight
-            rows={consumerData}
-            columns={consumerColumn}
+            rows={consumerD}
+            columns={consumerCol}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}
@@ -74,6 +63,7 @@ const ConsumersDisplay = props => {
     </div>
   );
 };
+
 export default ConsumersDisplay;
 
 /*attempts at pagination with custom footer
