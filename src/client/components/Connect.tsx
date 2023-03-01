@@ -110,7 +110,7 @@ const Connect = props => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="center"
-      height="100vh"
+      height="500px"
       textAlign={'center'}
     >
       <Box
