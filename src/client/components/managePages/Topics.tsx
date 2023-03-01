@@ -1,22 +1,18 @@
-import React, {useState} from 'react';
-import {Link, Outlet, useNavigate} from 'react-router-dom';
-import {TopicsProps, clickHandler} from './types';
+import {useState} from 'react';
+import {Outlet, useNavigate} from 'react-router-dom';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {Box, Breadcrumbs, Typography} from '@mui/material';
+import {clickHandler} from './types';
 
-// appropriate props from fetch should be passed down to the appropriate displays
-// todo: needs to be integrated with React Router
-const Topics = ({data}: TopicsProps) => {
+const Topics = () => {
   const navigate = useNavigate();
   const [activeTopicsComponent, setActiveTopicsComponent] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedPartitions, setPartitions] = useState([]);
 
-  //    setSelectedTopic((e.target as HTMLButtonElement).name);
-  const handleComponentChange = (e, topicName = 'hoi', array = []) => {
-    // console.log('this burront reitoe', topicName);
-    // console.log('thi sis parotitosn', array);
-    const topicComponent = e.target.innerText;
+  const handleComponentChange: clickHandler = (e, topicName = '', array = []) => {
+    const topicComponent = (e.target as HTMLButtonElement).innerText;
+
     setActiveTopicsComponent(topicComponent);
     setSelectedTopic(topicName);
     setPartitions(array);

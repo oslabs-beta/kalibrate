@@ -1,15 +1,5 @@
 import {MouseEvent} from 'react';
 
-export type topics = {
-  name: string;
-  partitions: partitions[];
-  offsets: offsets[];
-};
-
-export type TopicsProps = {
-  topics: topics[];
-};
-
 export type clickHandler = (event: MouseEvent<HTMLButtonElement>) => void;
 
 export type partitions = {
@@ -28,15 +18,16 @@ export type offsets = {
   partition: number;
 };
 
-export type TopicsDisplayProps = {
-  topics: topics[];
-  selectedTopic: string;
-  topicComponent: string;
-  handleComponentChange: clickHandler;
+export type topics = {
+  name: string;
+  partitions: partitions[];
+  offsets: offsets[];
 };
 
-export type MessageDisplayProps = {
-  topic: string;
+export type TopicsContext = {};
+
+export type TopicsDisplayProps = {
+  topics: topics[];
 };
 
 export type message = {
@@ -47,6 +38,7 @@ export type message = {
   key: string;
   value: string;
 };
+
 export interface ConsumerProps {
-  groupData: { [k: string]: any }[];
+  groupData: {[k: string]: any}[];
 }
