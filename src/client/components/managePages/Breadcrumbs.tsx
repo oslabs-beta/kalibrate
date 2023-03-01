@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Breadcrumbs, Link, Typography} from '@mui/material';
 import {createBrowserHistory} from 'history';
-import path from 'path';
-// import history from "history/browser";
 
 const Breadcrumb = ({topicName, topicComp}) => {
   const navigate = useNavigate();
@@ -16,9 +14,9 @@ const Breadcrumb = ({topicName, topicComp}) => {
   const subCrumb = history.location.pathname === homePath ? [] : [topicName, topicComp];
   return (
     <Breadcrumbs>
-      <Link onClick={() => navigate(homePath)}>Topics</Link>
+      <Typography onClick={() => navigate(homePath)}>Topics</Typography>
       {subCrumb.map(path => (
-        <Typography>{path}</Typography>
+        <Typography>{path.toLowerCase()}</Typography>
       ))}
     </Breadcrumbs>
   );
