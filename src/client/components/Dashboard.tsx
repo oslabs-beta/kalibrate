@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Button
+  Button,
 } from '@mui/material';
 
 const drawerWidth = 150;
@@ -18,7 +18,7 @@ const drawerWidth = 150;
 const Dashboard = props => {
   const navigate = useNavigate();
 
-  const { sessionClusters, setConnectedCluster} = props;
+  const {sessionClusters, setConnectedCluster} = props;
 
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
@@ -36,7 +36,11 @@ const Dashboard = props => {
       >
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
-          <List>
+          <List
+            sx={{
+              background: 'green',
+            }}
+          >
             {sessionClusters.map(text => (
               <ListItem key={text} disablePadding>
                 <ListItemButton
