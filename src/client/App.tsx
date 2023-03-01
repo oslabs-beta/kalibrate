@@ -111,8 +111,8 @@ function App() {
           <Route path="consumers" element={<Consumers groupData={groupData} />} />
           <Route path="topics" element={<Topics topics={topicData.topics} />}>
             <Route index element={<TopicsDisplay topics={topicData.topics} />} />
-            <Route path=":topic/partitions" element={<PartitionsDisplay />} />
-            <Route path=":topic/messages" element={<MessagesDisplay topic={'topicname'} />} />
+            <Route path="partitions" element={<PartitionsDisplay />} />
+            <Route path="messages" element={<MessagesDisplay topic={'topicname'} />} />
           </Route>
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />

@@ -33,7 +33,7 @@ const Overview = props => {
         <Box sx={{p: 2, border: 1}}>Brokers Count: {data.topicData.topics.length}</Box>
       </ImageListItem>
 
-      <ImageListItem>
+      {/* <ImageListItem>
         <Box sx={{p: 2, border: 1}}>Offsets: {data.topicData.topics[0].offsets.length}</Box>
       </ImageListItem>
 
@@ -43,12 +43,10 @@ const Overview = props => {
 
       <ImageListItem>
         <Box sx={{p: 2, border: 1}}>Consumer Groups: {data.groupList.length}</Box>
-      </ImageListItem>
+      </ImageListItem> */}
     </ImageList>
   );
 };
-
-
 
 //  <div className="mt-10 w-min m-auto flex flex-col">
 //   <div className="stats shadow mb-10">

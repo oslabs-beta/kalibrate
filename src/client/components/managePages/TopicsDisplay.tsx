@@ -5,9 +5,8 @@ import {topicData} from '../../../../demo/mockData';
 import {Button, Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 
-const TopicsDisplay = ({data}) => {
-  const topicList = data.topics;
-  console.log('Here is the data in topics display', topicList);
+const TopicsDisplay = ({topics}) => {
+  console.log('Here is the data in topics display', topics);
   const context = useOutletContext();
 
   // console.log('Trying to extra partitions and update state \n');
@@ -29,7 +28,7 @@ const TopicsDisplay = ({data}) => {
           <Button
             onClick={e => {
               // const topicName = getTopicName(),
-              let partitions = topicList[params.row.id].partitions;
+              let partitions = topics[params.row.id].partitions;
               context.handleComponentChange(e, params.row.topicName, partitions);
               navigate('partitions');
             }}
@@ -58,7 +57,7 @@ const TopicsDisplay = ({data}) => {
     },
   ];
 
-  const rows = topicList.map((topic, index) => {
+  const rows = topics.map((topic, index) => {
     return {
       id: index,
       topicName: topic.name,
