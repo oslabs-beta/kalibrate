@@ -2,11 +2,10 @@ import {useState} from 'react';
 import {useOutletContext} from 'react-router-dom';
 import {Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {partitions} from './types';
+import {partitions, TopicsContext} from './types';
 
 const PartitionsDisplay = () => {
-  const context = useOutletContext();
-  const partitions = context.partitions[0];
+  const {topicPartitions}: TopicsContext = useOutletContext();
   const [pageSize, setPageSize] = useState<number>(5);
 
   const partitionColumns = [
@@ -18,7 +17,7 @@ const PartitionsDisplay = () => {
     {field: 'error', headerName: 'Error Code', flex: 1},
   ];
 
-  const partitionRows = partitions.map((partition: partitions, index: number) => {
+  const partitionRows = topicPartitions.map((partition: partitions, index: number) => {
     return {
       id: index,
       partId: partition.partitionId,

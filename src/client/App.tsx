@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {connectedClusterData} from '../client/components/managePages/types';
 import Connect from './components/Connect';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
@@ -19,14 +20,10 @@ import './stylesheets/style.css';
 
 function App() {
   //declare clientId state so other components could access for link & routing
-  const [isConnected, setIsConnected] = useState(false);
-  const [connectedCluster, setConnectedCluster] = useState('');
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState([]);
-  const [connectedClusterData, setConnectedClusterData] = useState({
-    clusterData: {brokers: []},
-    topicData: {topics: []},
-    groupData: [],
-  });
+  const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({});
 
   const {clusterData, topicData, groupData} = connectedClusterData;
 
@@ -48,6 +45,7 @@ function App() {
     }
   }, [connectedCluster]);
 
+  // log fetched data for dev purposes, remove before push to prod
   console.log('Connected cluster data:', connectedClusterData);
 
   return (
@@ -92,10 +90,10 @@ function App() {
               />
             }
           />
-          <Route path="brokers" element={<Brokers data={clusterData} />} />
+          <Route path="brokers" element={<Brokers clusterData={clusterData} />} />
           <Route path="consumers" element={<Consumers groupData={groupData} />} />
           <Route path="topics" element={<Topics />}>
-            <Route index element={<TopicsDisplay topics={topicData.topics} />} />
+            <Route index element={<TopicsDisplay topicData={topicData} />} />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
             <Route path=":topic/messages" element={<MessagesDisplay />} />
           </Route>

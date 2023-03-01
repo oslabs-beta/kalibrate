@@ -2,20 +2,20 @@ import {useState} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {Box, Breadcrumbs, Typography} from '@mui/material';
-import {clickHandler} from './types';
+import {clickHandler, partitions} from './types';
 
 const Topics = () => {
   const navigate = useNavigate();
-  const [activeTopicsComponent, setActiveTopicsComponent] = useState('');
-  const [selectedTopic, setSelectedTopic] = useState('');
-  const [selectedPartitions, setPartitions] = useState([]);
+  const [activeTopicsComponent, setActiveTopicsComponent] = useState<string>('');
+  const [selectedTopic, setSelectedTopic] = useState<string>('');
+  const [topicPartitions, setTopicPartitions] = useState<partitions[]>([]);
 
-  const handleComponentChange: clickHandler = (e, topicName = '', array = []) => {
+  const handleComponentChange: clickHandler = (e, topic, partitions) => {
     const topicComponent = (e.target as HTMLButtonElement).innerText;
 
     setActiveTopicsComponent(topicComponent);
-    setSelectedTopic(topicName);
-    setPartitions(array);
+    setSelectedTopic(topic);
+    if (partitions) setTopicPartitions(partitions);
   };
 
   return (
@@ -35,9 +35,8 @@ const Topics = () => {
       <div className="topics-display">
         <Outlet
           context={{
-            active: [activeTopicsComponent, setActiveTopicsComponent],
-            select: [selectedTopic, setSelectedTopic],
-            partitions: [selectedPartitions, setPartitions],
+            selectedTopic: selectedTopic,
+            topicPartitions: topicPartitions,
             handleComponentChange,
           }}
         />

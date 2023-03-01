@@ -1,6 +1,16 @@
 import {MouseEvent} from 'react';
 
-export type clickHandler = (event: MouseEvent<HTMLButtonElement>) => void;
+export type brokers = {
+  nodeId: number;
+  host: string;
+  port: number;
+};
+
+export type clusterData = {
+  clusterId: string;
+  controllers: number;
+  brokers: brokers[];
+};
 
 export type partitions = {
   isr: number[];
@@ -24,10 +34,42 @@ export type topics = {
   offsets: offsets[];
 };
 
-export type TopicsContext = {};
+export type topicData = {
+  topics: topics[];
+};
+
+export type groupData = {
+  [k: string]: any[];
+};
+
+export type connectedClusterData = {
+  clusterData?: clusterData;
+  topicData?: topicData;
+  groupData?: groupData;
+};
+
+export type BrokersProps = {
+  clusterData?: clusterData;
+};
 
 export type TopicsDisplayProps = {
-  topics: topics[];
+  topicData?: topicData;
+};
+
+export interface ConsumerProps {
+  groupData: {[k: string]: any}[];
+}
+
+export type clickHandler = (
+  event: MouseEvent<HTMLButtonElement>,
+  topic: string,
+  partitions?: partitions[]
+) => void;
+
+export type TopicsContext = {
+  handleComponentChange: clickHandler;
+  selectedTopic: string;
+  topicPartitions: partitions[];
 };
 
 export type message = {
@@ -38,7 +80,3 @@ export type message = {
   key: string;
   value: string;
 };
-
-export interface ConsumerProps {
-  groupData: {[k: string]: any}[];
-}

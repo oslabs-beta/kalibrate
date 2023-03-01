@@ -1,37 +1,39 @@
-import React, {useState, useEffect} from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import {Button, Grid, Pagination} from '@mui/material';
-import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-//REMEMBER TO CHANGE BETWEEN MOCK DATA (brokersData) AND REAL KAFKA DATA (rows)
-import {brokerColumn, brokerData} from '../../../../demo/mockData.js';
+import {useState} from 'react';
+import {Box, Paper} from '@mui/material';
+import {DataGrid, GridToolbar} from '@mui/x-data-grid';
+import {BrokersProps} from './types';
 
-const BrokersDisplay = props => {
-  const {brokers} = props.data;
+const BrokersDisplay = ({clusterData}: BrokersProps) => {
+  //default num of rows on a page of data grid
+  const [pageSize, setPageSize] = useState<number>(5);
+  const {brokers} = clusterData;
 
-  console.log('Attempting to map Broker Data...', brokers);
-  const rows = brokers.map((broker, index) => {
+  const brokerColumns = [
+    {field: 'clusterId', headerName: 'Cluster ID', flex: 1},
+    {field: 'nodeId', headerName: 'Node ID', flex: 1},
+    {field: 'host', headerName: 'Host', flex: 1},
+    {field: 'port', headerName: 'Port', flex: 1},
+  ];
+
+  const brokerRows = brokers.map((broker, index) => {
     return {
       id: index,
+      clusterId: clusterData.clusterId,
       nodeId: broker.nodeId,
       host: broker.host,
       port: broker.port,
     };
   });
-  console.log(rows);
-  //default num of rows on a page of data grid
-  const [pageSize, setPageSize] = useState<number>(5);
-  // hardcoded values are used as example, remove hardcoded example and render list instead when data available
+
   return (
     <div className="wrapper">
       <div className="display-table">
         <Box sx={{height: 400, width: '1000'}}>
           <Paper elevation={6}>
             <DataGrid
-              //better alt for autoHeight? DataGrid inherits height of parent, even if have data
-              autoHeight
-              rows={rows}
-              columns={brokerColumn}
+              autoHeight // sets table height based on number of rows
+              rows={brokerRows}
+              columns={brokerColumns}
               pageSize={pageSize}
               onPageSizeChange={newPageSize => setPageSize(newPageSize)}
               rowsPerPageOptions={[5, 10, 25]}
@@ -56,36 +58,3 @@ const BrokersDisplay = props => {
 };
 
 export default BrokersDisplay;
-/*//old
-  // eventual list to generate...
-  // const brokersList = brokers.map(broker => {
-  //   return (
-  //     <tr className="hover">
-  //       <th>broker.id</th>
-  //       <td>broker.host</td>
-  //       <td>broker.port</td>
-  //     </tr>
-  //   );
-  // });
-  /* ASSUMING INCOMING INFO is array with nesteed broker obj, w/ id, host, port
-    <div className="overflow-x-auto">
-      <table className="table w-full">
-        <thead>
-          <tr>
-            <th>Node ID</th>
-            <th>Host</th>
-            <th>Port</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr className="hover">
-            <th>0</th>
-            <td>localhost</td>
-            <td>9091</td>
-          </tr>
-
-          {/* {brokersList}
-        </tbody>
-      </table>
-    </div>*/

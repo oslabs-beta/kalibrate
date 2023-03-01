@@ -2,10 +2,11 @@ import {useState} from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {Button, Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
-import {TopicsDisplayProps} from './types';
+import {TopicsDisplayProps, TopicsContext} from './types';
 
-const TopicsDisplay = ({topics}: TopicsDisplayProps) => {
-  const {handleComponentChange} = useOutletContext();
+const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
+  const {topics} = topicData;
+  const {handleComponentChange}: TopicsContext = useOutletContext();
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState<number>(5);
 
@@ -70,7 +71,7 @@ const TopicsDisplay = ({topics}: TopicsDisplayProps) => {
           <DataGrid
             autoHeight // sets table height based on number of rows
             rows={topicRows}
-            columns={topicColumns}
+            columns={topicColumns} // not sure how to remove this TS error
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}
