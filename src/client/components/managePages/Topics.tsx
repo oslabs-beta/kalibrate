@@ -1,69 +1,46 @@
 import React, {useState} from 'react';
-import TopicsDisplay from './TopicsDisplay';
-import PartitionsDisplay from './PartitionsDisplay';
-import MessagesDisplay from './MessagesDisplay';
-import {Box, Breadcrumbs, Link, Typography} from '@mui/material';
+import {Link, Outlet, useNavigate} from 'react-router-dom';
 import {TopicsProps, clickHandler} from './types';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import {Box, Breadcrumbs, Typography} from '@mui/material';
 
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
 const Topics = ({topics}: TopicsProps) => {
+  const navigate = useNavigate();
   const [activeTopicsComponent, setActiveTopicsComponent] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
 
-  const handlePartitionsComponentChange: clickHandler = e => {
-    setActiveTopicsComponent('Partitions');
-    setSelectedTopic((e.target as HTMLButtonElement).name);
+  //    setSelectedTopic((e.target as HTMLButtonElement).name);
+  const handleComponentChange = (e, topicName = 'hoi') => {
+    // const topicName = e.target.name;
+    console.log('this burront reitoe', topicName);
+    const topicComponent = e.target.innerText;
+    setActiveTopicsComponent(topicComponent);
+    setSelectedTopic(topicName);
   };
-
-  const handleMessagesComponentChange: clickHandler = e => {
-    setActiveTopicsComponent('Messages');
-    setSelectedTopic((e.target as HTMLButtonElement).name);
-  };
-
-  let topicsComponent;
-  switch (activeTopicsComponent) {
-    case 'Partitions':
-      topicsComponent = <PartitionsDisplay topic={selectedTopic} />;
-      break;
-    case 'Messages':
-      topicsComponent = <MessagesDisplay topic={selectedTopic} />;
-      break;
-    default:
-      topicsComponent = (
-        <TopicsDisplay
-          topics={topics}
-          handlePartitionsComponentChange={handlePartitionsComponentChange}
-          handleMessagesComponentChange={handleMessagesComponentChange}
-        />
-      );
-  }
-
-  const topicsBreadcrumb = activeTopicsComponent ? (
-    <>
-      <li>{selectedTopic}</li>
-      <li>{activeTopicsComponent}</li>
-    </>
-  ) : null;
 
   return (
     <div className="wrapper">
       <div className="topics-heading">
         <Typography variant="h6">Topics List</Typography>
-        <div className="text-sm breadcrumbs">
-          <ul>
-            <li></li>
-            {topicsBreadcrumb}
-          </ul>
-        </div>
-
-        {/* <input
-          type="text"
-          placeholder="Search"
-          className="input input-bordered input-sm w-full max-w-xs mb-5"
-        /> */}
+        <Box m={2}>
+          <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small" />}>
+            <Typography className="topicCrumb">Topics</Typography>
+            {selectedTopic && <div>{selectedTopic}</div>}
+            {activeTopicsComponent && <div>{activeTopicsComponent}</div>}
+          </Breadcrumbs>
+        </Box>
       </div>
-      <div className="topics-display">{topicsComponent}</div>
+      <div className="topics-display">
+        <Outlet
+          context={{
+            active: [activeTopicsComponent, setActiveTopicsComponent],
+            select: [selectedTopic, setSelectedTopic],
+            handleComponentChange,
+          }}
+        />
+      </div>
     </div>
   );
 };

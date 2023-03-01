@@ -88,8 +88,13 @@ const Connect = props => {
       setConnectedCluster(clientId);
       const newSessionClusters = [...sessionClusters, clientId];
       setSessionClusters(newSessionClusters);
+      setPassword('');
+      setClientId('');
+      setSasl(false);
+      setUsername('');
+      setBrokers('');
 
-      navigate('/dashboard');
+      navigate('/');
     } catch {
       setErrorMessage('Failed to connect. Verify credentials.');
     } finally {

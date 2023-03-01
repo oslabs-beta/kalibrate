@@ -6,7 +6,7 @@ import {ConsumerProps} from './types';
 const Consumers = (props: ConsumerProps) => {
   const {groupData} = props;
   console.log('(CONSUMERS) groupData:', groupData);
-
+  
   return (
     <div className="wrapper">
       <div className="consumers-heading" data-testid="consumer-1">

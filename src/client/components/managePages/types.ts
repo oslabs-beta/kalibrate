@@ -30,8 +30,9 @@ export type offsets = {
 
 export type TopicsDisplayProps = {
   topics: topics[];
-  handlePartitionsComponentChange: clickHandler;
-  handleMessagesComponentChange: clickHandler;
+  selectedTopic: string;
+  topicComponent: string;
+  handleComponentChange: clickHandler;
 };
 
 export type MessageDisplayProps = {

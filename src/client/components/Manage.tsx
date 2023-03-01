@@ -17,11 +17,9 @@ import {useState} from 'react';
 const drawerWidth = 150;
 
 const Manage = props => {
-
   const navigate = useNavigate();
 
   const {connectedCluster} = props;
-
 
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
@@ -49,35 +47,19 @@ const Manage = props => {
             </ListItem>
             <Collapse in={openManage} timeout="auto" unmountOnExit>
               <ListItem key="Brokers" disablePadding>
-                <ListItemButton
-                  onClick={() => navigate('brokers')}
-                >
+                <ListItemButton onClick={() => navigate('brokers')}>
                   <ListItemText primary="Brokers" />
                 </ListItemButton>
               </ListItem>
 
-
-                <ListItem key="Topics" disablePadding>
-                  <ListItemButton
-                    onClick={() => navigate('topics')}
-                  >
-                    <ListItemText primary="Topics" />
-                  </ListItemButton>
-                </ListItem>
-
-                <ListItem key="Producers" disablePadding>
-                  <ListItemButton
-                    onClick={() => navigate('producers')}
-                  >
-                    <ListItemText primary="Producers" />
-                  </ListItemButton>
-                </ListItem>
-
+              <ListItem key="Topics" disablePadding>
+                <ListItemButton onClick={() => navigate('topics')}>
+                  <ListItemText primary="Topics" />
+                </ListItemButton>
+              </ListItem>
 
               <ListItem key="Consumers" disablePadding>
-                <ListItemButton
-                  onClick={() => navigate('consumers')}
-                >
+                <ListItemButton onClick={() => navigate('consumers')}>
                   <ListItemText primary="Consumers" />
                 </ListItemButton>
               </ListItem>
@@ -125,7 +107,7 @@ const Manage = props => {
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        <Typography paragraph> {connectedCluster}</Typography>
+        {/* <Typography paragraph> {connectedCluster}</Typography> */}
         <Outlet />
       </Box>
     </Box>

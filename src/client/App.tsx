@@ -3,7 +3,6 @@ import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import Producers from './components/managePages/Producers';
 import Brokers from './components/managePages/Brokers';
 import {useState, useEffect} from 'react';
 import Overview from './components/Overview';
@@ -13,8 +12,12 @@ import Lag from './components/monitorPages/Lag';
 import Throughput from './components/monitorPages/Throughput';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
+import './stylesheets/style.css'
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import PartitionsDisplay from './components/managePages/PartitionsDisplay';
+import MessagesDisplay from './components/managePages/MessagesDisplay';
+import TopicsDisplay from './components/managePages/TopicsDisplay';
 
 function App() {
   //declare clientId state so other components could access for link & routing
@@ -33,7 +36,7 @@ function App() {
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
-      fetch('api/get-data', {
+      fetch('api/data', {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -51,10 +54,12 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar isConnected={isConnected} />
+      <nav>
+        <Navbar isConnected={isConnected} />
+      </nav>
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Home />} />
         <Route
           path="connect"
           element={
@@ -66,9 +71,9 @@ function App() {
               setIsConnected={setIsConnected}
             />
           }
-        />
+        /> */}
         <Route
-          path="dashboard"
+          path="/" // was dashboard
           element={
             <Dashboard
               connectedCluster={connectedCluster}
@@ -81,8 +86,20 @@ function App() {
           <Route
             index
             element={
-              //pass in all the data needed for the overview data here
-              //clustername, version, brokers count, partitions, topics, production
+              <Connect
+                connectedCluster={connectedCluster}
+                setConnectedCluster={setConnectedCluster}
+                sessionClusters={sessionClusters}
+                setSessionClusters={setSessionClusters}
+                setIsConnected={setIsConnected}
+              />
+            }
+          />
+        </Route>
+        <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
+          <Route
+            index
+            element={
               <Overview
                 data={connectedClusterData}
                 connectedCluster={connectedCluster}
@@ -90,12 +107,13 @@ function App() {
               />
             }
           />
-        </Route>
-        <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
           <Route path="brokers" element={<Brokers data={clusterData} />} />
-          <Route path="producers" element={<Producers groupData={groupData} />} />
           <Route path="consumers" element={<Consumers groupData={groupData} />} />
-          <Route path="topics" element={<Topics topics={topicData.topics} />} />
+          <Route path="topics" element={<Topics topics={topicData.topics} />}>
+            <Route index element={<TopicsDisplay topics={topicData.topics} />} />
+            <Route path=":topic/partitions" element={<PartitionsDisplay />} />
+            <Route path=":topic/messages" element={<MessagesDisplay topic={'topicname'} />} />
+          </Route>
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
           <Route path="consume" element={<Consume />} />
@@ -109,4 +127,5 @@ function App() {
 export default App;
 /*TODO:
 - as of 1st attempt brokers: data is not drilled properly unless all of connectedClusterData is passe through.
+- props for groupData does not specify producers or consumers
 */
