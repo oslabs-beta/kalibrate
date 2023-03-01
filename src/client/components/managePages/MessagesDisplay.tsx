@@ -1,9 +1,14 @@
 import {useState, useEffect} from 'react';
+import {useOutletContext} from 'react-router-dom';
 import {Box, Paper, CircularProgress, Button, Alert} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {MessageDisplayProps, message} from './types';
 
 const MessagesDisplay = ({topic}: MessageDisplayProps) => {
+  //topico is the topic name passed through outletContext
+  const context = useOutletContext();
+  const topico: string = context.select[0];
+
   const [pageSize, setPageSize] = useState<number>(25);
   const [messages, setMessages] = useState<message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -12,7 +17,8 @@ const MessagesDisplay = ({topic}: MessageDisplayProps) => {
   // Fetches all messages for a given topic and update state
   const fetchTopicMessages = async () => {
     try {
-      const response = await fetch(`/api/${topic}/messages`);
+      console.log('fetching messages....');
+      const response = await fetch(`/api/${topico}/messages`);
 
       if (!response.ok) throw new Error();
 
