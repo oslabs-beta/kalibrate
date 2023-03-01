@@ -12,16 +12,17 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {useState, SyntheticEvent} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
+import crow from './assets/crow.png';
 
 interface Props {
-  isConnected: boolean
+  isConnected: boolean;
 }
 
 const Navbar = (props: Props) => {
   const pages = ['Dashboard'];
   const settings = ['Account'];
   const alerts = ['Alert 1', 'Alert 2'];
-  
+
   const navigate = useNavigate();
   // const [value, setValue] = useState<number>(0);
   // const handleChange = (event: SyntheticEvent, newValue: number) => {
@@ -55,10 +56,14 @@ const Navbar = (props: Props) => {
           position: 'fixed',
           zIndex: theme => theme.zIndex.drawer + 1,
           width: '100vw',
-          bgcolor: 'skyblue',
+          bgcolor: '#9db4c0',
         }}
       >
         <Toolbar disableGutters>
+          <Typography edge="left">
+            <img src={crow} length="30" width="50"></img>
+          </Typography>
+
           {/* link kalibrate logo to home page */}
           <Typography
             variant="h6"
@@ -73,19 +78,25 @@ const Navbar = (props: Props) => {
               letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             KALIBRATE
           </Typography>
-          
+
           {/* link dashboard button to dashboard page */}
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (
               <Button
                 key={page}
                 onClick={() => navigate('/dashboard')}
-                sx={{my: 2, color: 'white', display: 'block', m: 0, visibility: isConnected ? 'visible' : 'hidden'}}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                  m: 0,
+                  visibility: isConnected ? 'visible' : 'hidden',
+                }}
               >
                 {page}
               </Button>
@@ -93,7 +104,12 @@ const Navbar = (props: Props) => {
           </Box>
 
           {/* when Alerts icon is clicked, connect popover menu to alerts element via anchorEl */}
-          <IconButton size="large" color="inherit" onClick={handleOpenAlertsMenu} sx={{visibility: isConnected ? 'visible' : 'hidden'}}>
+          <IconButton
+            size="large"
+            color="inherit"
+            onClick={handleOpenAlertsMenu}
+            sx={{visibility: isConnected ? 'visible' : 'hidden'}}
+          >
             <Badge badgeContent={2} color="error">
               <NotificationsIcon aria-label="notification" />
             </Badge>
@@ -122,7 +138,12 @@ const Navbar = (props: Props) => {
           </Menu>
 
           {/* when Settings icon is clicked, connect popover menu to settings element via anchorEl */}
-          <IconButton size="large" color="inherit" onClick={handleOpenUserMenu} sx={{visibility: isConnected ? 'visible' : 'hidden'}}>
+          <IconButton
+            size="large"
+            color="inherit"
+            onClick={handleOpenUserMenu}
+            sx={{visibility: isConnected ? 'visible' : 'hidden'}}
+          >
             <SettingsIcon aria-label="settings" />
           </IconButton>
           <Menu

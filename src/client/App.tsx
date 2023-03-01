@@ -12,6 +12,7 @@ import Lag from './components/monitorPages/Lag';
 import Throughput from './components/monitorPages/Throughput';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
+import './stylesheets/style.css'
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -53,7 +54,9 @@ function App() {
   const {clusterData, topicData, groupList, groupData} = connectedClusterData;
   return (
     <BrowserRouter>
-      <Navbar isConnected={isConnected} />
+      <nav>
+        <Navbar isConnected={isConnected} />
+      </nav>
 
       <Routes>
         <Route path="/" element={<Home />} />
