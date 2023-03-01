@@ -1,21 +1,25 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate, useOutletContext} from 'react-router-dom';
+import {Outlet, useNavigate, useOutletContext} from 'react-router-dom';
 import {TopicsDisplayProps} from './types';
 import {topicData} from '../../../../demo/mockData';
 import {Button, Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 
-const TopicsDisplay = (props: TopicsDisplayProps) => {
+const TopicsDisplay = ({data}) => {
+  const topicList = data.topics;
+  console.log('Here is the data in topics display', topicList);
   const context = useOutletContext();
+
+  // console.log('Trying to extra partitions and update state \n');
+  // console.log(topicList[0].partitions);
 
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState<number>(5);
 
   const topicColumn = [
-    {field: 'topicName', headername: 'Name', width: 225},
-    {field: 'replication', headerName: 'Replication Factor', width: 50},
-    {field: 'numPartitions', headerName: 'Num of Paritions', width: 50},
-    {field: 'numMessages', headerName: 'Num of Messages', width: 50},
+    {field: 'topicName', headername: 'Topic Name', width: 200},
+    {field: 'offsets', headerName: 'Offsets Total', width: 100},
+    {field: 'numPartitions', headerName: 'Partitions Total', width: 100},
     {
       field: 'linkToPart',
       headerName: 'See Partitions',
@@ -25,7 +29,8 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
           <Button
             onClick={e => {
               // const topicName = getTopicName(),
-              context.handleComponentChange(e, params.row.topicName);
+              let partitions = topicList[params.row.id].partitions;
+              context.handleComponentChange(e, params.row.topicName, partitions);
               navigate('partitions');
             }}
           >
@@ -53,13 +58,14 @@ const TopicsDisplay = (props: TopicsDisplayProps) => {
     },
   ];
 
-  const rows = topicData.map((topic, index) => {
+  const rows = topicList.map((topic, index) => {
     return {
       id: index,
-      topicName: topic.topicName,
-      replications: topic.replications,
-      numPartitions: topic.numPartitions,
-      numMessages: topic.numMessages,
+      topicName: topic.name,
+      offsets: topic.offsets.length,
+      numPartitions: topic.partitions.length,
+      // replications: topic.replications,
+      // numMessages: topic.numMessages,
     };
   });
 
