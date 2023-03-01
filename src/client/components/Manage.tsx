@@ -25,7 +25,7 @@ const Manage = props => {
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
 
-  const lightBlue = '#c1d4de';
+  const lightBlue = 'c8d6de';
   //edf8fe
   //bfd4e0
   return (
@@ -46,17 +46,10 @@ const Manage = props => {
         <Toolbar />
         <Box sx={{overflow: 'auto', background: lightBlue}}>
           <List className="no-padding-list">
-            <ListItem key="Manage" disablePadding sx={{background: lightBlue}}>
+            <ListItem key="Manage" disablePadding sx={{background: '#edf8fe'}}>
               <ListItemButton
                 onClick={() => setOpenManage(prev => !prev)}
-                sx={
-                  openManage
-                    ? {
-                        borderRadius: '5px',
-                        border: '1px outset #c2dfe3',
-                      }
-                    : {borderRadius: '5px'}
-                }
+                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
               >
                 <ListItemText primary="Manage" />
                 {openManage ? <ExpandLess /> : <ExpandMore />}
@@ -85,14 +78,7 @@ const Manage = props => {
             <ListItem key="Monitor" disablePadding sx={{background: lightBlue}}>
               <ListItemButton
                 onClick={() => setOpenMonitor(prev => !prev)}
-                sx={
-                  openMonitor
-                    ? {
-                        border: '1px outset #c2dfe3',
-                        borderRadius: '5px',
-                      }
-                    : {}
-                }
+                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
               >
                 <ListItemText primary="Monitor" />
                 {openMonitor ? <ExpandLess /> : <ExpandMore />}
@@ -114,14 +100,7 @@ const Manage = props => {
             <ListItem key="Test" disablePadding sx={{background: lightBlue}}>
               <ListItemButton
                 onClick={() => setOpenTest(prev => !prev)}
-                sx={
-                  openTest
-                    ? {
-                        border: '1px outset #c2dfe3',
-                        borderRadius: '5px',
-                      }
-                    : {}
-                }
+                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
               >
                 <ListItemText primary="Test" />
                 {openTest ? <ExpandLess /> : <ExpandMore />}
