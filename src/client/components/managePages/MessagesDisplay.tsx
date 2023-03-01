@@ -3,6 +3,7 @@ import {useOutletContext} from 'react-router-dom';
 import {Box, Paper, CircularProgress, Button, Alert} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {MessageDisplayProps, message} from './types';
+import crow from '../assets/crow2.png';
 
 const MessagesDisplay = ({topic}: MessageDisplayProps) => {
   //topico is the topic name passed through outletContext
@@ -102,7 +103,12 @@ const MessagesDisplay = ({topic}: MessageDisplayProps) => {
       <CircularProgress size="75px" />
     </Box>
   );
-
+  //crow alternative
+  const loadingKrow = (
+    <Box sx={{display: 'flex', justifyContent: 'center'}}>
+      <img className="loadKrow" src={crow}></img>
+    </Box>
+  );
   // Button to reload messages
   const refreshButton = (
     <Button variant="contained" onClick={handleMessagesRefresh}>
@@ -125,7 +131,7 @@ const MessagesDisplay = ({topic}: MessageDisplayProps) => {
     <div className="wrapper">
       <div className="refresh">{isLoading ? disabledRefreshutton : refreshButton}</div>
       <div className="message-table">
-        {isLoading ? loadingWheel : isError ? errorAlert : messageTable}
+        {isLoading ? loadingKrow : isError ? errorAlert : messageTable}
       </div>
     </div>
   );
