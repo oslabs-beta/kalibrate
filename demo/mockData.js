@@ -34,17 +34,47 @@ export const producerData = [
 
 //TOPIC DATA
 export const topicColumn = [
-  {field: 'topicName', headername: 'Name', width: 250},
-  {field: 'replication', headerName: 'Replication Factor', width: 50},
-  {field: 'numPartitions', headerName: 'Num of Paritions', width: 50},
-  {field: 'numMessages', headerName: 'Num of Messages', width: 50},
-  {
-    field: 'linkToPart',
-    headerName: 'See Partitions',
-    width: 150,
-    // renderCell: () => <PartitionsDisplay />,
-  },
-  // {field: 'linkToMsg', headerName: 'See Messages', width: 150, renderCell: () => <Link></Link>},
+  {field: 'topicName', headername: 'Topic Name', width: 200},
+  {field: 'offsets', headerName: 'Offsets Total', width: 100},
+  {field: 'numPartitions', headerName: 'Partitions Total', width: 100},
+  // {field: 'replication', headerName: 'Replication Factor', width: 50},
+  // {field: 'numMessages', headerName: 'Num of Messages', width: 50},
+  // {
+  //   field: 'linkToPart',
+  //   headerName: 'See Partitions',
+  //   width: 110,
+  //   renderCell: (params: GridValueGetterParams) => (
+  //     <Box>
+  //       <Button
+  //         onClick={e => {
+  //           // const topicName = getTopicName(),
+  //           let partitions = topicList[params.row.id].partitions;
+  //           context.handleComponentChange(e, params.row.topicName, partitions);
+  //           navigate('partitions');
+  //         }}
+  //       >
+  //         Partitions
+  //       </Button>
+  //     </Box>
+  //   ),
+  // },
+  // {
+  //   field: 'linkToMsg',
+  //   headerName: 'See Messages',
+  //   width: 110,
+  //   renderCell: (params: GridValueGetterParams) => (
+  //     <Box>
+  //       <Button
+  //         onClick={e => {
+  //           context.handleComponentChange(e, params.row.topicName);
+  //           navigate('messages');
+  //         }}
+  //       >
+  //         Messages
+  //       </Button>
+  //     </Box>
+  //   ),
+  // },
 ];
 export const topicData = [
   {
@@ -64,10 +94,11 @@ export const topicData = [
 //PARTITION DATA
 export const partitionColumn = [
   {field: 'partId', headerName: 'Partition ID', width: 100},
-  {field: 'leader', headerName: 'Leader', width: 50},
-  {field: 'offset', headerName: 'Offset', width: 50},
-  {field: 'high', headerName: 'High', width: 50},
-  {field: 'low', headerName: 'low', width: 50},
+  {field: 'leader', headerName: 'Leader', width: 100},
+  {field: 'isr', headerName: 'ISR', width: 100},
+  {field: 'replicas', headerName: 'Replicas', width: 100},
+  {field: 'offlineReplicas', headerName: 'Offline Replicas', width: 100},
+  {field: 'error', headerName: 'Error Code', width: 100},
 ];
 export const partitionData = [{partId: 0, leader: 0, offset: 100, high: 50, low: 150}];
 //MESSAGE DATA

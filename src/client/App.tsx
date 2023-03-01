@@ -12,6 +12,7 @@ import Lag from './components/monitorPages/Lag';
 import Throughput from './components/monitorPages/Throughput';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
+import './stylesheets/style.css';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -26,9 +27,10 @@ function App() {
   const [connectedClusterData, setConnectedClusterData] = useState({
     clusterData: {brokers: []},
     topicData: {topics: []},
-    groupList: [],
-    groupData: {groups: []},
+    groupData: [],
   });
+
+  const {clusterData, topicData, groupData} = connectedClusterData;
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -50,13 +52,14 @@ function App() {
 
   console.log('Received Data:', connectedClusterData);
 
-  const {clusterData, topicData, groupList, groupData} = connectedClusterData;
   return (
     <BrowserRouter>
-      <Navbar isConnected={isConnected} />
+      <nav>
+        <Navbar isConnected={isConnected} />
+      </nav>
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Home />} />
         <Route
           path="connect"
           element={
@@ -68,9 +71,9 @@ function App() {
               setIsConnected={setIsConnected}
             />
           }
-        />
+        /> */}
         <Route
-          path="dashboard"
+          path="/" // was dashboard
           element={
             <Dashboard
               connectedCluster={connectedCluster}
@@ -105,11 +108,11 @@ function App() {
             }
           />
           <Route path="brokers" element={<Brokers data={clusterData} />} />
-          <Route path="consumers" element={<Consumers data={groupData} />} />
-          <Route path="topics" element={<Topics data={topicData} />}>
-            <Route index element={<TopicsDisplay data={topicData} />} />
-            <Route path=":partitions" element={<PartitionsDisplay data={topicData.topics} />} />
-            <Route path=":messages" element={<MessagesDisplay topic={'topicname'} />} />
+          <Route path="consumers" element={<Consumers groupData={groupData} />} />
+          <Route path="topics" element={<Topics topics={topicData.topics} />}>
+            <Route index element={<TopicsDisplay topics={topicData.topics} />} />
+            <Route path="partitions" element={<PartitionsDisplay />} />
+            <Route path="messages" element={<MessagesDisplay topic={'topicname'} />} />
           </Route>
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />

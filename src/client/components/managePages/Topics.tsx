@@ -6,18 +6,20 @@ import {Box, Breadcrumbs, Typography} from '@mui/material';
 
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
-const Topics = ({topics}: TopicsProps) => {
+const Topics = ({data}: TopicsProps) => {
   const navigate = useNavigate();
   const [activeTopicsComponent, setActiveTopicsComponent] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
+  const [selectedPartitions, setPartitions] = useState([]);
 
   //    setSelectedTopic((e.target as HTMLButtonElement).name);
-  const handleComponentChange = (e, topicName = 'hoi') => {
-    // const topicName = e.target.name;
-    console.log('this burront reitoe', topicName);
+  const handleComponentChange = (e, topicName = 'hoi', array = []) => {
+    // console.log('this burront reitoe', topicName);
+    // console.log('thi sis parotitosn', array);
     const topicComponent = e.target.innerText;
     setActiveTopicsComponent(topicComponent);
     setSelectedTopic(topicName);
+    setPartitions(array);
   };
 
   return (
@@ -26,7 +28,9 @@ const Topics = ({topics}: TopicsProps) => {
         <Typography variant="h6">Topics List</Typography>
         <Box m={2}>
           <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small" />}>
-            <Typography className="topicCrumb">Topics</Typography>
+            <Typography className="topicCrumb" onClick={() => navigate(-1)}>
+              Topics
+            </Typography>
             {selectedTopic && <div>{selectedTopic}</div>}
             {activeTopicsComponent && <div>{activeTopicsComponent}</div>}
           </Breadcrumbs>
@@ -38,6 +42,7 @@ const Topics = ({topics}: TopicsProps) => {
           context={{
             active: [activeTopicsComponent, setActiveTopicsComponent],
             select: [selectedTopic, setSelectedTopic],
+            partitions: [selectedPartitions, setPartitions],
             handleComponentChange,
           }}
         />
