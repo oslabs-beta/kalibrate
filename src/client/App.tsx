@@ -100,11 +100,13 @@ function App() {
           <Route
             index
             element={
-              <Overview
-                data={connectedClusterData}
-                connectedCluster={connectedCluster}
-                sessionClusters={sessionClusters}
-              />
+              <div className="overview">
+                <Overview
+                  data={connectedClusterData}
+                  connectedCluster={connectedCluster}
+                  sessionClusters={sessionClusters}
+                />
+              </div>
             }
           />
           <Route

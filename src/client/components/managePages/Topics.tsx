@@ -33,6 +33,7 @@ const Topics = ({connectedCluster}) => {
       </div>
       <div className="topics-display">
         <Outlet
+          // these props are passed to sibling components that are navigated to from here
           context={{
             active: [activeTopicsComponent, setActiveTopicsComponent],
             select: [selectedTopic, setSelectedTopic],
