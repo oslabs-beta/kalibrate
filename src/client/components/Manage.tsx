@@ -40,7 +40,18 @@ const Manage = props => {
         <Box sx={{overflow: 'auto'}}>
           <List>
             <ListItem key="Manage" disablePadding>
-              <ListItemButton onClick={() => setOpenManage(prev => !prev)}>
+              <ListItemButton
+                onClick={() => setOpenManage(prev => !prev)}
+                sx={
+                  openManage
+                    ? {
+                        background: 'white',
+                        border: '1px outset #c2dfe3',
+                        borderRadius: '5px',
+                      }
+                    : {}
+                }
+              >
                 <ListItemText primary="Manage" />
                 {openManage ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -66,7 +77,18 @@ const Manage = props => {
             </Collapse>
 
             <ListItem key="Monitor" disablePadding>
-              <ListItemButton onClick={() => setOpenMonitor(prev => !prev)}>
+              <ListItemButton
+                onClick={() => setOpenMonitor(prev => !prev)}
+                sx={
+                  openMonitor
+                    ? {
+                        background: 'white',
+                        border: '1px outset #c2dfe3',
+                        borderRadius: '5px',
+                      }
+                    : {}
+                }
+              >
                 <ListItemText primary="Monitor" />
                 {openMonitor ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -85,7 +107,18 @@ const Manage = props => {
             </Collapse>
 
             <ListItem key="Test" disablePadding>
-              <ListItemButton onClick={() => setOpenTest(prev => !prev)}>
+              <ListItemButton
+                onClick={() => setOpenTest(prev => !prev)}
+                sx={
+                  openTest
+                    ? {
+                        background: 'white',
+                        border: '1px outset #c2dfe3',
+                        borderRadius: '5px',
+                      }
+                    : {}
+                }
+              >
                 <ListItemText primary="Test" />
                 {openTest ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>

@@ -120,7 +120,7 @@ const Connect = props => {
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
           padding: '15px',
-          border: '2px solid #253237',
+          border: '2px outset #253237',
           borderRadius: '8px',
         }}
         noValidate

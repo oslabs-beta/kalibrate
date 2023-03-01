@@ -36,13 +36,17 @@ const Dashboard = props => {
       >
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>
-          <List
-            sx={{
-              background: 'green',
-            }}
-          >
+          <List>
             {sessionClusters.map(text => (
-              <ListItem key={text} disablePadding>
+              <ListItem
+                key={text}
+                sx={{
+                  background: 'white',
+                  border: '1px outset #c2dfe3',
+                  borderRadius: '5px',
+                }}
+                disablePadding
+              >
                 <ListItemButton
                   onClick={() => {
                     setConnectedCluster(text);
