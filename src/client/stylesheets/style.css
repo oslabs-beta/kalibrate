@@ -9,3 +9,35 @@
   --error: #e17160;
 }
 
+h1 {
+  color: var(--darkestBlue);
+}
+
+.err {
+  color: var(--error);
+}
+
+.loadingSpan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rotocrow {
+  width: auto;
+  height: 30px;
+  display: inline;
+  animation: rotation 2s infinite linear, wiggle 0.8s infinite linear;
+  transition: 1;
+  z-index: 5;
+  transform: translate(-30px, -5px);
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

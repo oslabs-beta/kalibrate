@@ -1,6 +1,8 @@
 import {useState} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
+import '../stylesheets/style.css';
+import crow from './assets/crow2.png';
 
 /*
 CONNECTION FORM OPTIONS
@@ -118,7 +120,7 @@ const Connect = props => {
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
           padding: '15px',
-          border: '2px solid black',
+          border: '2px solid #253237',
           borderRadius: '8px',
         }}
         noValidate
@@ -185,14 +187,17 @@ const Connect = props => {
         ) : null}
 
         <Grid>
-          <Button variant="outlined" size="medium" type="submit">
-            {loginInProgress ? 'Connecting...' : 'Connect'}
-          </Button>
+          <span className="loadingSpan">
+            {loginInProgress ? <img className="rotocrow" src={crow}></img> : null}
+            <Button variant="outlined" size="medium" type="submit">
+              {loginInProgress ? 'Connecting...' : 'Connect'}
+            </Button>
+          </span>
         </Grid>
 
         {errorMessage ? (
           <Grid>
-            <h3>{errorMessage}</h3>
+            <h3 className="err">{errorMessage}</h3>
           </Grid>
         ) : null}
       </Box>
