@@ -5,7 +5,7 @@ import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {partitionData, partitionColumn} from '../../../../demo/mockData';
 import {partitions} from './types';
-const PartitionsDisplay = ({data}) => {
+const PartitionsDisplay = () => {
   const context = useOutletContext();
   const partitions = context.partitions[0];
   console.log('Here is the context data in partition display', partitions);

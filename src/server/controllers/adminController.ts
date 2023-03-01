@@ -122,18 +122,19 @@ adminController.getGroupData = async (req, res, next) => {
     admin = kafkaController.kafka.admin();
     await admin.connect();
     const listObj = await admin.listGroups();
+    // type: { [k:string]: string }[]
     res.locals.groupList = listObj.groups;
     // if there are no groups present, return nothing
     if (res.locals.groupList.length === 0) {
       res.locals.groups = [];
       return next();
     } else {
-      //list of groups of the form [{groupId: string, protocolType: string}]
-      const groupIds: string[] = [];
-      for (const el of res.locals.groupList) {
-        groupIds.push(el.groupId);
-      }
-      res.locals.groupData = await admin.describeGroups(groupIds);
+      const groupIds: string[] = res.locals.groupList.map(
+        (group: {[k: string]: string}) => group.groupId
+      );
+      // type: { [k:string]: any }[]
+      const groupData = await admin.describeGroups(groupIds);
+      res.locals.groupData = groupData.groups;
       return next();
     }
   } catch (err) {
@@ -146,10 +147,15 @@ adminController.getGroupData = async (req, res, next) => {
   }
 };
 
-// {
+// List of groups
+// groups: [
+//   {groupId: 'test-group', protocolType: 'consumer'}
+// ]
+
+// Describe groups
 //   groups: [{
 //     errorCode: 0,
-//     groupId: 'testgroup',
+//     groupId: 'test-group',
 //     members: [
 //       {
 //         clientHost: '/172.19.0.1',
@@ -163,6 +169,5 @@ adminController.getGroupData = async (req, res, next) => {
 //     protocolType: 'consumer',
 //     state: 'Stable',
 //   }]
-// }
 
 export default adminController;
