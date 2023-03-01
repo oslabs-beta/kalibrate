@@ -94,7 +94,7 @@ const Connect = props => {
       setUsername('');
       setBrokers('');
 
-      navigate('/dashboard');
+      navigate('/');
     } catch {
       setErrorMessage('Failed to connect. Verify credentials.');
     } finally {
