@@ -60,7 +60,7 @@ const Navbar = (props: Props) => {
         }}
       >
         <Toolbar disableGutters>
-          <Typography edge="left">
+          <Typography>
             <img src={crow} length="30" width="50"></img>
           </Typography>
 
@@ -83,13 +83,13 @@ const Navbar = (props: Props) => {
           >
             KALIBRATE
           </Typography>
-
+          
           {/* link dashboard button to dashboard page */}
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (
               <Button
                 key={page}
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/')}
                 sx={{
                   my: 2,
                   color: 'white',

@@ -59,7 +59,7 @@ function App() {
       </nav>
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Home />} />
         <Route
           path="connect"
           element={
@@ -71,9 +71,9 @@ function App() {
               setIsConnected={setIsConnected}
             />
           }
-        />
+        /> */}
         <Route
-          path="dashboard"
+          path="/" // was dashboard
           element={
             <Dashboard
               connectedCluster={connectedCluster}
@@ -109,10 +109,10 @@ function App() {
           />
           <Route path="brokers" element={<Brokers data={clusterData} />} />
           <Route path="consumers" element={<Consumers data={groupData} />} />
-          <Route path="topics" element={<Topics data={topicData} />}>
-            <Route index element={<TopicsDisplay data={topicData} />} />
-            <Route path=":partitions" element={<PartitionsDisplay />} />
-            <Route path=":messages" element={<MessagesDisplay topic={'topicname'} />} />
+          <Route path="topics" element={<Topics topics={topicData.topics} />}>
+            <Route index element={<TopicsDisplay topics={topicData.topics} />} />
+            <Route path=":topic/partitions" element={<PartitionsDisplay />} />
+            <Route path=":topic/messages" element={<MessagesDisplay topic={'topicname'} />} />
           </Route>
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
