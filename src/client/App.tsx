@@ -12,7 +12,7 @@ import Lag from './components/monitorPages/Lag';
 import Throughput from './components/monitorPages/Throughput';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
-import './stylesheets/style.css'
+import './stylesheets/style.css';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -28,9 +28,10 @@ function App() {
     clusterData: {brokers: []},
     topicData: {topics: []},
     groupData: [],
+    commitOffsets: {},
   });
 
-  const {clusterData, topicData, groupData} = connectedClusterData;
+  const {clusterData, topicData, groupData, commitOffsets} = connectedClusterData;
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -49,8 +50,6 @@ function App() {
         .catch(err => console.log(`from app loading cluster data: ${err}`));
     }
   }, [connectedCluster]);
-
-  console.log('Received Data:', connectedClusterData);
 
   return (
     <BrowserRouter>
@@ -108,7 +107,7 @@ function App() {
             }
           />
           <Route path="brokers" element={<Brokers data={clusterData} />} />
-          <Route path="consumers" element={<Consumers groupData={groupData} />} />
+          <Route path="consumers" element={<Consumers groupData={groupData} commitOffsets={commitOffsets} />} />
           <Route path="topics" element={<Topics topics={topicData.topics} />}>
             <Route index element={<TopicsDisplay topics={topicData.topics} />} />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
