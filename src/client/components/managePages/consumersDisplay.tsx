@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {ConsumerDisplayProps} from './types';
+import {ConsumerDisplayProps} from '../../types';
 
 const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const {groupData} = props;

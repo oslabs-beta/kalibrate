@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {connectedClusterData} from '../client/components/managePages/types';
+import {connectedClusterData} from './types';
 import Connect from './components/Connect';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';

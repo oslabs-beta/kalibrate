@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
 import {Box, Paper, CircularProgress, Button, Alert} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {message, TopicsContext} from './types';
+import {message, TopicsContext} from '../../types';
 
 const MessagesDisplay = () => {
   const {selectedTopic}: TopicsContext = useOutletContext();

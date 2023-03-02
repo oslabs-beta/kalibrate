@@ -1,7 +1,7 @@
 import {useState, SyntheticEvent} from 'react';
 import {Grid, Button, TextField, Box, Checkbox, Alert} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import {ConnectProps, connectionConfig} from './managePages/types';
+import {ConnectProps, connectionConfig} from '../types';
 import '../stylesheets/style.css';
 import crow from './assets/crow2.png';
 

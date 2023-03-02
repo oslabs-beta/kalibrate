@@ -1,6 +1,6 @@
 import BrokersDisplay from './BrokersDisplay';
 import {Typography} from '@mui/material';
-import {BrokersProps} from './types';
+import {BrokersProps} from '../../types';
 
 //props takes in the connectedClusterData
 const Brokers = ({clusterData, connectedCluster}: BrokersProps) => {
