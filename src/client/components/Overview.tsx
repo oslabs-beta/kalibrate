@@ -5,29 +5,71 @@ const Overview = (props: OverviewProps) => {
   const {connectedCluster, data} = props;
 
   return (
-    <ImageList sx={{width: 700, height: 450, margin: 'auto'}} variant="woven" cols={3} gap={25}>
+    <ImageList sx={{width: 700, height: 550, margin: 'auto'}} variant="woven" cols={3} gap={25}>
       <ImageListItem>
-        <Box sx={{p: 2, border: 1}}>Cluster Name: {connectedCluster}</Box>
+        <Box
+          bgcolor="#c2dfe3"
+          sx={{p: 8, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+        >
+          ClusterName: <br />
+          <br />
+          {connectedCluster}
+        </Box>
       </ImageListItem>
 
       <ImageListItem>
-        <Box sx={{p: 2, border: 1}}>Brokers Count: {data.clusterData.brokers.length}</Box>
+        <Box
+          bgcolor="#e0fbfc"
+          sx={{p: 4, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+        >
+          Brokers Count: <br />
+          <br />
+          {data.clusterData.brokers.length}
+        </Box>
       </ImageListItem>
 
       <ImageListItem>
-        <Box sx={{p: 2, border: 1}}>Brokers Count: {data.topicData.topics.length}</Box>
+        <Box
+          bgcolor="#c2dfe3"
+          sx={{p: 4, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+        >
+          Topics Count: <br />
+          <br />
+          {data.topicData.topics.length}
+        </Box>
       </ImageListItem>
 
       <ImageListItem>
-        <Box sx={{p: 2, border: 1}}>Offsets: {data.topicData.topics[0].offsets.length}</Box>
+        <Box
+          bgcolor="#c2dfe3"
+          sx={{p: 8, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+        >
+          Offsets: <br />
+          <br />
+          {data.topicData.topics[0].offsets.length}
+        </Box>
       </ImageListItem>
 
       <ImageListItem>
-        <Box sx={{p: 2, border: 1}}>Partitions: {data.topicData.topics[0].partitions.length}</Box>
+        <Box
+          bgcolor="#e0fbfc"
+          sx={{p: 8, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+        >
+          Partitions: <br />
+          <br />
+          {data.topicData.topics[0].partitions.length}
+        </Box>
       </ImageListItem>
 
       <ImageListItem>
-        <Box sx={{p: 2, border: 1}}>Consumer Groups: {data.groupList.length}</Box>
+        <Box
+          bgcolor="#c2dfe3"
+          sx={{p: 4, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+        >
+          Consumer Groups: <br />
+          <br />
+          {data.groupList.length}
+        </Box>
       </ImageListItem>
     </ImageList>
   );

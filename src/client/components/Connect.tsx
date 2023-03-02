@@ -7,7 +7,9 @@ import crow from './assets/crow2.png';
 
 const Connect = (props: ConnectProps) => {
   const navigate = useNavigate();
-  const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected} = props;
+  const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected, isConnected} =
+    props;
+  console.log('(CONNECT) session clusters', sessionClusters);
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -91,23 +93,25 @@ const Connect = (props: ConnectProps) => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="center"
-      height="500px"
+      height="30em"
       textAlign={'center'}
+      sx={{position: isConnected ? 'static' : 'relative', right: '6rem'}}
     >
       <Box
         component="form"
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
-          padding: '15px',
-          border: '2px outset #253237',
+          padding: '30px',
+          border: '2px solid black',
           borderRadius: '8px',
-          background: 'white',
+          borderColor: '#253237',
+          boxShadow: '2px 2px 2px grey',
         }}
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        <h1>Connect to a Cluster</h1>
+        <div className="connectText">Connect to a Cluster</div>
 
         <Grid>
           <TextField
@@ -169,7 +173,12 @@ const Connect = (props: ConnectProps) => {
         <Grid>
           <span className="loadingSpan">
             {loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null}
-            <Button variant="outlined" size="medium" type="submit">
+            <Button
+            variant="contained"
+            size="medium"
+            type="submit"
+            sx={{fontWeight: 'bold', marginTop: '15px'}}
+          >
               {loginInProgress ? 'Connecting...' : 'Connect'}
             </Button>
           </span>
