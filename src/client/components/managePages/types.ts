@@ -135,3 +135,7 @@ export type message = {
   key: string;
   value: string;
 };
+
+export interface ConsumerProps {
+  groupData: { [k: string]: any }[];
+}
