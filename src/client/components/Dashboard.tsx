@@ -10,15 +10,15 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Button
+  Button,
 } from '@mui/material';
 
-const drawerWidth = 150;
+const drawerWidth = 200;
 
 const Dashboard = props => {
   const navigate = useNavigate();
 
-  const { sessionClusters, setConnectedCluster} = props;
+  const {isConnected, sessionClusters, setConnectedCluster} = props;
 
   const [clusterData, setClusterData] = useState({});
   const [stableData, setStableData] = useState({});
@@ -27,7 +27,9 @@ const Dashboard = props => {
     <Box sx={{display: 'flex'}}>
       {/* <CssBaseline /> */}
       <Drawer
-        variant="permanent"
+        variant="persistent"
+        anchor="left"
+        open={isConnected}
         sx={{
           width: drawerWidth,
           flexShrink: 0,

@@ -14,7 +14,7 @@ import {
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
 import {useState} from 'react';
 
-const drawerWidth = 150;
+const drawerWidth = 200;
 
 const Manage = props => {
   const navigate = useNavigate();

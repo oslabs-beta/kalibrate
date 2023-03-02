@@ -92,6 +92,7 @@ function App() {
                 sessionClusters={sessionClusters}
                 setSessionClusters={setSessionClusters}
                 setIsConnected={setIsConnected}
+                isConnected={isConnected}
               />
             }
           />

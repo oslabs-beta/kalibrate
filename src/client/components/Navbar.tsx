@@ -93,7 +93,7 @@ const Navbar = (props: Props) => {
                 onClick={() => navigate('/')}
                 sx={{
                   my: 2,
-                  color: 'white',
+                  color: 'inherit',
                   display: 'block',
                   m: 0,
                   visibility: isConnected ? 'visible' : 'hidden',
