@@ -22,8 +22,16 @@ function App() {
   //declare clientId state so other components could access for link & routing
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [connectedCluster, setConnectedCluster] = useState<string>('');
-  const [sessionClusters, setSessionClusters] = useState([]);
-  const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({});
+  const [sessionClusters, setSessionClusters] = useState<string[]>([]);
+  const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
+    clusterData: {
+      brokers: [],
+    },
+    topicData: {
+      topics: [],
+    },
+    groupData: [],
+  });
 
   const {clusterData, topicData, groupData} = connectedClusterData;
 
@@ -59,10 +67,8 @@ function App() {
           path="/"
           element={
             <Dashboard
-              connectedCluster={connectedCluster}
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
-              isConnected={isConnected}
             />
           }
         >
@@ -70,7 +76,6 @@ function App() {
             index
             element={
               <Connect
-                connectedCluster={connectedCluster}
                 setConnectedCluster={setConnectedCluster}
                 sessionClusters={sessionClusters}
                 setSessionClusters={setSessionClusters}
@@ -79,16 +84,12 @@ function App() {
             }
           />
         </Route>
-        <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
+        <Route path=":clusterName" element={<Manage />}>
           <Route
             index
             element={
               <div className="overview">
-                <Overview
-                  data={connectedClusterData}
-                  connectedCluster={connectedCluster}
-                  sessionClusters={sessionClusters}
-                />
+                <Overview data={connectedClusterData} connectedCluster={connectedCluster} />
               </div>
             }
           />
@@ -116,7 +117,3 @@ function App() {
 }
 
 export default App;
-/*TODO:
-- as of 1st attempt brokers: data is not drilled properly unless all of connectedClusterData is passe through.
-- props for groupData does not specify producers or consumers
-*/

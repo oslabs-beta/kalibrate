@@ -2,10 +2,8 @@ import {Outlet, useNavigate} from 'react-router-dom';
 import {
   Box,
   Drawer,
-  CssBaseline,
   Toolbar,
   List,
-  Typography,
   ListItem,
   ListItemButton,
   ListItemText,
@@ -16,21 +14,17 @@ import {useState} from 'react';
 
 const drawerWidth = 150;
 
-const Manage = props => {
+const Manage = () => {
   const navigate = useNavigate();
-
-  const {connectedCluster} = props;
 
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
 
   const lightBlue = 'c8d6de';
-  //edf8fe
-  //bfd4e0
+
   return (
     <Box sx={{display: 'flex'}}>
-      {/* <CssBaseline /> */}
       <Drawer
         variant="permanent"
         sx={{
@@ -123,7 +117,6 @@ const Manage = props => {
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        {/* <Typography paragraph> {connectedCluster}</Typography> */}
         <Outlet />
       </Box>
     </Box>

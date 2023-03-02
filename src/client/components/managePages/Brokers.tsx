@@ -8,7 +8,7 @@ const Brokers = ({clusterData, connectedCluster}: BrokersProps) => {
     <div className="wrapper">
       <div className="brokers-heading">
         <Typography variant="h4">{`${connectedCluster}`}</Typography>
-        <Typography variant="h8">Brokers List</Typography>
+        <Typography variant="h6">Brokers List</Typography>
       </div>
       <div className="brokers-display">
         <BrokersDisplay clusterData={clusterData} />

@@ -71,7 +71,7 @@ const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
           <DataGrid
             autoHeight // sets table height based on number of rows
             rows={topicRows}
-            columns={topicColumns} // not sure how to remove this TS error
+            columns={topicColumns} // not sure how to fix this TS error
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}

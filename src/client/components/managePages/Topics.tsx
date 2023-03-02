@@ -1,13 +1,12 @@
 import {useState} from 'react';
-import {Outlet, useNavigate} from 'react-router-dom';
+import {Outlet} from 'react-router-dom';
 import {Box, Typography} from '@mui/material';
 import Breadcrumb from './Breadcrumbs';
-import {clickHandler, partitions} from './types';
+import {clickHandler, partitions, TopicsProps} from './types';
 
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
-const Topics = ({connectedCluster}) => {
-  const navigate = useNavigate();
+const Topics = ({connectedCluster}: TopicsProps) => {
   const [activeTopicsComponent, setActiveTopicsComponent] = useState<string>('');
   const [selectedTopic, setSelectedTopic] = useState<string>('');
   const [topicPartitions, setTopicPartitions] = useState<partitions[]>([]);

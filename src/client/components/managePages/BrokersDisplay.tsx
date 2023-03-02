@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import {Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {BrokersProps} from './types';
+import {BrokersDisplayProps} from './types';
 
-const BrokersDisplay = ({clusterData}: BrokersProps) => {
+const BrokersDisplay = ({clusterData}: BrokersDisplayProps) => {
   //default num of rows on a page of data grid
   const [pageSize, setPageSize] = useState<number>(5);
   const {brokers} = clusterData;

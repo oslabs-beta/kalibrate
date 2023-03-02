@@ -1,5 +1,33 @@
 import {MouseEvent} from 'react';
 
+export type connectionConfig = {
+  clientId: string;
+  brokers: string[];
+  ssl?: boolean;
+  sasl?: {
+    mechanism: string;
+    username: string;
+    password: string;
+  };
+};
+
+export type ConnectProps = {
+  setConnectedCluster: (clientId: string) => void;
+  setSessionClusters: (clientId: string[]) => void;
+  sessionClusters: string[];
+  setIsConnected: (clientId: boolean) => void;
+};
+
+export type DashboardProps = {
+  sessionClusters: string[];
+  setConnectedCluster: (clientId: string) => void;
+};
+
+export type OverviewProps = {
+  connectedCluster: string;
+  data: connectedClusterData;
+};
+
 export type brokers = {
   nodeId: number;
   host: string;
@@ -7,8 +35,8 @@ export type brokers = {
 };
 
 export type clusterData = {
-  clusterId: string;
-  controllers: number;
+  clusterId?: string;
+  controllers?: number;
   brokers: brokers[];
 };
 
@@ -38,27 +66,52 @@ export type topicData = {
   topics: topics[];
 };
 
-export type groupData = {
-  [k: string]: any[];
+export type group = {
+  errorCode: number;
+  groupId: string;
+  state: string;
+  protocolType: string;
+  protocol: string;
 };
 
+export type groupData = group[];
+
 export type connectedClusterData = {
-  clusterData?: clusterData;
-  topicData?: topicData;
-  groupData?: groupData;
+  clusterData: clusterData;
+  topicData: topicData;
+  groupData: groupData;
 };
 
 export type BrokersProps = {
-  clusterData?: clusterData;
+  clusterData: clusterData;
+  connectedCluster: string;
+};
+
+export type BrokersDisplayProps = {
+  clusterData: clusterData;
+};
+
+export type TopicsProps = {
+  connectedCluster: string;
 };
 
 export type TopicsDisplayProps = {
-  topicData?: topicData;
+  topicData: topicData;
 };
 
 export interface ConsumerProps {
+  groupData: groupData;
+  connectedCluster: string;
+}
+
+export interface ConsumerDisplayProps {
   groupData: {[k: string]: any}[];
 }
+
+export type BreadcrumbProps = {
+  topicName: string;
+  topicComp: string;
+};
 
 export type clickHandler = (
   event: MouseEvent<HTMLButtonElement>,
@@ -80,8 +133,3 @@ export type message = {
   key: string;
   value: string;
 };
-
-export interface ConsumerProps {
-  groupData: {[k: string]: any}[];
-  connectedCluster: string;
-}
