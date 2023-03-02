@@ -28,10 +28,9 @@ function App() {
     clusterData: {brokers: []},
     topicData: {topics: []},
     groupData: [],
-    commitOffsets: {},
   });
 
-  const {clusterData, topicData, groupData, commitOffsets} = connectedClusterData;
+  const {clusterData, topicData, groupData} = connectedClusterData;
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -109,7 +108,7 @@ function App() {
             }
           />
           <Route path="brokers" element={<Brokers data={clusterData} />} />
-          <Route path="consumers" element={<Consumers groupData={groupData} commitOffsets={commitOffsets} />} />
+          <Route path="consumers" element={<Consumers groupData={groupData} />} />
           <Route path="topics" element={<Topics topics={topicData.topics} />}>
             <Route index element={<TopicsDisplay topics={topicData.topics} />} />
             <Route path="partitions" element={<PartitionsDisplay />} />

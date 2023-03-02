@@ -57,11 +57,6 @@ topicController.getMessages = async (req, res, next) => {
       }
     });
 
-    // messageConsumer.on(messageConsumer.events.COMMIT_OFFSETS, ({payload}: any) => {
-    //   console.log('Commit Offsets Payload', payload);
-    //   res.locals.committedOffsets = payload;
-    // });
-
     // consume messages from earliest offset and push them to array to send back
     await messageConsumer.subscribe({topic, fromBeginning: true});
     await messageConsumer.run({

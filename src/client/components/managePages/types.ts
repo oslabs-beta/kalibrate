@@ -50,5 +50,4 @@ export type message = {
 
 export interface ConsumerProps {
   groupData: { [k: string]: any }[];
-  commitOffsets: { [k: string]: any};
 }
