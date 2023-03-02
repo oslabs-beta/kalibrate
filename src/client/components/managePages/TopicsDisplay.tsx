@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {Button, Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
-import {TopicsDisplayProps, TopicsContext} from './types';
+import {TopicsDisplayProps, TopicsContext} from '../../types';
 
 const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
   const {topics} = topicData;

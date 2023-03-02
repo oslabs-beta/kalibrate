@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {connectedClusterData} from '../client/components/managePages/types';
+import {connectedClusterData} from './types';
 import Connect from './components/Connect';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
@@ -16,6 +16,7 @@ import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
 import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
+import NotFound from './components/NotFound';
 import './stylesheets/style.css';
 
 function App() {
@@ -113,6 +114,7 @@ function App() {
           <Route path="consume" element={<Consume />} />
           <Route path="Produce" element={<Produce />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

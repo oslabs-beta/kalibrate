@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {Outlet} from 'react-router-dom';
 import {Box, Typography} from '@mui/material';
 import Breadcrumb from './Breadcrumbs';
-import {clickHandler, partitions, TopicsProps} from './types';
+import {clickHandler, partitions, TopicsProps} from '../../types';
 
 // appropriate props from fetch should be passed down to the appropriate displays
 // todo: needs to be integrated with React Router
