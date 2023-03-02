@@ -10,9 +10,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
-import {useState, SyntheticEvent} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
-import crow from './assets/crow.png';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import crow from './assets/crow2.png';
 
 interface Props {
   isConnected: boolean;
@@ -24,10 +24,6 @@ const Navbar = (props: Props) => {
   const alerts = ['Alert 1', 'Alert 2'];
 
   const navigate = useNavigate();
-  // const [value, setValue] = useState<number>(0);
-  // const handleChange = (event: SyntheticEvent, newValue: number) => {
-  //   setValue(newValue);
-  // };
   const {isConnected} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -62,7 +58,7 @@ const Navbar = (props: Props) => {
         <Toolbar disableGutters>
           <div className="logo">
             <Typography noWrap sx={{display: {xs: 'none', md: 'flex'}}}>
-              <img src={crow} length="30" width="50"></img>
+              <img src={crow} length="25" width="35"></img>
             </Typography>
           </div>
           {/* link kalibrate logo to home page */}

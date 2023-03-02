@@ -1,18 +1,64 @@
 :root {
-  --lightestBlue: #e0fbfc;
+  --lightestBlue: #edf8fe;
   --lighterBlue: #c2dfe3;
   --blue: #9db4c0;
+
   --darkerBlue: #5c6b73;
   --darkestBlue: #253237;
-  --white: #feffef;
+  --white: #fcfcfc;
   --black: #393e41;
   --error: #e17160;
 }
 
-body {
-  min-height: 100vh;
+h1 {
+  color: var(--darkestBlue);
+}
+
+.err {
+  color: var(--error);
+}
+
+.loadingSpan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rotocrow {
+  width: auto;
+  height: 30px;
+  display: inline;
+  transition: 1;
+  z-index: 5;
+  transform: translate(-30px, -5px);
+}
+
+.rotation {
+  animation: rotation 3s infinite linear;
+}
+.loadKrow {
+  display: inline;
+  height: 80px;
+}
+
+.loadKrowJump {
+  display: inline;
+  height: 80px;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(359deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+body,
+main {
+  max-height: 100%;
   margin: 0;
-  background-color: var(--white)
+  background-color: var(--white);
 }
 
 .logo {
@@ -29,4 +75,8 @@ body {
   margin-inline-end: 0px;
   font-weight: bold;
   margin-top: 0;
+}
+
+.no-padding-list {
+  padding-top: 0px;
 }

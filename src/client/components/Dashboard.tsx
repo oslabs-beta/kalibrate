@@ -1,21 +1,11 @@
 import {useNavigate, Outlet} from 'react-router-dom';
-import {useEffect, useState} from 'react';
-import {
-  Box,
-  Drawer,
-  CssBaseline,
-  Toolbar,
-  List,
-  Typography,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Button,
-} from '@mui/material';
+import {Box, Drawer, Toolbar, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import {DashboardProps} from './managePages/types';
+import { useState } from 'react'
 
 const drawerWidth = 200;
 
-const Dashboard = props => {
+const Dashboard = (props: DashboardProps) => {
   const navigate = useNavigate();
 
   const {isConnected, sessionClusters, setConnectedCluster} = props;
@@ -25,7 +15,6 @@ const Dashboard = props => {
 
   return (
     <Box sx={{display: 'flex'}}>
-      {/* <CssBaseline /> */}
       <Drawer
         variant="persistent"
         anchor="left"
@@ -33,14 +22,26 @@ const Dashboard = props => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            background: '#edf8fe',
+          },
         }}
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto'}}>
+        <Box sx={{overflow: 'auto', background: '#edf8fe'}}>
           <List>
-            {sessionClusters.map(text => (
-              <ListItem key={text} disablePadding>
+            {sessionClusters.map((text: string) => (
+              <ListItem
+                key={text}
+                sx={{
+                  background: '#edf8fe',
+                  border: '1px outset #c2dfe3',
+                  borderRadius: '5px',
+                }}
+                disablePadding
+              >
                 <ListItemButton
                   onClick={() => {
                     setConnectedCluster(text);
@@ -52,22 +53,10 @@ const Dashboard = props => {
               </ListItem>
             ))}
           </List>
-          {/* <Button 
-          variant ='contained'
-          style={{position: 'absolute', bottom: 10, marginLeft: 20}}
-          color = 'inherit'
-          onClick = {()=> {
-            navigate('/connect');
-          }}
-          >
-            Connect
-          </Button> */}
         </Box>
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        {/* <Typography paragraph></Typography> */}
-        {/* added outlet to render the table on the right of the sidebar */}
         <Outlet />
       </Box>
     </Box>
