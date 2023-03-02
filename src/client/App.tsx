@@ -4,6 +4,8 @@ import {connectedClusterData} from './types';
 import Connect from './components/Connect';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
+import ConsumersDisplay from './components/managePages/consumersDisplay';
+import MembersDisplay from './components/managePages/membersDisplay';
 import Navbar from './components/Navbar';
 import Brokers from './components/managePages/Brokers';
 import Overview from './components/Overview';
@@ -70,7 +72,7 @@ function App() {
             <Dashboard
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
-              isConnected = {isConnected}
+              isConnected={isConnected}
             />
           }
         >
@@ -102,8 +104,11 @@ function App() {
           />
           <Route
             path="consumers"
-            element={<Consumers groupData={groupData} connectedCluster={connectedCluster} />}
-          />
+            element={<Consumers connectedCluster={connectedCluster} groupData={groupData} />}
+          >
+            <Route index element={<ConsumersDisplay groupData={groupData} />} />
+            <Route path=":groupId/members" element={<MembersDisplay />} />
+          </Route>
           <Route path="topics" element={<Topics connectedCluster={connectedCluster} />}>
             <Route index element={<TopicsDisplay topicData={topicData} />} />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
