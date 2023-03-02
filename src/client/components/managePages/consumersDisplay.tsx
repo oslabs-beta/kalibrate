@@ -5,12 +5,21 @@ import {ConsumerDisplayProps} from './types';
 
 const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const {groupData} = props;
-  const fields = ['id', 'members', 'numOfMembers', 'subscribedTopics', 'recordsLag', 'status'];
+  const fields = [
+    'id',
+    'memberName',
+    'numOfMembers',
+    'subscribedTopics',
+    'protocolType',
+    'recordsLag',
+    'status',
+  ];
   const headers = [
     'GroupId',
-    'Members',
+    'Member Name',
     'Number of Members',
     'Topics Subscribed',
+    'Protocol Type',
     'Records Lag',
     'Status',
   ];
@@ -27,12 +36,14 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   });
 
   const consumerD = groupData.map(group => {
+    console.log('group', group);
     return {
       id: group.groupId,
-      members: group.members.length ? group.members : 'N/A',
+      memberName: group.members.length ? group.members[0].memberId.slice(20) : 'N/A',
       numOfMembers: group.members.length,
       subscribedTopics: 6,
-      recordsLag: 1,
+      protocolType: group.protocolType,
+      recordsLag: 0,
       status: group.state,
     };
   });

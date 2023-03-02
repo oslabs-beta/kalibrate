@@ -11,12 +11,12 @@ const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
   const [pageSize, setPageSize] = useState<number>(5);
 
   const topicColumns = [
-    {field: 'topicName', headername: 'Topic Name', flex: 1},
+    {field: 'topicName', headerName: 'Topic Name', flex: 1},
     {field: 'offsets', headerName: 'Offsets Total', flex: 1},
     {field: 'numPartitions', headerName: 'Partitions Total', flex: 1},
     {
       field: 'linkToPart',
-      headerName: 'See Partitions',
+      headerName: 'View Partitions',
       flex: 1,
       renderCell: (params: GridValueGetterParams) => (
         <Box>
@@ -36,7 +36,7 @@ const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
     },
     {
       field: 'linkToMsg',
-      headerName: 'See Messages',
+      headerName: 'View Messages',
       flex: 1,
       renderCell: (params: GridValueGetterParams) => (
         <Box>
