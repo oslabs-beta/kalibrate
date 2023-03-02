@@ -1,36 +1,32 @@
-import React, {useState, useEffect} from 'react';
-import {Outlet, useNavigate, useOutletContext} from 'react-router-dom';
-import {TopicsDisplayProps} from './types';
-import {topicData} from '../../../../demo/mockData';
+import {useState} from 'react';
+import {useNavigate, useOutletContext} from 'react-router-dom';
 import {Button, Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
+import {TopicsDisplayProps, TopicsContext} from './types';
 
-const TopicsDisplay = ({topics}) => {
-  console.log('Here is the data in topics display', topics);
-  const context = useOutletContext();
-
-  // console.log('Trying to extra partitions and update state \n');
-  // console.log(topicList[0].partitions);
-
+const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
+  const {topics} = topicData;
+  const {handleComponentChange}: TopicsContext = useOutletContext();
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState<number>(5);
 
-  const topicColumn = [
-    {field: 'topicName', headername: 'Topic Name', width: 200},
-    {field: 'offsets', headerName: 'Offsets Total', width: 100},
-    {field: 'numPartitions', headerName: 'Partitions Total', width: 100},
+  const topicColumns = [
+    {field: 'topicName', headername: 'Topic Name', flex: 1},
+    {field: 'offsets', headerName: 'Offsets Total', flex: 1},
+    {field: 'numPartitions', headerName: 'Partitions Total', flex: 1},
     {
       field: 'linkToPart',
       headerName: 'See Partitions',
-      width: 110,
+      flex: 1,
       renderCell: (params: GridValueGetterParams) => (
         <Box>
           <Button
             onClick={e => {
-              // const topicName = getTopicName(),
-              let partitions = topics[params.row.id].partitions;
-              context.handleComponentChange(e, params.row.topicName, partitions);
-              navigate('partitions');
+              const topic = params.row.topicName;
+              const partitions = topics[params.row.id].partitions;
+
+              handleComponentChange(e, topic, partitions);
+              navigate(`${topic}/partitions`);
             }}
           >
             Partitions
@@ -41,13 +37,15 @@ const TopicsDisplay = ({topics}) => {
     {
       field: 'linkToMsg',
       headerName: 'See Messages',
-      width: 110,
+      flex: 1,
       renderCell: (params: GridValueGetterParams) => (
         <Box>
           <Button
             onClick={e => {
-              context.handleComponentChange(e, params.row.topicName);
-              navigate('messages');
+              const topic = params.row.topicName;
+
+              handleComponentChange(e, topic);
+              navigate(`${topic}/messages`);
             }}
           >
             Messages
@@ -57,27 +55,23 @@ const TopicsDisplay = ({topics}) => {
     },
   ];
 
-  const rows = topics.map((topic, index) => {
+  const topicRows = topics.map((topic, index) => {
     return {
       id: index,
       topicName: topic.name,
       offsets: topic.offsets.length,
       numPartitions: topic.partitions.length,
-      // replications: topic.replications,
-      // numMessages: topic.numMessages,
     };
   });
 
-  // two hardcoded values are used as example, remove hardcoded example and update/render list instead when data available
   return (
     <div>
       <Box sx={{height: 400, width: '1000'}}>
         <Paper elevation={6}>
           <DataGrid
-            //better alt for autoHeight? DataGrid inherits height of parent, even if have data
-            autoHeight
-            rows={rows}
-            columns={topicColumn}
+            autoHeight // sets table height based on number of rows
+            rows={topicRows}
+            columns={topicColumns} // not sure how to fix this TS error
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}
