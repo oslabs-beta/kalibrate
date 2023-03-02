@@ -73,7 +73,7 @@
       "!src/**/*.d.ts"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/jest-setup.js"
+      "<rootDir>/jest-setup.ts"
     ]
   }
 }
