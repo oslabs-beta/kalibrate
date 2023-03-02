@@ -1,31 +1,16 @@
 import {useNavigate, Outlet} from 'react-router-dom';
-import {useEffect, useState} from 'react';
-import {
-  Box,
-  Drawer,
-  CssBaseline,
-  Toolbar,
-  List,
-  Typography,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Button,
-} from '@mui/material';
+import {Box, Drawer, Toolbar, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import {DashboardProps} from './managePages/types';
 
 const drawerWidth = 150;
 
-const Dashboard = props => {
+const Dashboard = (props: DashboardProps) => {
   const navigate = useNavigate();
 
   const {sessionClusters, setConnectedCluster} = props;
 
-  const [clusterData, setClusterData] = useState({});
-  const [stableData, setStableData] = useState({});
-
   return (
     <Box sx={{display: 'flex'}}>
-      {/* <CssBaseline /> */}
       <Drawer
         variant="permanent"
         sx={{
@@ -41,7 +26,7 @@ const Dashboard = props => {
         <Toolbar />
         <Box sx={{overflow: 'auto', background: '#edf8fe'}}>
           <List>
-            {sessionClusters.map(text => (
+            {sessionClusters.map((text: string) => (
               <ListItem
                 key={text}
                 sx={{
@@ -62,22 +47,10 @@ const Dashboard = props => {
               </ListItem>
             ))}
           </List>
-          {/* <Button 
-          variant ='contained'
-          style={{position: 'absolute', bottom: 10, marginLeft: 20}}
-          color = 'inherit'
-          onClick = {()=> {
-            navigate('/connect');
-          }}
-          >
-            Connect
-          </Button> */}
         </Box>
       </Drawer>
       <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Toolbar />
-        {/* <Typography paragraph></Typography> */}
-        {/* added outlet to render the table on the right of the sidebar */}
         <Outlet />
       </Box>
     </Box>

@@ -1,35 +1,13 @@
-import {useState} from 'react';
+import {useState, SyntheticEvent} from 'react';
 import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
+import {ConnectProps, connectionConfig} from './managePages/types';
 import '../stylesheets/style.css';
 import crow from './assets/crow2.png';
 
-/*
-CONNECTION FORM OPTIONS
-- client (string)*
-- seed (string)*
-- sasl checkbox
-  if true:
-    - username*
-    - password*
-
-todo: add additional connection mechanisms (oauth, aws, etc), currently just using plain
-*/
-
-// interface Props {
-//   setConnectedCluster: React.Dispatch<React.SetStateAction<{
-//     cluster: {brokers: []},
-//     admin: {topics: []},
-//   }>>,
-//   sessionClusters: string[],
-//   setSessionClusters: React.Dispatch<React.SetStateAction<boolean>>,
-//   setIsConnected: React.Dispatch<React.SetStateAction<boolean>>,
-// }
-
-const Connect = props => {
+const Connect = (props: ConnectProps) => {
   const navigate = useNavigate();
   const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected} = props;
-  console.log('(CONNECT) session clusters', sessionClusters);
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -43,7 +21,7 @@ const Connect = props => {
   const [errorMessage, setErrorMessage] = useState('');
 
   // form submission handler
-  const handleSubmit = async event => {
+  const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
     // input validation
@@ -55,7 +33,7 @@ const Connect = props => {
     if (sasl && !password) return setErrorMessage('Password is required when SASL is selected.');
 
     // create config object to send in request
-    const connectionConfig = {
+    const connectionConfig: connectionConfig = {
       clientId,
       brokers: [brokers],
     };
@@ -70,8 +48,8 @@ const Connect = props => {
       };
     }
 
-    console.log('Attempting to connect:', connectionConfig);
     setLoginInProgress(true);
+
     try {
       // Send POST request to connect
       const response = await fetch('api/connection', {
