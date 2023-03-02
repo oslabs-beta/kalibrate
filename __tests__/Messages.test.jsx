@@ -92,6 +92,7 @@ describe('MessagesDisplay Component', () => {
     expect(screen.getByRole('grid')).toBeInTheDocument(); // MUI data grid
     expect(screen.getAllByRole('row')).toHaveLength(3); // row header + 2 rows from api call
   });
+
   it('Should display loading wheel while waiting for response', async () => {
     render(
       <MemoryRouter>
@@ -103,10 +104,10 @@ describe('MessagesDisplay Component', () => {
       </MemoryRouter>
     );
 
-    await screen.findByRole('progressbar'); // wait for loading wheel to render
-
-    expect(screen.getByRole('progressbar').toBeInTheDocument);
+    await screen.findAllByAltText('loading'); // wait for loading wheel to render
+    expect(screen.getByAltText('loading').toBeInTheDocument);
   });
+
   it('Should display error after a failed fetch', async () => {
     // Passing a topic that doesn't exist into the context
     render(
@@ -124,28 +125,3 @@ describe('MessagesDisplay Component', () => {
     expect(screen.getByRole('alert').toBeInTheDocument);
   });
 });
-
-/* EXAMPLES */
-
-// await userEvent.click(screen.getByText('Load Greeting'));
-// await screen.findByRole('heading');
-
-// expect(screen.getByRole('heading')).toHaveTextContent('hello there');
-// expect(screen.getByRole('button')).toBeDisabled();
-
-// test('handles server error', async () => {
-//   server.use(
-//     rest.get('/greeting', (req, res, ctx) => {
-//       return res(ctx.status(500));
-//     })
-//   );
-
-//   render(<Fetch url="/greeting" />);
-
-//   fireEvent.click(screen.getByText('Load Greeting'));
-
-//   await waitFor(() => screen.getByRole('alert'));
-
-//   expect(screen.getByRole('alert')).toHaveTextContent('Oops, failed to fetch!');
-//   expect(screen.getByRole('button')).not.toBeDisabled();
-// });

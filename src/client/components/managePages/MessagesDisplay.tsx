@@ -92,16 +92,10 @@ const MessagesDisplay = () => {
     </Box>
   );
 
-  // Loading wheel for while data is loading
-  const loadingWheel = (
-    <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <CircularProgress size="75px" />
-    </Box>
-  );
   //crow alternative
   const loadingKrow = (
     <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <img className="loadKrow rotation" src={crow}></img>
+      <img className="loadKrow rotation" src={crow} alt="loading"></img>
     </Box>
   );
   // Button to reload messages
