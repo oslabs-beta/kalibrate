@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
-import crow from './assets/crow.png';
+import crow from './assets/crow2.png';
 
 interface Props {
   isConnected: boolean;
@@ -60,7 +60,7 @@ const Navbar = (props: Props) => {
         <Toolbar disableGutters>
           <div className="logo">
             <Typography noWrap sx={{display: {xs: 'none', md: 'flex'}}}>
-              <img src={crow} height="30" width="50"></img>
+              <img src={crow} length="25" width="35"></img>
             </Typography>
           </div>
           {/* link kalibrate logo to home page */}
@@ -91,7 +91,7 @@ const Navbar = (props: Props) => {
                 onClick={() => navigate('/')}
                 sx={{
                   my: 2,
-                  color: 'white',
+                  color: 'inherit',
                   display: 'block',
                   m: 0,
                   visibility: isConnected ? 'visible' : 'hidden',

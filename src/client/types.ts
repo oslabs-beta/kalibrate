@@ -16,9 +16,11 @@ export type ConnectProps = {
   setSessionClusters: (clientId: string[]) => void;
   sessionClusters: string[];
   setIsConnected: (clientId: boolean) => void;
+  isConnected: boolean
 };
 
 export type DashboardProps = {
+  isConnected: boolean
   sessionClusters: string[];
   setConnectedCluster: (clientId: string) => void;
 };
@@ -133,3 +135,7 @@ export type message = {
   key: string;
   value: string;
 };
+
+export interface ConsumerProps {
+  groupData: { [k: string]: any }[];
+}

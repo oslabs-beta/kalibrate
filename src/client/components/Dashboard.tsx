@@ -1,18 +1,24 @@
+import {useState} from 'react';
 import {useNavigate, Outlet} from 'react-router-dom';
 import {Box, Drawer, Toolbar, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
 import {DashboardProps} from '../types';
 
-const drawerWidth = 150;
+const drawerWidth = 200;
 
 const Dashboard = (props: DashboardProps) => {
   const navigate = useNavigate();
 
-  const {sessionClusters, setConnectedCluster} = props;
+  const {isConnected, sessionClusters, setConnectedCluster} = props;
+
+  const [clusterData, setClusterData] = useState({});
+  const [stableData, setStableData] = useState({});
 
   return (
     <Box sx={{display: 'flex'}}>
       <Drawer
-        variant="permanent"
+        variant="persistent"
+        anchor="left"
+        open={isConnected}
         sx={{
           width: drawerWidth,
           flexShrink: 0,

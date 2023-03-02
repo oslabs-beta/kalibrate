@@ -5,10 +5,17 @@ import {ConsumerDisplayProps} from '../../types';
 
 const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const {groupData} = props;
-  const fields = ['id', 'members', 'subscribedTopics', 'msgsBehind', 'status'];
-  const headers = ['GroupId', 'Members', 'Topics Subscribed', 'Messages Behind', 'Status'];
+  const fields = ['id', 'members', 'numOfMembers', 'subscribedTopics', 'recordsLag', 'status'];
+  const headers = [
+    'GroupId',
+    'Members',
+    'Number of Members',
+    'Topics Subscribed',
+    'Records Lag',
+    'Status',
+  ];
 
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
 
   // create array of objects
   const consumerCol = headers.map((header, i) => {
@@ -22,9 +29,10 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const consumerD = groupData.map(group => {
     return {
       id: group.groupId,
-      members: group.members.length,
+      members: group.members.length ? group.members : 'N/A',
+      numOfMembers: group.members.length,
       subscribedTopics: 6,
-      messagesBehind: 0,
+      recordsLag: 1,
       status: group.state,
     };
   });
