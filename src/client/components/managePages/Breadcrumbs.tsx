@@ -1,5 +1,5 @@
 import {useNavigate} from 'react-router-dom';
-import {Breadcrumbs, Typography} from '@mui/material';
+import {Breadcrumbs, Link, Typography} from '@mui/material';
 import {createBrowserHistory} from 'history';
 import {BreadcrumbProps} from './types';
 
@@ -14,7 +14,9 @@ const Breadcrumb = ({topicName, topicComp}: BreadcrumbProps) => {
   const subCrumb = history.location.pathname === homePath ? [] : [topicName, topicComp];
   return (
     <Breadcrumbs>
-      <Typography onClick={() => navigate(homePath)}>Topics</Typography>
+      <Typography sx={{cursor: 'pointer'}} onClick={() => navigate(homePath)}>
+        Topics
+      </Typography>
       {subCrumb.map(path => (
         <Typography>{path.toLowerCase()}</Typography>
       ))}
