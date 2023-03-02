@@ -23,7 +23,7 @@ const Topics = ({connectedCluster}: TopicsProps) => {
     <div className="wrapper">
       <div className="topics-heading">
         <Typography variant="h4">{`${connectedCluster}`}</Typography>
-        <Box m={2}>
+        <Box mt={2} mb={2}>
           <Breadcrumb topicName={selectedTopic} topicComp={activeTopicsComponent}></Breadcrumb>
         </Box>
       </div>
