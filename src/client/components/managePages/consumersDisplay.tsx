@@ -40,7 +40,7 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
       groupId: group.groupId,
       state: group.state,
       errorCode: group.errorCode,
-      protocol: group.protocol,
+      protocol: group.protocol ? group.protocol : 'N/A',
       numberOfMembers: group.members.length,
     };
   });
