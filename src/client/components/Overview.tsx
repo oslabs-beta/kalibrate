@@ -1,5 +1,5 @@
 import {ImageList, Box, ImageListItem} from '@mui/material';
-import {OverviewProps} from './managePages/types';
+import {OverviewProps} from '../types';
 
 const Overview = (props: OverviewProps) => {
   const {connectedCluster, data} = props;

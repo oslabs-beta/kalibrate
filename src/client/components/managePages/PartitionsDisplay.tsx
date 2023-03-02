@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useOutletContext} from 'react-router-dom';
 import {Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {partitions, TopicsContext} from './types';
+import {partitions, TopicsContext} from '../../types';
 
 const PartitionsDisplay = () => {
   const {topicPartitions}: TopicsContext = useOutletContext();

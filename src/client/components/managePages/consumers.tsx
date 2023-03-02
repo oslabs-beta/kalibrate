@@ -1,6 +1,6 @@
 import ConsumersDisplay from './consumersDisplay';
 import {Typography} from '@mui/material';
-import {ConsumerProps} from './types';
+import {ConsumerProps} from '../../types';
 
 const Consumers = (props: ConsumerProps) => {
   const {groupData, connectedCluster} = props;

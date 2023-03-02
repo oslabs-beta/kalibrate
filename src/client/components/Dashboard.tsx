@@ -1,7 +1,7 @@
+import {useState} from 'react';
 import {useNavigate, Outlet} from 'react-router-dom';
 import {Box, Drawer, Toolbar, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
-import {DashboardProps} from './managePages/types';
-import { useState } from 'react'
+import {DashboardProps} from '../types';
 
 const drawerWidth = 200;
 

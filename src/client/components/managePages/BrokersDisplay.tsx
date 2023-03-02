@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {BrokersDisplayProps} from './types';
+import {BrokersDisplayProps} from '../../types';
 
 const BrokersDisplay = ({clusterData}: BrokersDisplayProps) => {
   //default num of rows on a page of data grid
