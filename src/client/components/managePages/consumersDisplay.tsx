@@ -1,13 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import {Button, Grid, Pagination} from '@mui/material';
-import {DataGrid, GridColDef, GridRowsProp, GridToolbar} from '@mui/x-data-grid';
-//consumer dummy column/data imported
-// import {consumerColumn, consumerData} from '../../../../demo/mockData.js';
-import {ConsumerProps} from './types';
+import {useState} from 'react';
+import {Box, Paper} from '@mui/material';
+import {DataGrid, GridToolbar} from '@mui/x-data-grid';
+import {ConsumerDisplayProps} from './types';
 
-const ConsumersDisplay = (props: ConsumerProps) => {
+const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const {groupData} = props;
   const fields = ['id', 'members', 'numOfMembers', 'subscribedTopics', 'recordsLag', 'status'];
   const headers = [
@@ -46,7 +42,7 @@ const ConsumersDisplay = (props: ConsumerProps) => {
       <Box sx={{height: 400, width: '1000'}}>
         <Paper elevation={6}>
           <DataGrid
-            autoHeight
+            autoHeight // sets table height based on number of rows
             rows={consumerD}
             columns={consumerCol}
             pageSize={pageSize}
@@ -72,45 +68,3 @@ const ConsumersDisplay = (props: ConsumerProps) => {
 };
 
 export default ConsumersDisplay;
-
-/*attempts at pagination with custom footer
-  function CustomPagination() {
-    return <Pagination color="primary" count={5} page={1} />;
-  }
-          <Button onClick={updateConnectionStatus}>
-            {connectionStatus === 'connected' ? 'Connected' : 'Disconnected'}
-          </Button>
-*/
-/*
-//used to track status connection >:D
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import {blue, pink} from '@mui/material/colors';
-  //demo state for status connection; ideally would take in a connection status as props
-  type connectionType = 'connected' | 'disconnected';
-  const [connectionStatus, setConnectionStatus] = useState<connectionType | null>('disconnected');
-  // useEffect(() => {
-  //   console.log('updated!', connectionStatus);
-  // }, [connectionStatus]);
-  function CustomFooterStatusComponent(props: {connectionStatus: connectionType}) {
-    return (
-      <Box>
-        <FiberManualRecordIcon
-          fontSize="small"
-          sx={{mr: 1, color: connectionStatus === 'connected' ? 'pink' : 'blue'}}
-        />
-        Status {props.connectionStatus}
-        <Pagination pageSize={5} rowsPerPageOptions={[5, 10, 25]}></Pagination>
-        </Box>
-        );
-      }
-      //does not update
-      const updateConnectionStatus = (): void => {
-        console.log('connection clicked', connectionStatus);
-        switch (connectionStatus) {
-          case 'connected':
-            setConnectionStatus('disconnected');
-          case 'disconnected':
-            setConnectionStatus('connected');
-        }
-      };
-*/

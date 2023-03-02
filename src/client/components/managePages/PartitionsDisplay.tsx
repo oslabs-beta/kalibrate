@@ -1,16 +1,23 @@
-import React, {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {useOutletContext} from 'react-router-dom';
 import {Box, Paper} from '@mui/material';
-import {Button, Grid, Pagination} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {partitionData, partitionColumn} from '../../../../demo/mockData';
-import {partitions} from './types';
-const PartitionsDisplay = () => {
-  const context = useOutletContext();
-  const partitions = context.partitions[0];
-  console.log('Here is the context data in partition display', partitions);
+import {partitions, TopicsContext} from './types';
 
-  const rows = partitions.map((partition: partitions, index: number) => {
+const PartitionsDisplay = () => {
+  const {topicPartitions}: TopicsContext = useOutletContext();
+  const [pageSize, setPageSize] = useState<number>(5);
+
+  const partitionColumns = [
+    {field: 'partId', headerName: 'Partition ID', flex: 1},
+    {field: 'leader', headerName: 'Leader', flex: 1},
+    {field: 'isr', headerName: 'ISR', flex: 1},
+    {field: 'replicas', headerName: 'Replicas', flex: 1},
+    {field: 'offlineReplicas', headerName: 'Offline Replicas', flex: 1},
+    {field: 'error', headerName: 'Error Code', flex: 1},
+  ];
+
+  const partitionRows = topicPartitions.map((partition: partitions, index: number) => {
     return {
       id: index,
       partId: partition.partitionId,
@@ -22,18 +29,15 @@ const PartitionsDisplay = () => {
     };
   });
 
-  const [pageSize, setPageSize] = useState<number>(5);
-  // hardcoded value used as example, remove hardcoded example and update/render list instead when data available
   return (
     <div className="wrapper">
       <div className="partition-table">
         <Box sx={{height: 400, width: '1000'}}>
           <Paper elevation={6}>
             <DataGrid
-              //better alt for autoHeight? DataGrid inherits height of parent, even if have data
-              autoHeight
-              rows={rows}
-              columns={partitionColumn}
+              autoHeight // sets table height based on number of rows
+              rows={partitionRows}
+              columns={partitionColumns}
               pageSize={pageSize}
               onPageSizeChange={newPageSize => setPageSize(newPageSize)}
               rowsPerPageOptions={[5, 10, 25]}
