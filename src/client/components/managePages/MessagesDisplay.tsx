@@ -3,6 +3,7 @@ import {useOutletContext} from 'react-router-dom';
 import {Box, Paper, CircularProgress, Button, Alert} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {message, TopicsContext} from './types';
+import crow from '../assets/crow2.png';
 
 const MessagesDisplay = () => {
   const {selectedTopic}: TopicsContext = useOutletContext();
@@ -65,10 +66,9 @@ const MessagesDisplay = () => {
 
   // Generate messages data grid with generates columns and rows
   const messageTable = (
-    <Box sx={{height: 400, width: '1000'}}>
-      <Paper elevation={6}>
+    <Box sx={{height: '70vh'}}>
+      <Paper elevation={6} sx={{height: '100%'}}>
         <DataGrid
-          autoHeight // sets table height based on number of rows
           getRowHeight={() => 'auto'}
           rows={messageRows}
           columns={messageColumn}
@@ -98,7 +98,12 @@ const MessagesDisplay = () => {
       <CircularProgress size="75px" />
     </Box>
   );
-
+  //crow alternative
+  const loadingKrow = (
+    <Box sx={{display: 'flex', justifyContent: 'center'}}>
+      <img className="loadKrow rotation" src={crow}></img>
+    </Box>
+  );
   // Button to reload messages
   const refreshButton = (
     <Button variant="contained" onClick={handleMessagesRefresh}>
@@ -121,7 +126,7 @@ const MessagesDisplay = () => {
     <div className="wrapper">
       <div className="refresh">{isLoading ? disabledRefreshutton : refreshButton}</div>
       <div className="message-table">
-        {isLoading ? loadingWheel : isError ? errorAlert : messageTable}
+        {isLoading ? loadingKrow : isError ? errorAlert : messageTable}
       </div>
     </div>
   );

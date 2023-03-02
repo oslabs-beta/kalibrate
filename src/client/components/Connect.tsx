@@ -168,7 +168,7 @@ const Connect = (props: ConnectProps) => {
 
         <Grid>
           <span className="loadingSpan">
-            {loginInProgress ? <img className="rotocrow" src={crow}></img> : null}
+            {loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null}
             <Button variant="outlined" size="medium" type="submit">
               {loginInProgress ? 'Connecting...' : 'Connect'}
             </Button>

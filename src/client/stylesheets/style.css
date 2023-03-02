@@ -28,22 +28,35 @@ h1 {
   width: auto;
   height: 30px;
   display: inline;
-  animation: rotation 2s infinite linear, wiggle 0.8s infinite linear;
   transition: 1;
   z-index: 5;
   transform: translate(-30px, -5px);
 }
 
+.rotation {
+  animation: rotation 3s infinite linear;
+}
+.loadKrow {
+  display: inline;
+  height: 80px;
+}
+
+.loadKrowJump {
+  display: inline;
+  height: 80px;
+}
+
 @keyframes rotation {
   from {
-    transform: rotate(0deg);
-  }
-  to {
     transform: rotate(359deg);
   }
+  to {
+    transform: rotate(0deg);
+  }
 }
-body {
-  min-height: 100vh;
+body,
+main {
+  max-height: 100%;
   margin: 0;
   background-color: var(--white);
 }
