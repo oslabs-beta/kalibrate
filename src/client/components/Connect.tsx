@@ -1,5 +1,5 @@
 import {useState, SyntheticEvent} from 'react';
-import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
+import {Grid, Button, TextField, Box, Checkbox, Alert} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import {ConnectProps, connectionConfig} from './managePages/types';
 import '../stylesheets/style.css';
@@ -177,7 +177,7 @@ const Connect = (props: ConnectProps) => {
 
         {errorMessage.length ? (
           <Grid>
-            <h3 className="err">{errorMessage}</h3>
+            <Alert severity="error">{errorMessage}</Alert>
           </Grid>
         ) : null}
       </Box>
