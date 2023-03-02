@@ -70,10 +70,9 @@ const MessagesDisplay = ({topic}: MessageDisplayProps) => {
 
   // Generate messages data grid with generates columns and rows
   const messageTable = (
-    <Box sx={{height: 400, width: '1000'}}>
-      <Paper elevation={6}>
+    <Box sx={{height: '70vh'}}>
+      <Paper elevation={6} sx={{height: '100%'}}>
         <DataGrid
-          autoHeight
           getRowHeight={() => 'auto'}
           rows={messageRows}
           columns={messageColumn}
@@ -106,7 +105,7 @@ const MessagesDisplay = ({topic}: MessageDisplayProps) => {
   //crow alternative
   const loadingKrow = (
     <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <img className="loadKrow" src={crow}></img>
+      <img className="loadKrow rotation" src={crow}></img>
     </Box>
   );
   // Button to reload messages

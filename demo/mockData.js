@@ -37,44 +37,6 @@ export const topicColumn = [
   {field: 'topicName', headername: 'Topic Name', width: 200},
   {field: 'offsets', headerName: 'Offsets Total', width: 100},
   {field: 'numPartitions', headerName: 'Partitions Total', width: 100},
-  // {field: 'replication', headerName: 'Replication Factor', width: 50},
-  // {field: 'numMessages', headerName: 'Num of Messages', width: 50},
-  // {
-  //   field: 'linkToPart',
-  //   headerName: 'See Partitions',
-  //   width: 110,
-  //   renderCell: (params: GridValueGetterParams) => (
-  //     <Box>
-  //       <Button
-  //         onClick={e => {
-  //           // const topicName = getTopicName(),
-  //           let partitions = topicList[params.row.id].partitions;
-  //           context.handleComponentChange(e, params.row.topicName, partitions);
-  //           navigate('partitions');
-  //         }}
-  //       >
-  //         Partitions
-  //       </Button>
-  //     </Box>
-  //   ),
-  // },
-  // {
-  //   field: 'linkToMsg',
-  //   headerName: 'See Messages',
-  //   width: 110,
-  //   renderCell: (params: GridValueGetterParams) => (
-  //     <Box>
-  //       <Button
-  //         onClick={e => {
-  //           context.handleComponentChange(e, params.row.topicName);
-  //           navigate('messages');
-  //         }}
-  //       >
-  //         Messages
-  //       </Button>
-  //     </Box>
-  //   ),
-  // },
 ];
 export const topicData = [
   {
@@ -118,13 +80,7 @@ export const brokerColumn = [
 ];
 
 export const brokerData = [{id: 0, host: 'localhost', port: 9091}];
-/* TO DO
-- topics data grid to be done last!!!!
-- set width to NOT a static number
-- have table reize with window size
-- specifically topic column: add two column to hold links/routes to partition and messages
-- isConnected !== connected xd
--consumers' connection status to be toggle?!
+/* 
 REMEMBER
 - all rows need an 'id' 
 */
