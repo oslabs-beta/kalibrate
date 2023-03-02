@@ -4,8 +4,6 @@ import {Box, Typography} from '@mui/material';
 import Breadcrumb from './Breadcrumbs';
 import {clickHandler, partitions, TopicsProps} from '../../types';
 
-// appropriate props from fetch should be passed down to the appropriate displays
-// todo: needs to be integrated with React Router
 const Topics = ({connectedCluster}: TopicsProps) => {
   const [activeTopicsComponent, setActiveTopicsComponent] = useState<string>('');
   const [selectedTopic, setSelectedTopic] = useState<string>('');

@@ -1,50 +1,47 @@
 import {useState} from 'react';
-import {Box, Paper} from '@mui/material';
-import {DataGrid, GridToolbar} from '@mui/x-data-grid';
+import {useNavigate} from 'react-router-dom';
+import {Box, Paper, Button} from '@mui/material';
+import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 import {ConsumerDisplayProps} from '../../types';
 
 const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const {groupData} = props;
-  const fields = [
-    'id',
-    'memberName',
-    'numOfMembers',
-    'subscribedTopics',
-    'protocolType',
-    'recordsLag',
-    'status',
-  ];
-  const headers = [
-    'GroupId',
-    'Member Name',
-    'Number of Members',
-    'Topics Subscribed',
-    'Protocol Type',
-    'Records Lag',
-    'Status',
-  ];
-
   const [pageSize, setPageSize] = useState(10);
+  const navigate = useNavigate();
 
-  // create array of objects
-  const consumerCol = headers.map((header, i) => {
-    return {
-      field: fields[i],
-      headerName: header,
-      width: 250,
-    };
-  });
+  const consumerColumns = [
+    {field: 'groupId', headerName: 'Group ID', flex: 1},
+    {field: 'state', headerName: 'State', flex: 1},
+    {field: 'errorCode', headerName: 'Error Code', flex: 1},
+    {field: 'protocol', headerName: 'Protocol', flex: 1},
+    {field: 'numberOfMembers', headerName: 'Number Of Members', flex: 1},
+    {
+      field: 'seeMembers',
+      headerName: 'See Members',
+      flex: 1,
+      renderCell: (params: GridValueGetterParams) => (
+        <Box>
+          <Button
+            onClick={e => {
+              const groupId = params.row.groupId;
+              navigate(`${groupId}/members`);
+            }}
+          >
+            Members
+          </Button>
+        </Box>
+      ),
+    },
+  ];
 
-  const consumerD = groupData.map(group => {
-    console.log('group', group);
+  const consumerRows = groupData.map((group, index) => {
     return {
-      id: group.groupId,
-      memberName: group.members.length ? group.members[0].memberId.slice(20) : 'N/A',
-      numOfMembers: group.members.length,
-      subscribedTopics: 6,
-      protocolType: group.protocolType,
-      recordsLag: 0,
-      status: group.state,
+      id: index,
+      groupId: group.groupId,
+      state: group.state,
+      errorCode: group.errorCode,
+      protocol: group.protocol,
+      numberOfMembers: group.members.length,
     };
   });
 
@@ -54,8 +51,8 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
         <Paper elevation={6}>
           <DataGrid
             autoHeight // sets table height based on number of rows
-            rows={consumerD}
-            columns={consumerCol}
+            rows={consumerRows}
+            columns={consumerColumns}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}
