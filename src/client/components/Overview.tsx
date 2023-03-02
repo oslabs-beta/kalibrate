@@ -5,7 +5,7 @@ const Overview = (props: OverviewProps) => {
   const {connectedCluster, data} = props;
 
   return (
-    <ImageList sx={{width: 700, height: 550, margin: 'auto'}} variant="woven" cols={3} gap={25}>
+    <ImageList sx={{width: 700, height: 550, margin: 'auto', marginTop: '20px'}} variant="woven" cols={3} gap={25}>
       <ImageListItem>
         <Box
           bgcolor="#c2dfe3"

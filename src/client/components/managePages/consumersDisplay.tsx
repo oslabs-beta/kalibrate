@@ -10,7 +10,7 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const navigate = useNavigate();
 
   const consumerColumns = [
-    {field: 'groupId', headername: 'Group ID', flex: 1},
+    {field: 'groupId', headerName: 'Group ID', flex: 1},
     {field: 'state', headerName: 'State', flex: 1},
     {field: 'errorCode', headerName: 'Error Code', flex: 1},
     {field: 'protocol', headerName: 'Protocol', flex: 1},
@@ -40,7 +40,7 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
       groupId: group.groupId,
       state: group.state,
       errorCode: group.errorCode,
-      protocol: group.protocol,
+      protocol: group.protocol ? group.protocol : 'N/A',
       numberOfMembers: group.members.length,
     };
   });

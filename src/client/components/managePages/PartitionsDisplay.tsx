@@ -11,7 +11,7 @@ const PartitionsDisplay = () => {
   const partitionColumns = [
     {field: 'partId', headerName: 'Partition ID', flex: 1},
     {field: 'leader', headerName: 'Leader', flex: 1},
-    {field: 'isr', headerName: 'ISR', flex: 1},
+    {field: 'isr', headerName: 'In-Sync Replicas', flex: 1},
     {field: 'replicas', headerName: 'Replicas', flex: 1},
     {field: 'offlineReplicas', headerName: 'Offline Replicas', flex: 1},
     {field: 'error', headerName: 'Error Code', flex: 1},

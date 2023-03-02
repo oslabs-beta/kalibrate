@@ -93,9 +93,9 @@ const Connect = (props: ConnectProps) => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="center"
-      height="30em"
-      textAlign={'center'}
-      sx={{position: isConnected ? 'static' : 'relative', right: '6rem'}}
+      // height="36em"
+      textAlign='center'
+      sx={{position: isConnected ? 'static' : 'relative', right: '6rem', height: '80vh'}}
     >
       <Box
         component="form"
