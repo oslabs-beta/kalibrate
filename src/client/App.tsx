@@ -69,6 +69,7 @@ function App() {
             <Dashboard
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
+              isConnected = {isConnected}
             />
           }
         >
@@ -80,6 +81,7 @@ function App() {
                 sessionClusters={sessionClusters}
                 setSessionClusters={setSessionClusters}
                 setIsConnected={setIsConnected}
+                isConnected={isConnected}
               />
             }
           />
