@@ -1,0 +1,82 @@
+{
+  "name": "kalibrate",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"ts-node-dev -P tsconfig.server.json src/server/server.ts\"",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "demo-kafka": "export KAFKA_HOST_IP=$(ifconfig | grep -E '([0-9]{1,3}\\.){3}[0-9]{1,3}' | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1) && docker-compose -f demo/local/kafka.yml up",
+    "demo-services": "node demo/local/services.mjs",
+    "demo-kafka-reset": "docker-compose -f demo/local/kafka.yml down"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.9",
+    "@mui/material": "^5.11.10",
+    "@mui/x-data-grid": "^5.17.24",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.14.2",
+    "daisyui": "^2.50.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "history": "^5.3.0",
+    "ip": "^1.1.8",
+    "jest-environment-jsdom": "^29.4.3",
+    "kafkajs": "^2.2.3",
+    "node-fetch": "^3.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
+    "uuid": "^9.0.0",
+    "whatwg-fetch": "^3.6.2",
+    "ws": "^8.12.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/ip": "^1.1.0",
+    "@types/jest": "^29.4.0",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@types/react-router": "^5.1.20",
+    "@types/testing-library__jest-dom": "^5.14.5",
+    "@types/ws": "^8.5.4",
+    "@vitejs/plugin-react": "^3.1.0",
+    "babel-jest": "^29.4.3",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.4.3",
+    "msw": "^1.1.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.4",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx,js,jsx}",
+      "!src/**/*.d.ts"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest-setup.ts"
+    ],
+    "moduleNameMapper": {
+      "\\.(png|jpg|ico|jpeg|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mock__/ImageMock.js"
+    }
+  }
+}
