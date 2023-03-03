@@ -15,6 +15,7 @@ const BrokersDisplay = ({clusterData}: BrokersDisplayProps) => {
     {field: 'port', headerName: 'Port', flex: 1},
   ];
 
+  // Takes information from broker array and returns row data
   const brokerRows = brokers.map((broker, index) => {
     return {
       id: index,

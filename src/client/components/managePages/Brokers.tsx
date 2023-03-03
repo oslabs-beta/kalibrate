@@ -4,6 +4,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Box from '@mui/material/Box';
 import {BrokersProps} from '../../types';
 
+// Wrapper for BrokersDisplay
 //props takes in the connectedClusterData
 const Brokers = ({clusterData, connectedCluster}: BrokersProps) => {
   return (

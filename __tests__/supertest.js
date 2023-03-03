@@ -46,6 +46,7 @@ describe('Route integration', () => {
       });
 
       it('fails connection with incorrect credentials', () => {
+        // deep clone the config object so we can create an incorrect version of it without touching the original
         const incorrectLogin = JSON.parse(JSON.stringify(KAFKA_TEST_CONFIG));
         incorrectLogin.sasl.password = 'wrong';
         return request(server)

@@ -1,10 +1,15 @@
-import kafka from './testKafkaConfig';
+import {Kafka} from 'kafkajs';
+import KAFKA_TEST_CONFIG from './kafka-test-config';
+
+// Connect to a Kafka cluster instance
+// See KafkaJS producer demo
+
+const kafka = new Kafka(KAFKA_TEST_CONFIG);
 
 // create a producer client
 const producer = kafka.producer();
 
 // connect to producer instance and publish messages to cluster
-// consider: pass in topic and messages inputs to publishMessage?
 const publishMessages = async () => {
   await producer.connect();
 

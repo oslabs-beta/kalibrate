@@ -1,8 +1,9 @@
 import {useState} from 'react';
 import {useParams, useOutletContext} from 'react-router-dom';
 import {Box, Paper} from '@mui/material';
-import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
+import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 
+// Display group member data within consumers
 const MembersDisplay = () => {
   const {groupData} = useOutletContext();
   const {groupId} = useParams();

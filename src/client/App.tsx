@@ -22,7 +22,6 @@ import NotFound from './components/NotFound';
 import './stylesheets/style.css';
 
 function App() {
-  //declare clientId state so other components could access for link & routing
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
@@ -49,15 +48,11 @@ function App() {
       })
         .then(res => res.json())
         .then(data => {
-          console.log('Fetched data', data);
           setConnectedClusterData(data);
         })
-        .catch(err => console.log(`from app loading cluster data: ${err}`));
+        .catch(err => console.log(`Error from app loading cluster data: ${err}`));
     }
   }, [connectedCluster]);
-
-  // log fetched data for dev purposes, remove before push to prod
-  console.log('Connected cluster data:', connectedClusterData);
 
   return (
     <BrowserRouter>

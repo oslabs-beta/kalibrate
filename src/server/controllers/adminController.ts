@@ -10,7 +10,6 @@ adminController.getClusterData = async (req, res, next) => {
     // attempt to connect admin to instance of kafka
     admin = kafkaController.kafka.admin();
     await admin.connect();
-
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
@@ -27,7 +26,6 @@ adminController.getClusterData = async (req, res, next) => {
 adminController.getTopicData = async (req, res, next) => {
   // declare variables scoped for access from all try blocks
   let topicList, topicMetadata, admin;
-
   // get array of topics
   try {
     // attempt to connect admin to instance of kafka - use var to escape block scope
@@ -94,26 +92,6 @@ adminController.getTopicData = async (req, res, next) => {
   }
 };
 
-/*
-The resulting array should consist of objects of this form:
-{
-  name: String,
-  partitions: [{
-    partitionErrorCode: Number,
-    partitionId: Number,
-    leader: Number,
-    replicas: [Numbers],
-    isr: [Numbers]
-  }],
-  offsets: [{
-    partition: Number,
-    offset: String,
-    high: String,
-    low: String
-  }],
-}
-*/
-
 // get group data
 adminController.getGroupData = async (req, res, next) => {
   let admin;
@@ -157,28 +135,5 @@ adminController.getGroupData = async (req, res, next) => {
     });
   }
 };
-
-// List of groups
-// groups: [
-//   {groupId: 'test-group', protocolType: 'consumer'}
-// ]
-
-// Describe groups
-//   groups: [{
-//     errorCode: 0,
-//     groupId: 'test-group',
-//     members: [
-//       {
-//         clientHost: '/172.19.0.1',
-//         clientId: 'test-3e93246fe1f4efa7380a',
-//         memberAssignment: Buffer,
-//         memberId: 'test-3e93246fe1f4efa7380a-ff87d06d-5c87-49b8-a1f1-c4f8e3ffe7eb',
-//         memberMetadata: Buffer,
-//       },
-//     ],
-//     protocol: 'RoundRobinAssigner',
-//     protocolType: 'consumer',
-//     state: 'Stable',
-//   }]
 
 export default adminController;
