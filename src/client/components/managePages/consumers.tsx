@@ -4,6 +4,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Box from '@mui/material/Box';
 import {ConsumerProps} from '../../types';
 
+// Wrapper for consumersDisplays and membersDisplay
 const Consumers = ({connectedCluster, groupData}: ConsumerProps) => {
   const {groupId} = useParams();
 

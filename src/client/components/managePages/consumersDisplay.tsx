@@ -9,6 +9,7 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
 
+  //  Create column headers & "members" button functionality
   const consumerColumns = [
     {field: 'groupId', headerName: 'Group ID', flex: 1},
     {field: 'state', headerName: 'State', flex: 1},
@@ -34,6 +35,7 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
     },
   ];
 
+  // Create table rows
   const consumerRows = groupData.map((group, index) => {
     return {
       id: index,

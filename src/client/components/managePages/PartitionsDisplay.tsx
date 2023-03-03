@@ -4,9 +4,10 @@ import {Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {partitions, TopicsContext} from '../../types';
 
+// Displays partitions within Topics component
 const PartitionsDisplay = () => {
   const {topicPartitions}: TopicsContext = useOutletContext();
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const partitionColumns = [
     {field: 'partId', headerName: 'Partition ID', flex: 1},

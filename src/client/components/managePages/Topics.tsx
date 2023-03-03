@@ -4,6 +4,7 @@ import {Box, Typography} from '@mui/material';
 import Breadcrumb from './Breadcrumbs';
 import {clickHandler, partitions, TopicsProps} from '../../types';
 
+// Wrapper for TopicsDisplay, PartitionsDisplay, and MessagesDisplay
 const Topics = ({connectedCluster}: TopicsProps) => {
   const [activeTopicsComponent, setActiveTopicsComponent] = useState<string>('');
   const [selectedTopic, setSelectedTopic] = useState<string>('');

@@ -9,7 +9,6 @@ const Connect = (props: ConnectProps) => {
   const navigate = useNavigate();
   const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected, isConnected} =
     props;
-  console.log('(CONNECT) session clusters', sessionClusters);
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -93,8 +92,7 @@ const Connect = (props: ConnectProps) => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="center"
-      // height="36em"
-      textAlign='center'
+      textAlign="center"
       sx={{position: isConnected ? 'static' : 'relative', right: '6rem', height: '80vh'}}
     >
       <Box
@@ -172,13 +170,16 @@ const Connect = (props: ConnectProps) => {
 
         <Grid>
           <span className="loadingSpan">
-            {loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null}
+            {
+              // conditional rendering based on whether login attempt is in progress
+              loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null
+            }
             <Button
-            variant="contained"
-            size="medium"
-            type="submit"
-            sx={{fontWeight: 'bold', marginTop: '15px'}}
-          >
+              variant="contained"
+              size="medium"
+              type="submit"
+              sx={{fontWeight: 'bold', marginTop: '15px'}}
+            >
               {loginInProgress ? 'Connecting...' : 'Connect'}
             </Button>
           </span>
