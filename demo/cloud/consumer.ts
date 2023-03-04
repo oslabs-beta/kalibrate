@@ -1,13 +1,11 @@
-import kafka from './testKafkaConfig';
+import {Kafka} from 'kafkajs';
+import KAFKA_TEST_CONFIG from './kafka-test-config';
 
-// GET request to /cluster-info should get back object shaped like this
-// {
-//   brokers: [
-//     { nodeId: 0, host: 'localhost', port: 9092 }
-//   ],
-//   controller: 0,
-//   clusterId: 'f8QmWTB8SQSLE6C99G4qzA'
-// }
+// connect to a Kafka cluster instance
+// See KafkaJS consumer demo
+
+// Create a new instance of Kafka server
+const kafka = new Kafka(KAFKA_TEST_CONFIG);
 
 // create a consumer client with a unique groupId
 const consumer = kafka.consumer({groupId: 'dev-group'});

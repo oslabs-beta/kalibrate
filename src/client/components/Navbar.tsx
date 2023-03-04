@@ -1,23 +1,26 @@
-import AppBar from '@mui/material/AppBar';
-import Container from '@mui/material/Container';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {
+  AppBar,
+  Container,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  IconButton,
+  Badge,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SettingsIcon from '@mui/icons-material/Settings';
 import crow from './assets/crow2.png';
 
 interface Props {
   isConnected: boolean;
 }
 
+// Render navbar at top of page
 const Navbar = (props: Props) => {
   const pages = ['Dashboard'];
   const settings = ['Account'];
@@ -61,7 +64,6 @@ const Navbar = (props: Props) => {
               <img src={crow} length="25" width="35"></img>
             </Typography>
           </div>
-          {/* link kalibrate logo to home page */}
           <Typography
             variant="h6"
             noWrap
@@ -81,7 +83,6 @@ const Navbar = (props: Props) => {
             KALIBRATE
           </Typography>
 
-          {/* link dashboard button to dashboard page */}
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (
               <Button
@@ -100,7 +101,7 @@ const Navbar = (props: Props) => {
             ))}
           </Box>
 
-          {/* when Alerts icon is clicked, connect popover menu to alerts element via anchorEl */}
+          {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
             size="large"
             color="inherit"
@@ -134,7 +135,7 @@ const Navbar = (props: Props) => {
             ))}
           </Menu>
 
-          {/* when Settings icon is clicked, connect popover menu to settings element via anchorEl */}
+          {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
           <IconButton
             size="large"
             color="inherit"

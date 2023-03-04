@@ -14,6 +14,7 @@ import {useState} from 'react';
 
 const drawerWidth = 200;
 
+// Display, in sidebar, management options for a selected cluster
 const Manage = () => {
   const navigate = useNavigate();
 
@@ -23,6 +24,7 @@ const Manage = () => {
 
   const lightBlue = 'c8d6de';
 
+  // Drawer = wrapper for sidebar
   return (
     <Box sx={{display: 'flex'}}>
       <Drawer

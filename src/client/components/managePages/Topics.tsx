@@ -2,10 +2,9 @@ import {useState} from 'react';
 import {Outlet} from 'react-router-dom';
 import {Box, Typography} from '@mui/material';
 import Breadcrumb from './Breadcrumbs';
-import {clickHandler, partitions, TopicsProps} from './types';
+import {clickHandler, partitions, TopicsProps} from '../../types';
 
-// appropriate props from fetch should be passed down to the appropriate displays
-// todo: needs to be integrated with React Router
+// Wrapper for TopicsDisplay, PartitionsDisplay, and MessagesDisplay
 const Topics = ({connectedCluster}: TopicsProps) => {
   const [activeTopicsComponent, setActiveTopicsComponent] = useState<string>('');
   const [selectedTopic, setSelectedTopic] = useState<string>('');
@@ -23,7 +22,7 @@ const Topics = ({connectedCluster}: TopicsProps) => {
     <div className="wrapper">
       <div className="topics-heading">
         <Typography variant="h4">{`${connectedCluster}`}</Typography>
-        <Box m={2}>
+        <Box mt={2} mb={2}>
           <Breadcrumb topicName={selectedTopic} topicComp={activeTopicsComponent}></Breadcrumb>
         </Box>
       </div>

@@ -2,16 +2,17 @@ import {useState} from 'react';
 import {useOutletContext} from 'react-router-dom';
 import {Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {partitions, TopicsContext} from './types';
+import {partitions, TopicsContext} from '../../types';
 
+// Displays partitions within Topics component
 const PartitionsDisplay = () => {
   const {topicPartitions}: TopicsContext = useOutletContext();
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const partitionColumns = [
     {field: 'partId', headerName: 'Partition ID', flex: 1},
     {field: 'leader', headerName: 'Leader', flex: 1},
-    {field: 'isr', headerName: 'ISR', flex: 1},
+    {field: 'isr', headerName: 'In-Sync Replicas', flex: 1},
     {field: 'replicas', headerName: 'Replicas', flex: 1},
     {field: 'offlineReplicas', headerName: 'Offline Replicas', flex: 1},
     {field: 'error', headerName: 'Error Code', flex: 1},

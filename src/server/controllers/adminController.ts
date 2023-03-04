@@ -10,7 +10,6 @@ adminController.getClusterData = async (req, res, next) => {
     // attempt to connect admin to instance of kafka
     admin = kafkaController.kafka.admin();
     await admin.connect();
-
     res.locals.clusterData = await admin.describeCluster();
     return next();
   } catch (err) {
@@ -27,7 +26,6 @@ adminController.getClusterData = async (req, res, next) => {
 adminController.getTopicData = async (req, res, next) => {
   // declare variables scoped for access from all try blocks
   let topicList, topicMetadata, admin;
-
   // get array of topics
   try {
     // attempt to connect admin to instance of kafka - use var to escape block scope
@@ -94,26 +92,6 @@ adminController.getTopicData = async (req, res, next) => {
   }
 };
 
-/*
-The resulting array should consist of objects of this form:
-{
-  name: String,
-  partitions: [{
-    partitionErrorCode: Number,
-    partitionId: Number,
-    leader: Number,
-    replicas: [Numbers],
-    isr: [Numbers]
-  }],
-  offsets: [{
-    partition: Number,
-    offset: String,
-    high: String,
-    low: String
-  }],
-}
-*/
-
 // get group data
 adminController.getGroupData = async (req, res, next) => {
   let admin;
@@ -122,8 +100,8 @@ adminController.getGroupData = async (req, res, next) => {
     admin = kafkaController.kafka.admin();
     await admin.connect();
     const listObj = await admin.listGroups();
-    // type: { [k:string]: string }[]
     res.locals.groupList = listObj.groups;
+
     // if there are no groups present, return nothing
     if (res.locals.groupList.length === 0) {
       res.locals.groups = [];
@@ -132,9 +110,20 @@ adminController.getGroupData = async (req, res, next) => {
       const groupIds: string[] = res.locals.groupList.map(
         (group: {[k: string]: string}) => group.groupId
       );
-      // type: { [k:string]: any }[]
+
       const groupData = await admin.describeGroups(groupIds);
-      res.locals.groupData = groupData.groups;
+
+      // convert buffers for metadata and assignment
+      res.locals.groupData = groupData.groups.map((group: any) => {
+        group.members = group.members.map((member: any) => {
+          member.memberMetadata = member.memberMetadata.toString();
+          member.memberAssignment = member.memberAssignment.toString();
+          return member;
+        });
+
+        return group;
+      });
+
       return next();
     }
   } catch (err) {
@@ -146,28 +135,5 @@ adminController.getGroupData = async (req, res, next) => {
     });
   }
 };
-
-// List of groups
-// groups: [
-//   {groupId: 'test-group', protocolType: 'consumer'}
-// ]
-
-// Describe groups
-//   groups: [{
-//     errorCode: 0,
-//     groupId: 'test-group',
-//     members: [
-//       {
-//         clientHost: '/172.19.0.1',
-//         clientId: 'test-3e93246fe1f4efa7380a',
-//         memberAssignment: Buffer,
-//         memberId: 'test-3e93246fe1f4efa7380a-ff87d06d-5c87-49b8-a1f1-c4f8e3ffe7eb',
-//         memberMetadata: Buffer,
-//       },
-//     ],
-//     protocol: 'RoundRobinAssigner',
-//     protocolType: 'consumer',
-//     state: 'Stable',
-//   }]
 
 export default adminController;

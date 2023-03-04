@@ -1,6 +1,7 @@
 import {ImageList, Box, ImageListItem} from '@mui/material';
-import {OverviewProps} from './managePages/types';
+import {OverviewProps} from '../types';
 
+// Display high-level cluster data (below navbar, right of dashboard)
 const Overview = (props: OverviewProps) => {
   const {connectedCluster, data} = props;
 

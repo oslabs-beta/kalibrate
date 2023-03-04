@@ -13,12 +13,6 @@ const app = express();
 // Parse requests
 app.use(express.json());
 
-// server.open in vite.config serves index.html as entry point I think
-// keeping this here as backup until I'm sure
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-// app.use('/', express.static(path.resolve(__dirname, '../index.html')));
-
 // Routes
 app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
   res.sendStatus(201);
@@ -26,6 +20,7 @@ app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
 
 const {getClusterData, getTopicData, getGroupData} = adminController;
 app.get('/api/data', getClusterData, getTopicData, getGroupData, (req, res) => {
+  console.log('Res Locals post app data retrieval', res.locals);
   res.status(200).json(res.locals);
 });
 
@@ -40,7 +35,6 @@ app.use('*', (req, res) => {
 
 // Global error handler
 app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
-  // if kafkaController instance is connected when an error is thrown, disconnect it
   const defaultErr: errorObject = {
     log: 'Express error handler caught unknown middleware error',
     status: 400,

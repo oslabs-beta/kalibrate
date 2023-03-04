@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom';
-import {Breadcrumbs, Link, Typography} from '@mui/material';
+import {Breadcrumbs, Typography} from '@mui/material';
 import {createBrowserHistory} from 'history';
-import {BreadcrumbProps} from './types';
+import {BreadcrumbProps} from '../../types';
 
 const Breadcrumb = ({topicName, topicComp}: BreadcrumbProps) => {
   const navigate = useNavigate();

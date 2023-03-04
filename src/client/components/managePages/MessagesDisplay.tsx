@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
-import {Box, Paper, CircularProgress, Button, Alert} from '@mui/material';
+import {Box, Paper, Button, Alert} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {message, TopicsContext} from './types';
+import {message, TopicsContext} from '../../types';
 import crow from '../assets/crow2.png';
 
 const MessagesDisplay = () => {
@@ -92,16 +92,10 @@ const MessagesDisplay = () => {
     </Box>
   );
 
-  // Loading wheel for while data is loading
-  const loadingWheel = (
-    <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <CircularProgress size="75px" />
-    </Box>
-  );
   //crow alternative
   const loadingKrow = (
     <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <img className="loadKrow rotation" src={crow}></img>
+      <img className="loadKrow rotation" src={crow} alt="loading"></img>
     </Box>
   );
   // Button to reload messages

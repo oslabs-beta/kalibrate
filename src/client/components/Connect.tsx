@@ -1,7 +1,7 @@
 import {useState, SyntheticEvent} from 'react';
-import {Grid, Button, TextField, Box, Checkbox} from '@mui/material';
+import {Grid, Button, TextField, Box, Checkbox, Alert} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import {ConnectProps, connectionConfig} from './managePages/types';
+import {ConnectProps, connectionConfig} from '../types';
 import '../stylesheets/style.css';
 import crow from './assets/crow2.png';
 
@@ -9,7 +9,6 @@ const Connect = (props: ConnectProps) => {
   const navigate = useNavigate();
   const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected, isConnected} =
     props;
-  console.log('(CONNECT) session clusters', sessionClusters);
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -93,9 +92,8 @@ const Connect = (props: ConnectProps) => {
       direction="column"
       justifyContent="space-evenly"
       alignItems="center"
-      height="30em"
-      textAlign={'center'}
-      sx={{position: isConnected ? 'static' : 'relative', right: '6rem'}}
+      textAlign="center"
+      sx={{position: isConnected ? 'static' : 'relative', right: '6rem', height: '80vh'}}
     >
       <Box
         component="form"
@@ -172,13 +170,16 @@ const Connect = (props: ConnectProps) => {
 
         <Grid>
           <span className="loadingSpan">
-            {loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null}
+            {
+              // conditional rendering based on whether login attempt is in progress
+              loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null
+            }
             <Button
-            variant="contained"
-            size="medium"
-            type="submit"
-            sx={{fontWeight: 'bold', marginTop: '15px'}}
-          >
+              variant="contained"
+              size="medium"
+              type="submit"
+              sx={{fontWeight: 'bold', marginTop: '15px'}}
+            >
               {loginInProgress ? 'Connecting...' : 'Connect'}
             </Button>
           </span>
@@ -186,7 +187,7 @@ const Connect = (props: ConnectProps) => {
 
         {errorMessage.length ? (
           <Grid>
-            <h3 className="err">{errorMessage}</h3>
+            <Alert severity="error">{errorMessage}</Alert>
           </Grid>
         ) : null}
       </Box>

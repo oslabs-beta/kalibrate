@@ -1,9 +1,11 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {connectedClusterData} from '../client/components/managePages/types';
+import {connectedClusterData} from './types';
 import Connect from './components/Connect';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
+import ConsumersDisplay from './components/managePages/consumersDisplay';
+import MembersDisplay from './components/managePages/membersDisplay';
 import Navbar from './components/Navbar';
 import Brokers from './components/managePages/Brokers';
 import Overview from './components/Overview';
@@ -16,10 +18,10 @@ import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
 import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
+import NotFound from './components/NotFound';
 import './stylesheets/style.css';
 
 function App() {
-  //declare clientId state so other components could access for link & routing
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
@@ -46,15 +48,11 @@ function App() {
       })
         .then(res => res.json())
         .then(data => {
-          console.log('Fetched data', data);
           setConnectedClusterData(data);
         })
-        .catch(err => console.log(`from app loading cluster data: ${err}`));
+        .catch(err => console.log(`Error from app loading cluster data: ${err}`));
     }
   }, [connectedCluster]);
-
-  // log fetched data for dev purposes, remove before push to prod
-  console.log('Connected cluster data:', connectedClusterData);
 
   return (
     <BrowserRouter>
@@ -69,7 +67,7 @@ function App() {
             <Dashboard
               setConnectedCluster={setConnectedCluster}
               sessionClusters={sessionClusters}
-              isConnected = {isConnected}
+              isConnected={isConnected}
             />
           }
         >
@@ -101,8 +99,11 @@ function App() {
           />
           <Route
             path="consumers"
-            element={<Consumers groupData={groupData} connectedCluster={connectedCluster} />}
-          />
+            element={<Consumers connectedCluster={connectedCluster} groupData={groupData} />}
+          >
+            <Route index element={<ConsumersDisplay groupData={groupData} />} />
+            <Route path=":groupId/members" element={<MembersDisplay />} />
+          </Route>
           <Route path="topics" element={<Topics connectedCluster={connectedCluster} />}>
             <Route index element={<TopicsDisplay topicData={topicData} />} />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
@@ -113,6 +114,7 @@ function App() {
           <Route path="consume" element={<Consume />} />
           <Route path="Produce" element={<Produce />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

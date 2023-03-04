@@ -2,21 +2,22 @@ import {useState} from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {Button, Box, Paper} from '@mui/material';
 import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
-import {TopicsDisplayProps, TopicsContext} from './types';
+import {TopicsDisplayProps, TopicsContext} from '../../types';
 
+// Displays topics within Topics component
 const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
   const {topics} = topicData;
   const {handleComponentChange}: TopicsContext = useOutletContext();
   const navigate = useNavigate();
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const topicColumns = [
-    {field: 'topicName', headername: 'Topic Name', flex: 1},
+    {field: 'topicName', headerName: 'Topic Name', flex: 1},
     {field: 'offsets', headerName: 'Offsets Total', flex: 1},
     {field: 'numPartitions', headerName: 'Partitions Total', flex: 1},
     {
       field: 'linkToPart',
-      headerName: 'See Partitions',
+      headerName: 'View Partitions',
       flex: 1,
       renderCell: (params: GridValueGetterParams) => (
         <Box>
@@ -36,7 +37,7 @@ const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
     },
     {
       field: 'linkToMsg',
-      headerName: 'See Messages',
+      headerName: 'View Messages',
       flex: 1,
       renderCell: (params: GridValueGetterParams) => (
         <Box>
@@ -71,7 +72,7 @@ const TopicsDisplay = ({topicData}: TopicsDisplayProps) => {
           <DataGrid
             autoHeight // sets table height based on number of rows
             rows={topicRows}
-            columns={topicColumns} // not sure how to fix this TS error
+            columns={topicColumns}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}
