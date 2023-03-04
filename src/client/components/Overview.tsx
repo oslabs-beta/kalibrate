@@ -5,73 +5,92 @@ const Overview = (props: OverviewProps) => {
   const {connectedCluster, data} = props;
 
   return (
-    <ImageList sx={{width: 700, height: 550, margin: 'auto'}} variant="woven" cols={3} gap={25}>
-      <ImageListItem>
+    <Box
+      sx={{
+        width: '100%',
+        height: '140px',
+        color: 'inherit',
+        '& > .MuiBox-root > .MuiBox-root': {
+          p: 1,
+          borderRadius: 2,
+          fontSize: '2rem',
+          fontWeight: '500',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderColor: '#253237',
+          border: 1,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: 1,
+          gridTemplateRows: 'repeat(3, 140px)',
+          gridTemplateAreas: `"cluster cluster topic partitions"
+            "cluster cluster offset offset"
+            "brokers brokers consumer consumer"`,
+        }}
+      >
         <Box
           bgcolor="#c2dfe3"
-          sx={{p: 8, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+          sx={{
+            gridArea: 'cluster',
+          }}
         >
           ClusterName: <br />
-          <br />
           {connectedCluster}
         </Box>
-      </ImageListItem>
-
-      <ImageListItem>
-        <Box
-          bgcolor="#e0fbfc"
-          sx={{p: 4, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
-        >
-          Brokers Count: <br />
-          <br />
-          {data.clusterData.brokers.length}
-        </Box>
-      </ImageListItem>
-
-      <ImageListItem>
         <Box
           bgcolor="#c2dfe3"
-          sx={{p: 4, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+          sx={{
+            gridArea: 'topic',
+          }}
         >
           Topics Count: <br />
-          <br />
           {data.topicData.topics.length}
         </Box>
-      </ImageListItem>
-
-      <ImageListItem>
-        <Box
-          bgcolor="#c2dfe3"
-          sx={{p: 8, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
-        >
-          Offsets: <br />
-          <br />
-          {data.topicData.topics[0].offsets.length}
-        </Box>
-      </ImageListItem>
-
-      <ImageListItem>
         <Box
           bgcolor="#e0fbfc"
-          sx={{p: 8, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+          sx={{
+            gridArea: 'partitions',
+          }}
         >
           Partitions: <br />
-          <br />
           {data.topicData.topics[0].partitions.length}
         </Box>
-      </ImageListItem>
-
-      <ImageListItem>
         <Box
           bgcolor="#c2dfe3"
-          sx={{p: 4, borderRadius: 1, borderColor: '#253237', border: 1, textAlign: 'center'}}
+          sx={{
+            gridArea: 'offset',
+          }}
+        >
+          Offsets: <br />
+          {data.topicData.topics[0].offsets.length}
+        </Box>
+        <Box
+          bgcolor="#e0fbfc"
+          sx={{
+            gridArea: 'brokers',
+          }}
+        >
+          Brokers Count: <br />
+          {data.clusterData.brokers.length}
+        </Box>
+        <Box
+          bgcolor="#c2dfe3"
+          sx={{
+            gridArea: 'consumer',
+          }}
         >
           Consumer Groups: <br />
-          <br />
           {data.groupList.length}
         </Box>
-      </ImageListItem>
-    </ImageList>
+      </Box>
+    </Box>
   );
 };
 
