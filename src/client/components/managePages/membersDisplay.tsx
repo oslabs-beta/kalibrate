@@ -27,7 +27,7 @@ const MembersDisplay = () => {
         <Box>
           <Button
             onClick={e => {
-              navigate(`../../topics`);
+              navigate(`../../topics`, {state: {selectedTopic: params.value}});
             }}
           >
             {params.value}
