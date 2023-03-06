@@ -1,4 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
+import cookieParser from 'cookie-parser';
 import {errorObject} from './types';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -7,30 +8,42 @@ dotenv.config();
 import kafkaController from './controllers/kafkaController';
 import topicController from './controllers/topicController';
 import adminController from './controllers/adminController';
+import authController from './controllers/authController';
 
 const app = express();
 
 // Parse requests
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
+app.post('/api/signup', authController.createUser, authController.setSessionCookie, (req, res) => {
+  const {user} = res.locals;
+  return res.status(201).json(user);
+});
+
+app.post('/api/login', authController.verifyUser, authController.setSessionCookie, (req, res) => {
+  const {user} = res.locals;
+  return res.status(201).json(user);
+});
+
 app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
-  res.sendStatus(201);
+  return res.sendStatus(201);
 });
 
 const {getClusterData, getTopicData, getGroupData} = adminController;
 app.get('/api/data', getClusterData, getTopicData, getGroupData, (req, res) => {
   console.log('Res Locals post app data retrieval', res.locals);
-  res.status(200).json(res.locals);
+  return res.status(200).json(res.locals);
 });
 
 app.get('/api/:topic/messages', topicController.getMessages, (req, res) => {
-  res.status(200).json(res.locals.topicMessages);
+  return res.status(200).json(res.locals.topicMessages);
 });
 
 // Catch all handler
 app.use('*', (req, res) => {
-  res.status(404).send('Not Found');
+  return res.status(404).send('Not Found');
 });
 
 // Global error handler
