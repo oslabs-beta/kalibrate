@@ -1,4 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
+import ClientCache from './ClientCache';
 import {errorObject} from './types';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -8,6 +9,8 @@ import kafkaController from './controllers/kafkaController';
 import topicController from './controllers/topicController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
+
+const clientCache = new ClientCache();
 
 const app = express();
 
@@ -25,13 +28,30 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
   return res.status(201).json(user);
 });
 
-app.post('/api/connection', kafkaController.initiateKafka, (req, res) => {
+// get and instantiate all saved server connections for a given user
+app.get('/api/connection', kafkaController.initiateKafka, (req, res) => {
+  return res.sendStatus(201);
+});
+
+// create and save a new sever connection for a given user
+app.post(
+  '/api/connection',
+  authController.verifySessionCookie,
+  kafkaController.initiateKafka,
+  kafkaController.cacheClient,
+  kafkaController.storeClient,
+  (req, res) => {
+    return res.sendStatus(201);
+  }
+);
+
+// delete a saved server connection for a given user
+app.delete('/api/connection', kafkaController.initiateKafka, (req, res) => {
   return res.sendStatus(201);
 });
 
 const {getClusterData, getTopicData, getGroupData} = adminController;
 app.get('/api/data', getClusterData, getTopicData, getGroupData, (req, res) => {
-  console.log('Res Locals post app data retrieval', res.locals);
   return res.status(200).json(res.locals);
 });
 
@@ -61,4 +81,4 @@ app.listen(process.env.PORT, () => {
   console.log(`Server listening on port: ${process.env.PORT}`);
 });
 
-export default app;
+export {app, clientCache};
