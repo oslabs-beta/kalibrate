@@ -15,21 +15,20 @@ import {
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import crow from './assets/crow2.png';
+import UserMenu from './UserMenu';
 
-interface Props {
+export interface Props {
   isConnected: boolean;
 }
 
 // Render navbar at top of page
 const Navbar = (props: Props) => {
   const pages = ['Dashboard'];
-  const settings = ['Account'];
   const alerts = ['Alert 1', 'Alert 2'];
 
   const navigate = useNavigate();
   const {isConnected} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenAlertsMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElAlerts(event.currentTarget);
@@ -37,14 +36,6 @@ const Navbar = (props: Props) => {
 
   const handleCloseAlertsMenu = (): void => {
     setAnchorElAlerts(null);
-  };
-
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = (): void => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -136,36 +127,7 @@ const Navbar = (props: Props) => {
           </Menu>
 
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
-          <IconButton
-            size="large"
-            color="inherit"
-            onClick={handleOpenUserMenu}
-            sx={{visibility: isConnected ? 'visible' : 'hidden'}}
-          >
-            <SettingsIcon aria-label="settings" />
-          </IconButton>
-          <Menu
-            sx={{mt: '30px'}}
-            id="settings-menu"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map(setting => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
+          <UserMenu isConnected={isConnected} />
         </Toolbar>
       </Container>
     </AppBar>

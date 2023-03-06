@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {
   Box,
@@ -8,21 +9,24 @@ import {
   ListItemButton,
   ListItemText,
   Collapse,
+  useTheme,
 } from '@mui/material';
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
-import {useState} from 'react';
+import {ColorModeContext, tokens} from '../theme';
 
 const drawerWidth = 200;
 
 // Display, in sidebar, management options for a selected cluster
 const Manage = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
 
-  const lightBlue = 'c8d6de';
+  // const lightBlue = 'c8d6de';
 
   // Drawer = wrapper for sidebar
   return (
@@ -35,14 +39,14 @@ const Manage = () => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            background: '#edf8fe',
+            background: colors.manage[500],
           },
         }}
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto', background: lightBlue}}>
+        <Box sx={{overflow: 'auto'}}>
           <List className="no-padding-list">
-            <ListItem key="Manage" disablePadding sx={{background: '#edf8fe'}}>
+            <ListItem key="Manage" disablePadding>
               <ListItemButton
                 onClick={() => setOpenManage(prev => !prev)}
                 sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
@@ -71,7 +75,7 @@ const Manage = () => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Monitor" disablePadding sx={{background: lightBlue}}>
+            <ListItem key="Monitor" disablePadding>
               <ListItemButton
                 onClick={() => setOpenMonitor(prev => !prev)}
                 sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
@@ -93,7 +97,7 @@ const Manage = () => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Test" disablePadding sx={{background: lightBlue}}>
+            <ListItem key="Test" disablePadding>
               <ListItemButton
                 onClick={() => setOpenTest(prev => !prev)}
                 sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}

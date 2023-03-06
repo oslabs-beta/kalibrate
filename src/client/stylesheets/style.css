@@ -80,5 +80,5 @@ body,
 main {
   max-height: 100%;
   margin: 0;
-  background-color: var(--white);
+  /* background-color: var(--white); */
 }
