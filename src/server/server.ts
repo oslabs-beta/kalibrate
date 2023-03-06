@@ -1,5 +1,6 @@
 import express, {Request, Response, NextFunction} from 'express';
 import ClientCache from './ClientCache';
+import cookieParser from 'cookie-parser';
 import {errorObject} from './types';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -16,6 +17,7 @@ const app = express();
 
 // Parse requests
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
 app.post('/api/signup', authController.createUser, authController.setSessionCookie, (req, res) => {
