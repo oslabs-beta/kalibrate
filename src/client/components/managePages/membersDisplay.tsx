@@ -1,12 +1,13 @@
 import {useState} from 'react';
-import {useParams, useOutletContext} from 'react-router-dom';
-import {Box, Paper} from '@mui/material';
-import {DataGrid, GridToolbar} from '@mui/x-data-grid';
+import {useParams, useOutletContext, useNavigate} from 'react-router-dom';
+import {Box, Paper, Button} from '@mui/material';
+import {DataGrid, GridRenderCellParams, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 
 // Display group member data within consumers
 const MembersDisplay = () => {
   const {groupData} = useOutletContext();
   const {groupId} = useParams();
+  const navigate = useNavigate();
 
   const memberData = groupData.filter(group => {
     return group.groupId === groupId;
@@ -18,7 +19,22 @@ const MembersDisplay = () => {
     {field: 'clientId', headername: 'Client ID', flex: 1},
     {field: 'clientHost', headerName: 'Client Host', flex: 1},
     {field: 'memberId', headerName: 'Member ID', flex: 1},
-    {field: 'topic', headerName: 'Topic', flex: 1},
+    {
+      field: 'topic',
+      headerName: 'Topic',
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box>
+          <Button
+            onClick={e => {
+              navigate(`../../topics`);
+            }}
+          >
+            {params.value}
+          </Button>
+        </Box>
+      ),
+    },
   ];
 
   const memberRows = memberData.map((member, index) => {
@@ -27,6 +43,7 @@ const MembersDisplay = () => {
       clientId: member.clientId,
       clientHost: member.clientHost,
       memberId: member.memberId,
+      //link to general topic page, with a specific topic filter?
       topic: member.memberAssignment,
     };
   });

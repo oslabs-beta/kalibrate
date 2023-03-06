@@ -19,7 +19,7 @@ const Consumers = ({connectedCluster, groupData}: ConsumerProps) => {
         </Box>
       </div>
       <div className="consumers-display">
-        <Outlet context={{groupData: groupData}} />
+        <Outlet context={{groupData}} />
       </div>
     </div>
   );
