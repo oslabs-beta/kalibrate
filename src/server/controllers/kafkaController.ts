@@ -4,12 +4,12 @@ import {controller} from './../types';
 
 const kafkaController: controller = {};
 
-// two supported connection types: 1. with ssl & sasl | 2. without ssl & sasl
 kafkaController.initiateKafka = async (req, res, next) => {
   const {clientId, brokers, ssl, sasl} = req.body;
 
   let kafkaClient;
 
+  // two supported connection types: with ssl & sasl, or without ssl & sasl
   if (!sasl) {
     kafkaClient = new Kafka({
       clientId,
@@ -24,15 +24,18 @@ kafkaController.initiateKafka = async (req, res, next) => {
     });
   }
 
+  // Verify cluster connection
   const testClient = kafkaClient.admin();
 
   try {
-    // Verify cluster connection
     await testClient.connect();
     await testClient.disconnect();
 
     res.locals.client = {
       clientId,
+      brokers,
+      ssl,
+      sasl,
       kafkaClient,
     };
 
@@ -50,18 +53,16 @@ kafkaController.cacheClient = (req, res, next) => {
   const {id} = res.locals.user;
   const {clientId, kafkaClient} = res.locals.client;
 
-  clientCache.set(id, clientId, kafkaClient);
-  console.log('kafka cache:', clientCache.cache); // remove
+  clientCache.set(id, clientId, kafkaClient); // cache in clientCache
 
   return next();
 };
 
 kafkaController.storeClient = (req, res, next) => {
   const {id} = res.locals.user;
-  const {clientId, kafkaClient} = res.locals.client;
+  const {clientId, brokers, ssl, sasl} = res.locals.client;
 
-  clientCache.set(id, clientId, kafkaClient);
-  console.log('kafka cache:', clientCache.cache); // remove
+  // store info in db (need user pw to encrypt?)
 
   return next();
 };

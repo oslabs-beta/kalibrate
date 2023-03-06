@@ -1,6 +1,6 @@
 import express, {Request, Response, NextFunction} from 'express';
-import ClientCache from './ClientCache';
 import cookieParser from 'cookie-parser';
+import ClientCache from './ClientCache';
 import {errorObject} from './types';
 import dotenv from 'dotenv';
 dotenv.config();
