@@ -5,7 +5,7 @@ import {controller} from './../types';
 const kafkaController: controller = {};
 
 kafkaController.initiateKafka = async (req, res, next) => {
-  const {clientId, brokers, ssl, sasl} = req.body;
+  let {clientId, brokers, ssl, sasl} = req.body;
 
   let kafkaClient;
 
@@ -53,16 +53,34 @@ kafkaController.cacheClient = (req, res, next) => {
   const {id} = res.locals.user;
   const {clientId, kafkaClient} = res.locals.client;
 
-  clientCache.set(id, clientId, kafkaClient); // cache in clientCache
+  clientCache.set(id, clientId, kafkaClient); // cache in client cache
 
   return next();
 };
 
-kafkaController.storeClient = (req, res, next) => {
+kafkaController.cacheClients = (req, res, next) => {
   const {id} = res.locals.user;
-  const {clientId, brokers, ssl, sasl} = res.locals.client;
+  const clients = res.locals.clients;
 
-  // store info in db (need user pw to encrypt?)
+  clientCache.setMany(id, clients); // cache several clients for a given user
+
+  return next();
+};
+
+kafkaController.getCachedClient = (req, res, next) => {
+  const {id} = res.locals.user;
+  const {clientId} = req.body;
+
+  clientCache.getUnique(id, clientId);
+
+  return next();
+};
+
+kafkaController.clearCachedClient = (req, res, next) => {
+  const clientId = req.body;
+  const {id} = res.locals.user;
+
+  clientCache.delete(id, clientId); // delete from client cache
 
   return next();
 };

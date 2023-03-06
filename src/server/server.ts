@@ -30,10 +30,15 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
   return res.status(201).json(user);
 });
 
-// get and instantiate all saved server connections for a given user
-app.get('/api/connection', kafkaController.initiateKafka, (req, res) => {
-  return res.sendStatus(201);
-});
+app.get(
+  '/api/connection',
+  authController.verifySessionCookie,
+  // todo: query database for all stored connections, decrypt passwords/intialize kafka instances/pass down chain
+  kafkaController.cacheClients,
+  (req, res) => {
+    return res.status(200).json(/* all cluster connection details to send*/);
+  }
+);
 
 // create and save a new sever connection for a given user
 app.post(
@@ -41,16 +46,30 @@ app.post(
   authController.verifySessionCookie,
   kafkaController.initiateKafka,
   kafkaController.cacheClient,
-  kafkaController.storeClient,
+  // todo: controller(s) to encrypt and store in db
   (req, res) => {
-    return res.sendStatus(201);
+    const {clientId, brokers, ssl, sasl} = res.locals.client;
+    return res.status(201).json({
+      clientId,
+      brokers,
+      ssl,
+      sasl: {
+        mechanism: sasl.mechanism,
+        username: sasl.username,
+      },
+    });
   }
 );
 
-// delete a saved server connection for a given user
-app.delete('/api/connection', kafkaController.initiateKafka, (req, res) => {
-  return res.sendStatus(201);
-});
+app.delete(
+  '/api/connection',
+  authController.verifySessionCookie,
+  authController.clearCachedClient,
+  // todo: controller(s) to delete record from db
+  (req, res) => {
+    return res.status(202).json(/* deleted cluster connection details to send*/);
+  }
+);
 
 const {getClusterData, getTopicData, getGroupData} = adminController;
 app.get('/api/data', getClusterData, getTopicData, getGroupData, (req, res) => {
