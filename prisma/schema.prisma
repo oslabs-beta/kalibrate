@@ -1,0 +1,44 @@
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_URL")
+  shadowDatabaseUrl = env("POSTGRES_SHADOW_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             Int          @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  email          String       @unique
+  password       String?
+  authProvider   AuthProvider @relation(fields: [authProviderId], references: [id])
+  authProviderId Int
+  clusters       Cluster[]
+}
+
+model AuthProvider {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  user  User[]
+}
+
+model Cluster {
+  id            Int          @id @default(autoincrement())
+  clientId      String
+  seedBrokers   SeedBroker[]
+  saslMechanism String?
+  saslUsername  String?
+  saslPassword  String?
+  user          User         @relation(fields: [userId], references: [id])
+  userId        Int
+}
+
+model SeedBroker {
+  id        Int     @id @default(autoincrement())
+  broker    String
+  cluster   Cluster @relation(fields: [clusterId], references: [id])
+  clusterId Int
+}
