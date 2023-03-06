@@ -18,6 +18,8 @@ import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
 import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
+import Login from './components/Login';
+import Signup from './components/Signup';
 import NotFound from './components/NotFound';
 import './stylesheets/style.css';
 
@@ -84,6 +86,8 @@ function App() {
             }
           />
         </Route>
+        <Route path="login" element={<Login />}></Route>
+        <Route path="signup" element={<Signup />}></Route>
         <Route path=":clusterName" element={<Manage />}>
           <Route
             index
