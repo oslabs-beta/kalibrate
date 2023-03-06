@@ -29,7 +29,8 @@ function App() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
-  const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
+
+  const defaultClusterData = {
     clusterData: {
       brokers: [],
     },
@@ -37,9 +38,20 @@ function App() {
       topics: [],
     },
     groupData: [],
-  });
+  };
+  const [connectedClusterData, setConnectedClusterData] =
+    useState<connectedClusterData>(defaultClusterData);
 
   const {clusterData, topicData, groupData} = connectedClusterData;
+
+  //resets session when user logs out
+  const logout = (): void => {
+    setIsConnected(false);
+    setConnectedCluster('');
+    setSessionClusters([]);
+    setConnectedClusterData(defaultClusterData);
+    console.log('YOURE LOGGED OUT', isConnected); //SUCCESS LOGOUT BUT isConnected still true
+  };
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -65,7 +77,7 @@ function App() {
         <div>
           <BrowserRouter>
             <nav>
-              <Navbar isConnected={isConnected} />
+              <Navbar isConnected={isConnected} logout={logout} />
             </nav>
 
             <Routes>

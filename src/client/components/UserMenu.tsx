@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {
   Box,
   IconButton,
@@ -20,6 +21,7 @@ import {Props} from './Navbar';
 import {ColorModeContext, tokens} from '../theme';
 
 const UserMenu = (props: Props) => {
+  const navigate = useNavigate();
   //manges light/dark mode
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -27,7 +29,7 @@ const UserMenu = (props: Props) => {
   //anchorEl: setup to be a toggle, if assigned, will display popover
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [checked, setChecked] = useState<boolean>(true);
-  const {isConnected} = props;
+  const {isConnected, logout} = props;
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
@@ -36,6 +38,13 @@ const UserMenu = (props: Props) => {
     setAnchorElUser(null);
   };
 
+  //end goal: should clear session data and send back to login/connect page
+  const handleLogout = async () => {
+    console.log('TRYING TO LOG OUT');
+    await logout();
+    console.log(isConnected);
+    await navigate('/login'); //if send back to '/', return error bc expecting data... async problem?
+  };
   const handleDarkMode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     //set them to dark
     setChecked(event.target.checked);
@@ -81,7 +90,7 @@ const UserMenu = (props: Props) => {
           <ManageAccountsOutlinedIcon />
           <Typography textAlign="center">Account</Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <LogoutIcon />
           <Typography>Logout</Typography>
         </MenuItem>

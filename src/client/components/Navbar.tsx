@@ -19,6 +19,7 @@ import UserMenu from './UserMenu';
 
 export interface Props {
   isConnected: boolean;
+  logout: () => void;
 }
 
 // Render navbar at top of page
@@ -27,7 +28,7 @@ const Navbar = (props: Props) => {
   const alerts = ['Alert 1', 'Alert 2'];
 
   const navigate = useNavigate();
-  const {isConnected} = props;
+  const {isConnected, logout} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
 
   const handleOpenAlertsMenu = (event: React.MouseEvent<HTMLElement>): void => {
@@ -127,7 +128,7 @@ const Navbar = (props: Props) => {
           </Menu>
 
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
-          <UserMenu isConnected={isConnected} />
+          <UserMenu isConnected={isConnected} logout={logout} />
         </Toolbar>
       </Container>
     </AppBar>
