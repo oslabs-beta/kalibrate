@@ -9,6 +9,7 @@ import kafkaController from './controllers/kafkaController';
 import topicController from './controllers/topicController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
+import clusterController from './controllers/clusterController';
 
 const app = express();
 
