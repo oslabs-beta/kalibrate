@@ -25,3 +25,7 @@ export type topicMessage = {
 export type consumedTopicPartitions = {
   [k: string]: boolean;
 };
+
+export type groupOffsetType = {
+  [k: string]: object[];
+};

@@ -1,5 +1,5 @@
 import kafkaController from './kafkaController';
-import {controller} from './../types';
+import {controller, groupOffsetType} from './../types';
 
 const adminController: controller = {};
 
@@ -113,6 +113,17 @@ adminController.getGroupData = async (req, res, next) => {
 
       const groupData = await admin.describeGroups(groupIds);
 
+      // iterate through res.locals.groupList; for each, call fetchoffsets
+      // using for loop because forEach doesn't work asynchronously
+      const groupOffsets: groupOffsetType = {};
+      for (const el of groupIds) {
+        console.log('current group: ', el);
+        groupOffsets[el] = await admin.fetchOffsets({groupId: el});
+      }
+
+      console.log(JSON.stringify(res.locals.groupOffsets));
+      res.locals.groupOffsets = groupOffsets;
+
       // convert buffers for metadata and assignment
       res.locals.groupData = groupData.groups.map((group: any) => {
         group.members = group.members.map((member: any) => {
@@ -120,7 +131,6 @@ adminController.getGroupData = async (req, res, next) => {
           member.memberAssignment = member.memberAssignment.toString();
           return member;
         });
-
         return group;
       });
 
@@ -128,8 +138,9 @@ adminController.getGroupData = async (req, res, next) => {
     }
   } catch (err) {
     await admin.disconnect();
+    console.log(err);
     return next({
-      log: 'adminController.describeGroups failed to get cluster details',
+      log: 'adminController.describeGroups failed to get group details',
       status: 400,
       message: err,
     });

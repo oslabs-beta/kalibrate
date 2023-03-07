@@ -139,3 +139,7 @@ export type message = {
 export interface ConsumerProps {
   groupData: {[k: string]: any}[];
 }
+
+export interface newPoll {
+  [k: string]: any;
+}

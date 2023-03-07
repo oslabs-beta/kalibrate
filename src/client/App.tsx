@@ -27,6 +27,7 @@ function App() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
+  const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
     clusterData: {
       brokers: [],
@@ -43,6 +44,7 @@ function App() {
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
+      let interval; // for
       fetch('api/data', {
         headers: {
           'Content-Type': 'application/json',
@@ -51,10 +53,84 @@ function App() {
         .then(res => res.json())
         .then(data => {
           setConnectedClusterData(data);
+          //set interval for polling
+          // make interval changeable?
+          //also rn I don't think you can actually change clusters by clicking between them on the sidebar - don't think it changes to the right k instacne. talk to the session folks
+          // add group data fetch to admincontroller
+          interval = setInterval(poll, 5000);
         })
         .catch(err => console.log(`Error from app loading cluster data: ${err}`));
+      // remove interval on unmount
+      // also clear timeseriesdata?
+      return () => clearInterval(interval);
     }
   }, [connectedCluster]);
+
+  // repeated poll to connected kafka instance for data
+  // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
+  // modularize poll into a different file?
+  const poll = () => {
+    fetch('api/data', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        const newPoll = {};
+        newPoll.time = Date.now();
+        console.log(Date.now());
+        console.log(data);
+        setConnectedClusterData(data);
+        // percent of groups by status
+        let stable = 0,
+          empty = 0;
+        for (const el of data.groupData) {
+          if (el.state === 'Stable') stable++;
+          if (el.state === 'Empty') empty++;
+        }
+        newPoll.groupStatus = {
+          total: data.groupData.length,
+          stable,
+          empty,
+          other: data.groupData.length - stable - empty,
+        };
+
+        // count of offsets by topic
+        // data.topicData.topics
+        newPoll.topicOffsets = {};
+        for (const t of data.topicData.topics) {
+          const topicName = t.name;
+          let sum = 0;
+          for (const o of t.offsets) {
+            sum += Number(o.offset);
+          }
+          newPoll.topicOffsets[topicName] = sum;
+        }
+
+        // count of offsets by group
+        // data.groupOffsets
+        newPoll.groupOffsets = {};
+        for (const g in data.groupOffsets) {
+          const groupName = g;
+          let sum = 0;
+          data.groupOffsets[g].forEach(el => {
+            el.partitions.forEach(p => {
+              sum += p.offset;
+            });
+          });
+          newPoll.groupOffsets[groupName] = sum;
+        }
+        console.log('np ', newPoll);
+
+        // add timeseriesdata to state
+        const newTimeSeriesData = timeSeriesData;
+        newTimeSeriesData.push(newPoll);
+        console.log('tsd: ', newTimeSeriesData);
+        setTimeSeriesData(newTimeSeriesData);
+      })
+      .catch(err => console.log(`Error polling data: ${err}`));
+  };
 
   return (
     <BrowserRouter>
