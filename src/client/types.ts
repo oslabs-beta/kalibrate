@@ -122,6 +122,7 @@ export type clickHandler = (
 ) => void;
 
 export type TopicsContext = {
+  connectedCluster: string;
   handleComponentChange: clickHandler;
   selectedTopic: string;
   topicPartitions: partitions[];

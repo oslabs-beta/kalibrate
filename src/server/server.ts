@@ -78,7 +78,7 @@ app.delete(
 );
 
 app.get(
-  '/api/data',
+  '/api/data/:clientId',
   authController.verifySessionCookie,
   kafkaController.getCachedClient,
   adminController.getClusterData,
@@ -93,8 +93,9 @@ app.get(
 );
 
 app.get(
-  '/api/:topic/messages',
+  '/api/messages/:clientId/:topic',
   authController.verifySessionCookie,
+  consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,
   (req, res) => {

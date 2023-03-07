@@ -7,15 +7,14 @@ const consumerController: controller = {};
 
 consumerController.getMessages = async (req, res, next) => {
   const {id} = res.locals.user;
-  const {clientId} = req.body;
-  const {topic} = req.params;
+  const {topic, clientId} = req.params;
   const {kafka} = res.locals;
 
-  if (res.locals.topicMessages) return next(); // move on if cache hit from prior middleware
+  if (res.locals.topicMessages) return next(); // move on if cache hit for messages
 
   // if cache miss from prior middleware run consumer
   const messageAdmin = kafka.admin();
-  const messageConsumer = kafka.consumer({groupId: 'kalibrate'});
+  const messageConsumer = kafka.consumer({groupId: `kalibrate-${id}-${clientId}-${topic}`});
 
   try {
     // attempt to disconnect before starting as failsafe
@@ -26,7 +25,7 @@ consumerController.getMessages = async (req, res, next) => {
     // necessary to fetch all messages from the earliest offset on repeated requests
     await messageAdmin.connect();
     await messageAdmin.resetOffsets({
-      groupId: 'kalibrate',
+      groupId: `kalibrate-${id}-${clientId}-${topic}`,
       topic: req.params.topic,
       earliest: true,
     });
@@ -52,24 +51,28 @@ consumerController.getMessages = async (req, res, next) => {
     });
 
     // when all messages have been consumed, keep client caching for timeout but send response of current cache
-    messageConsumer.on(messageConsumer.events.END_BATCH_PROCESS, async ({payload}: any) => {
-      const {topic, partition, offsetLag} = payload;
-      consumedTopicPartitions[`${topic}-${partition}`] = offsetLag === '0';
+    const removeBatchListener = messageConsumer.on(
+      messageConsumer.events.END_BATCH_PROCESS,
+      async ({payload}: any) => {
+        const {topic, partition, offsetLag} = payload;
+        consumedTopicPartitions[`${topic}-${partition}`] = offsetLag === '0';
 
-      if (Object.values(consumedTopicPartitions).every(consumed => Boolean(consumed))) {
-        let cachedMessages = consumerCache.get(id, clientId, topic); // get current value of cache
-        if (cachedMessages) cachedMessages = cachedMessages.reverse(); // reverse to get most recent first
-        res.locals.topicMessages = cachedMessages;
+        if (Object.values(consumedTopicPartitions).every(consumed => Boolean(consumed))) {
+          let cachedMessages = consumerCache.get(id, clientId, topic); // get current value of cache
+          if (cachedMessages) cachedMessages = [...cachedMessages].reverse(); // reverse copy to get most recent first
+          res.locals.topicMessages = cachedMessages;
 
-        // end consumer instances and clear cache after 20min timeout
-        setTimeout(async () => {
-          await messageConsumer.disconnect();
-          consumerCache.delete(id, clientId, topic);
-        }, consumerCacheTimeout);
+          // end consumer instances and clear cache after 20min timeout
+          setTimeout(async () => {
+            await messageConsumer.disconnect();
+            consumerCache.delete(id, clientId, topic);
+          }, consumerCacheTimeout);
 
-        return next();
+          removeBatchListener(); // remove the listener
+          return next();
+        }
       }
-    });
+    );
 
     // consume messages from earliest offset and push them to array to send back
     await messageConsumer.subscribe({topic, fromBeginning: true});
@@ -98,11 +101,10 @@ consumerController.getMessages = async (req, res, next) => {
 
 consumerController.checkConsumerCache = (req, res, next) => {
   const {id} = res.locals.user;
-  const {clientId} = req.body;
-  const {topic} = req.params;
+  const {clientId, topic} = req.params;
 
   const cachedMessages = consumerCache.get(id, clientId, topic); // store if cache hit
-  if (cachedMessages) res.locals.topicMessages = cachedMessages.reverse(); // reverse to get most recent first
+  if (cachedMessages) res.locals.topicMessages = [...cachedMessages].reverse(); // reverse copy to get most recent first
 
   return next();
 };
