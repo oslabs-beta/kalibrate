@@ -1,18 +1,24 @@
-import kafkaController from './kafkaController';
-import {controller} from './../types';
-import {topicMessage} from './../types';
-import {consumedTopicPartitions} from './../types';
+import {consumerCache} from '../server';
+import {controller} from '../types';
+import {consumedTopicPartitions} from '../types';
 
-const topicController: controller = {};
+const consumerCacheTimeout = 1200000; // 20 mins in ms
+const consumerController: controller = {};
 
-topicController.getMessages = async (req, res, next) => {
-  const topic = req.params.topic;
-  const messageAdmin = kafkaController.kafka.admin();
-  const messageConsumer = kafkaController.kafka.consumer({groupId: 'kalibrate'});
-  const topicMessages: topicMessage[] = [];
+consumerController.getMessages = async (req, res, next) => {
+  const {id} = res.locals.user;
+  const {clientId} = req.body;
+  const {topic} = req.params;
+  const {kafka} = res.locals;
+
+  if (res.locals.topicMessages) return next(); // move on if cache hit from prior middleware
+
+  // if cache miss from prior middleware run consumer
+  const messageAdmin = kafka.admin();
+  const messageConsumer = kafka.consumer({groupId: 'kalibrate'});
 
   try {
-    // attempt to disconnect in case a client was left connected from a failed previous request
+    // attempt to disconnect before starting as failsafe
     await messageAdmin.disconnect();
     await messageConsumer.disconnect();
 
@@ -45,14 +51,22 @@ topicController.getMessages = async (req, res, next) => {
       );
     });
 
-    // save array of messages and disconnect when all messages have been consumed
+    // when all messages have been consumed, keep client caching for timeout but send response of current cache
     messageConsumer.on(messageConsumer.events.END_BATCH_PROCESS, async ({payload}: any) => {
       const {topic, partition, offsetLag} = payload;
       consumedTopicPartitions[`${topic}-${partition}`] = offsetLag === '0';
 
       if (Object.values(consumedTopicPartitions).every(consumed => Boolean(consumed))) {
-        res.locals.topicMessages = topicMessages.reverse();
-        await messageConsumer.disconnect();
+        let cachedMessages = consumerCache.get(id, clientId, topic); // get current value of cache
+        if (cachedMessages) cachedMessages = cachedMessages.reverse(); // reverse to get most recent first
+        res.locals.topicMessages = cachedMessages;
+
+        // end consumer instances and clear cache after 20min timeout
+        setTimeout(async () => {
+          await messageConsumer.disconnect();
+          consumerCache.delete(id, clientId, topic);
+        }, consumerCacheTimeout);
+
         return next();
       }
     });
@@ -60,9 +74,9 @@ topicController.getMessages = async (req, res, next) => {
     // consume messages from earliest offset and push them to array to send back
     await messageConsumer.subscribe({topic, fromBeginning: true});
     await messageConsumer.run({
-      eachMessage: async ({topic, partition, message}: any) => {
+      eachMessage: async ({messageTopic, partition, message}: any) => {
         const topicMessage = {
-          topic: topic,
+          topic: messageTopic,
           partition: partition,
           timestamp: message.timestamp,
           offset: message.offset,
@@ -70,7 +84,7 @@ topicController.getMessages = async (req, res, next) => {
           value: message.value.toString(), // should be left as string since type could vary
         };
 
-        topicMessages.push(topicMessage);
+        consumerCache.add(id, clientId, topic, topicMessage); // add to cache
       },
     });
   } catch (err) {
@@ -82,4 +96,15 @@ topicController.getMessages = async (req, res, next) => {
   }
 };
 
-export default topicController;
+consumerController.checkConsumerCache = (req, res, next) => {
+  const {id} = res.locals.user;
+  const {clientId} = req.body;
+  const {topic} = req.params;
+
+  const cachedMessages = consumerCache.get(id, clientId, topic); // store if cache hit
+  if (cachedMessages) res.locals.topicMessages = cachedMessages.reverse(); // reverse to get most recent first
+
+  return next();
+};
+
+export default consumerController;
