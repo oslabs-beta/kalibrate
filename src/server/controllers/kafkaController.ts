@@ -44,7 +44,7 @@ kafkaController.initiateKafka = async (req, res, next) => {
     return next({
       log: `ERROR - kafkaController.initiateKafka: failed to connect to Kafka: ${err}`,
       status: 403,
-      message: 'Failed to connect to provided server, please verify crendentials are correct',
+      message: 'Failed to connect to provided server, please verify credentials are correct',
     });
   }
 };
@@ -86,8 +86,3 @@ kafkaController.clearCachedClient = (req, res, next) => {
 };
 
 export default kafkaController;
-
-// {
-//   cluster1: {...noSasl, sasl: false},
-//   cluster1: {...Sasl, sasl: true},
-// }
