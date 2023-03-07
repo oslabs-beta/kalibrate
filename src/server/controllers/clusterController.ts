@@ -1,50 +1,99 @@
 import {controller} from './../types';
 import {PrismaClient} from '@prisma/client';
-// import Cache
+const AES = require('crypto-js/aes');
 
 const prisma = new PrismaClient();
+const ENCRYPT_KEY: string = process.env.ENCRYPT_KEY || 'key';
 
 const clusterController: controller = {};
 
-// read cluster connection details upon logging in
-// or when connecting to a cluster from dashboard
-clusterController.getConnectionDetails = async (req, res, next) => {
-  const {email} = res.locals.user;
+clusterController.getClientConnections = async (req, res, next) => {
+  const {id} = res.locals.user;
 
-  // query database for a list of user's cluster connection details
-  const result = await prisma.user.findMany({
-    where: {
-      email: `${email}`,
-    },
-  });
-
-  // some users may not have connected to a cluster during an active session
-  // so no error handling is used for an empty result array
-
-  // save connection details to cache and res.locals
-  if (result.length) {
-    const {clusters} = result;
-    cache.storage = clusters;
-    res.locals.clusters = clusters;
+  if (!id) {
+    return next({
+      log: 'ERROR - clusterController.getConnectionDetails: Failed to read id for logged in user',
+      status: 404,
+      message: 'Unable to get cluster connection details',
+    });
   }
 
-  return next();
+  // query database for all clusters matching specified userId
+  // returns an array of objects
+  // [{ id: 1, email: 'alice@prisma.io', name: 'Alice' }]
+  const clusters = await prisma.cluster.findMany({
+    where: {userId: id},
+  });
+  console.log('clusters', clusters);
+
+  // decrypt password, initiate kafka server, send connection details to browser
+  if (clusters.length) {
+    const result = '';
+    clusters.forEach(cluster => {
+      const {clientId, saslMechanism, saslUsername, saslPassword} = cluster;
+
+      // decrypt passwords
+      const decryptedPassword = saslPassword ? AES.decrypt(saslPassword, ENCRYPT_KEY) : null;
+
+      // initialize kafka instance
+      // {clientId, brokers, ssl, sasl: {saslMechanism, saslUsername, saslPassword}}
+    });
+    //     // if there's no sasl, use seedBrokers to initiate Kafka
+    res.locals.clusters = result;
+  }
+
+  //   // return next();
 };
 
-// store cluster connection details 
-// when user connects to a cluster from dashboard
-clusterController.storeConnectionDetails = async (req, res, next) => {
-  // 
-  const {email} = res.locals.user;
-  // if connection details are not stored in database
-  // update user's info to store connection details
-  const updateUser = await prisma.user.update({
-    where: {
-      email: 'viola@prisma.io',
-    },
-  });
-  // store in database
-  // save them in res.locals and return to frontend
+clusterController.storeClientConnection = async (req, res, next) => {
+  const {id} = res.locals.user;
+  const {clientId, brokers, sasl} = res.locals.client;
+
+  if (!id || !clientId || !brokers) {
+    return next({
+      log: `Error - clusterController.storeClient: Missing cluster data for database storage`,
+      status: 404,
+      message: 'Missing cluster data for database storage',
+    });
+  }
+
+  // create Cluster record and connect it to an existing User record via id
+  try {
+    if (!sasl) {
+      await prisma.cluster.create({
+        data: {
+          clientId,
+          seedBrokers: {
+            create: [{broker: brokers}],
+          },
+          user: {
+            connect: {id},
+          },
+        },
+      });
+    } else {
+      const {mechanism, username, password} = sasl;
+      const encryptedPassword = AES.encrypt(password, ENCRYPT_KEY);
+
+      await prisma.cluster.create({
+        data: {
+          clientId,
+          seedBrokers: {
+            create: [{broker: brokers}],
+          },
+          saslMechanism: mechanism,
+          saslUsername: username,
+          saslPassword: encryptedPassword,
+          user: {
+            connect: {id},
+          },
+        },
+      });
+    }
+  } catch (err) {
+    console.log('Error storing cluster connection details: ', err);
+  }
+
   return next();
 };
 
