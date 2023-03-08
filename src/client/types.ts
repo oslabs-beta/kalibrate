@@ -122,6 +122,7 @@ export type clickHandler = (
 ) => void;
 
 export type TopicsContext = {
+  connectedCluster: string;
   handleComponentChange: clickHandler;
   selectedTopic: string;
   topicPartitions: partitions[];
@@ -140,6 +141,24 @@ export interface ConsumerProps {
   groupData: {[k: string]: any}[];
 }
 
-export interface newPoll {
-  [k: string]: any;
-}
+export type newPollType = {
+  time?: number;
+  groupStatus?: {};
+  topicOffsets?: OffsetCollection;
+  groupOffsets?: OffsetCollection;
+};
+
+export type OffsetCollection = {
+  [k: string]: number;
+};
+
+export type GroupTopic = {
+  topic: string;
+  partitions: TopicPartitions[];
+};
+
+export type TopicPartitions = {
+  partition: number;
+  offset: string;
+  metadata: any;
+};
