@@ -43,7 +43,7 @@ function App() {
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
-      fetch('api/data', {
+      fetch(`api/data/${connectedCluster}`, {
         headers: {
           'Content-Type': 'application/json',
         },

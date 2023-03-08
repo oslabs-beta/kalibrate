@@ -10,7 +10,6 @@ export type errorObject = {
 
 export type controller = {
   [k: string]: (req: Request, res: Response, next: NextFunction) => Promise<void> | void;
-  kafka?: any;
 };
 
 export type topicMessage = {
