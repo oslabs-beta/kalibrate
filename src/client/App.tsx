@@ -22,12 +22,14 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import NotFound from './components/NotFound';
 import './stylesheets/style.css';
+import {GroupTopic, newPollType} from '../server/types';
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
   const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
+  const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
     clusterData: {
       brokers: [],
@@ -44,7 +46,7 @@ function App() {
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     if (connectedCluster.length) {
-      let interval; // for
+      let interval: ReturnType<typeof setInterval> | undefined; // for
       fetch('api/data', {
         headers: {
           'Content-Type': 'application/json',
@@ -54,21 +56,18 @@ function App() {
         .then(data => {
           setConnectedClusterData(data);
           //set interval for polling
-          // make interval changeable?
-          //also rn I don't think you can actually change clusters by clicking between them on the sidebar - don't think it changes to the right k instacne. talk to the session folks
-          // add group data fetch to admincontroller
-          interval = setInterval(poll, 5000);
+          interval = setInterval(poll, pollInterval * 1000);
         })
         .catch(err => console.log(`Error from app loading cluster data: ${err}`));
+
       // remove interval on unmount
-      // also clear timeseriesdata?
       return () => clearInterval(interval);
     }
   }, [connectedCluster]);
 
   // repeated poll to connected kafka instance for data
   // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
-  // modularize poll into a different file?
+  // possible todo: modularize poll into a different file
   const poll = () => {
     fetch('api/data', {
       headers: {
@@ -77,11 +76,11 @@ function App() {
     })
       .then(res => res.json())
       .then(data => {
-        const newPoll = {};
+        const newPoll: newPollType = {};
         newPoll.time = Date.now();
-        console.log(Date.now());
-        console.log(data);
         setConnectedClusterData(data);
+        // process data from connected cluster into more graph-ready form:
+        // can be further processed if we want, maybe in the graph component
         // percent of groups by status
         let stable = 0,
           empty = 0;
@@ -97,7 +96,6 @@ function App() {
         };
 
         // count of offsets by topic
-        // data.topicData.topics
         newPoll.topicOffsets = {};
         for (const t of data.topicData.topics) {
           const topicName = t.name;
@@ -109,24 +107,22 @@ function App() {
         }
 
         // count of offsets by group
-        // data.groupOffsets
         newPoll.groupOffsets = {};
         for (const g in data.groupOffsets) {
           const groupName = g;
           let sum = 0;
-          data.groupOffsets[g].forEach(el => {
+          data.groupOffsets[g].forEach((el: GroupTopic) => {
             el.partitions.forEach(p => {
-              sum += p.offset;
+              sum += Number(p.offset);
             });
           });
           newPoll.groupOffsets[groupName] = sum;
         }
+        // to help while figuring out graphs: this is the snapshot of the new data (every <interval> seconds)
         console.log('np ', newPoll);
-
-        // add timeseriesdata to state
+        // add timeseriesdata to state so we can drill it/use it for graphing
         const newTimeSeriesData = timeSeriesData;
         newTimeSeriesData.push(newPoll);
-        console.log('tsd: ', newTimeSeriesData);
         setTimeSeriesData(newTimeSeriesData);
       })
       .catch(err => console.log(`Error polling data: ${err}`));

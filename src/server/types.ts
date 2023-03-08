@@ -26,6 +26,24 @@ export type consumedTopicPartitions = {
   [k: string]: boolean;
 };
 
-export type groupOffsetType = {
-  [k: string]: object[];
+export type newPollType = {
+  time?: number;
+  groupStatus?: {};
+  topicOffsets?: OffsetCollection;
+  groupOffsets?: OffsetCollection;
+};
+
+export type OffsetCollection = {
+  [k: string]: number;
+};
+
+export type GroupTopic = {
+  topic: string;
+  partitions: TopicPartitions[];
+};
+
+export type TopicPartitions = {
+  partition: number;
+  offset: string;
+  metadata: any;
 };
