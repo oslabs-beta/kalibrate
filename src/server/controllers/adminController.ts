@@ -135,7 +135,6 @@ adminController.getGroupData = async (req, res, next) => {
         groupOffsets[el] = await admin.fetchOffsets({groupId: el});
       }
 
-      console.log(JSON.stringify(res.locals.groupOffsets));
       res.locals.groupOffsets = groupOffsets;
 
       // convert buffers for metadata and assignment
