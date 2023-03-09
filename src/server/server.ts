@@ -98,8 +98,8 @@ app.get(
   adminController.getTopicData,
   adminController.getGroupData,
   (req, res) => {
-    const {clusterData, topicData, groupList, groupData, groupOffsets} = res.locals;
-    const data = {clusterData, topicData, groupList, groupData, groupOffsets};
+    const {clusterData, topicData, groupList, groupData} = res.locals;
+    const data = {clusterData, topicData, groupList, groupData};
 
     return res.status(200).json(data);
   }
