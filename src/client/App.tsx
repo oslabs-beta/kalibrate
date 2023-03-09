@@ -30,7 +30,7 @@ function App() {
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
   const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
   const [currentPollInterval, setCurrentPollInterval] = useState<typeof setInterval | undefined>(
-    undefined
+    undefined // useInterval return object
   );
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
@@ -48,13 +48,9 @@ function App() {
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
     console.log('useEffect start');
-    console.log(currentPollInterval);
-    // if we remove this if block, it will poll for all connected clusters, but this is potentially very slow
-    // currently polling for one cluster at once
-    if (currentPollInterval) {
-      console.log('clearing interval: ', currentPollInterval);
-      clearInterval(currentPollInterval);
-    }
+    // polling for all clusters is slow - poll for only active cluster
+    // take this out to poll for all clusters
+    if (currentPollInterval) clearInterval(currentPollInterval);
     // only runs if a cluster has been connected to the app
     console.log(connectedCluster);
     if (connectedCluster.length) {
@@ -68,13 +64,14 @@ function App() {
           setConnectedClusterData(data);
           //set interval for polling
           const interval: ReturnType<typeof setInterval> = setInterval(poll, pollInterval * 1000);
-          console.log('setting interval: ', interval);
           setCurrentPollInterval(interval);
         })
         .catch(err => console.log(`Error from app loading cluster data: ${err}`));
 
       // remove interval on unmount
-      return () => clearInterval(currentPollInterval);
+      return () => {
+        clearInterval(currentPollInterval);
+      };
     }
   }, [connectedCluster]);
 
@@ -82,6 +79,7 @@ function App() {
   // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
   // possible todo: modularize poll into a different file
   const poll = () => {
+    console.log('polling data for ', connectedCluster);
     fetch(`api/data/${connectedCluster}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -134,8 +132,10 @@ function App() {
         }
 
         // add timeseriesdata to state so we can drill it/use it for graphing
+        // limit to 50 columns for performance, for now
         const newTimeSeriesData = timeSeriesData;
         newTimeSeriesData.push(newPoll);
+        if (newTimeSeriesData.length > 50) newTimeSeriesData.shift();
         // to help while figuring out graphs: this is the snapshot of graphable data, added to every <interval> seconds
         console.log('graphable data: ', timeSeriesData);
         setTimeSeriesData(newTimeSeriesData);
