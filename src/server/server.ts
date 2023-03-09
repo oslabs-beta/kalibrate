@@ -107,7 +107,7 @@ app.get(
 
 app.get(
   '/api/messages/:clientId/:topic',
-  authController.verifySessionCookie,
+  // authController.verifySessionCookie,
   consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,

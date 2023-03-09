@@ -80,12 +80,16 @@ function App() {
   // possible todo: modularize poll into a different file
   const poll = () => {
     console.log('polling data for ', connectedCluster);
-    fetch(`api/data/${connectedCluster}`, {
+    fetch(`/api/data/${connectedCluster}`, {
       headers: {
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        return res.json();
+      })
       .then(data => {
         const newPoll: newPollType = {
           cluster: connectedCluster,
@@ -130,17 +134,22 @@ function App() {
           });
           newPoll.groupOffsets[groupName] = sum;
         }
-
+        addTimeSeries(newPoll);
         // add timeseriesdata to state so we can drill it/use it for graphing
         // limit to 50 columns for performance, for now
-        const newTimeSeriesData = timeSeriesData;
-        newTimeSeriesData.push(newPoll);
-        if (newTimeSeriesData.length > 50) newTimeSeriesData.shift();
+        //const newTimeSeriesData = timeSeriesData;
+        //newTimeSeriesData.push(newPoll);
+        //if (newTimeSeriesData.length > 50) newTimeSeriesData.shift();
         // to help while figuring out graphs: this is the snapshot of graphable data, added to every <interval> seconds
-        console.log('graphable data: ', timeSeriesData);
-        setTimeSeriesData(newTimeSeriesData);
       })
       .catch(err => console.log(`Error polling data: ${err}`));
+  };
+
+  const addTimeSeries = (newPoll: newPollType) => {
+    const newTimeSeriesData = timeSeriesData;
+    newTimeSeriesData.push(newPoll);
+    console.log('graphable data: ', timeSeriesData);
+    setTimeSeriesData(newTimeSeriesData);
   };
 
   return (
