@@ -22,8 +22,6 @@ const connectionLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-console.log(rateLimit);
-
 // Create caches
 const clientCache = new ClientCache();
 const consumerCache = new ConsumerCache();
