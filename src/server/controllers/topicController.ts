@@ -106,10 +106,6 @@ topicController.createTopic = async (req, res, next) => {
       ],
     });
 
-    const newTopics = await admin.listTopics();
-    console.log('new topics list', newTopics);
-    res.locals.newTopics = newTopics
-
     // invoke create partitions
     // await admin.createPartitions({
     //   topicPartitions: [
@@ -149,12 +145,14 @@ topicController.deleteTopic = async (req, res, next) => {
     await admin.connect();
 
     //grab topic to delete from req body
-    const {deleteTopic} = req.body;
+    const {deleteTopicArray} = req.body;
+    console.log('delete topic array from controller',deleteTopicArray);
+    console.log(req.body);
 
 
     //delete topic
     await admin.deleteTopics({
-      topics: [deleteTopic],
+      topics: req.body,
     });
 
     //disconnect from admin

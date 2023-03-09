@@ -1,11 +1,25 @@
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
-import {Button, Box, Paper, TextField} from '@mui/material';
-import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
+import {Button, Box, Paper, TextField, Alert} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+  GridValueGetterParams,
+} from '@mui/x-data-grid';
 import {TopicsDisplayProps, TopicsContext} from '../../types';
 
 // Displays topics within Topics component
-const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
+const TopicsDisplay = ({
+  topicData,
+  connectedCluster,
+  setConnectedClusterData,
+  connectedClusterData,
+}: TopicsDisplayProps) => {
   const {topics} = topicData;
   const {handleComponentChange}: TopicsContext = useOutletContext();
   const navigate = useNavigate();
@@ -13,13 +27,19 @@ const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
 
   const [newTopicName, setNewTopicName] = useState<string>('');
   const [numPartitions, setNumPartitions] = useState<number>(1);
-  const [deleteTopic, setDeleteTopic] = useState<string>('');
+
+  const [deleteTopic, setDeleteTopic] = useState<string[]>([]);
+  const [selectionModel, setSelectionModel] = useState([]);
+
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleDeleteSubmit = async event => {
     event.preventDefault();
 
-    const newDeleteTopic = {
-      deleteTopic
+    const deleteTopicArray = [];
+
+    for (let i = 0; i < deleteTopic.length; i++) {
+      deleteTopicArray.push(deleteTopic[i].topicName);
     }
 
     try {
@@ -28,8 +48,24 @@ const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newDeleteTopic),
+        body: JSON.stringify(deleteTopicArray),
       });
+
+      //assign response of fetch request to updateddata which is the updated list of topics
+      const updatedData = await response.json();
+
+      //retain old information while passing in new topics array
+      const updatedTopicData = {
+        ...connectedClusterData,
+        topicData: {
+          topics: updatedData.topics,
+        },
+      };
+
+      setConnectedClusterData(updatedTopicData);
+      setDeleteTopic([]);
+      setSelectionModel([]);
+
       if (!response.ok) throw new Error();
     } catch (err) {
       console.log(err);
@@ -39,10 +75,14 @@ const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
   const handleSubmit = async event => {
     event.preventDefault();
 
+    //check if newtopicname contain any spaces
+    if (newTopicName.includes(' ')) return setErrorMessage('Spaces are not allowed');
+
     const newTopic = {
       newTopicName,
       numPartitions,
     };
+
     //send post request to create new topic
     try {
       const response = await fetch(`/api/${connectedCluster}/topic`, {
@@ -51,9 +91,27 @@ const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
           'Content-Type': 'application/json',
         },
         method: 'POST',
+
+        //updateclusterdata with the new data sent back
       });
 
+      //assign response of fetch request to updateddata which is the updated list of topics
+      const updatedData = await response.json();
+
+      //retain old information while passing in new topics array
+      const updatedTopicData = {
+        ...connectedClusterData,
+        topicData: {
+          topics: updatedData.topics,
+        },
+      };
+
+      setConnectedClusterData(updatedTopicData);
+      setNewTopicName('');
+      setNumPartitions(1);
+
       if (!response.ok) throw new Error();
+      if (response.ok) setErrorMessage('');
     } catch (err) {
       console.log(err);
     }
@@ -113,27 +171,33 @@ const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
     };
   });
 
+  const customToolBar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+        <Box
+          component="form"
+          onSubmit={handleDeleteSubmit}
+          autoComplete="off"
+          sx={{
+            '& .MuiTextField-root': {m: 1},
+            '& button': {m: 1},
+          }}
+        >
+          <Button variant="text" size="small" type="submit">
+            <DeleteIcon color="inherit" sx={{fontSize: 18}} />
+            Delete
+          </Button>
+        </Box>
+      </GridToolbarContainer>
+    );
+  };
+
   return (
     <div>
-      <Box
-        component="form"
-        onSubmit={handleDeleteSubmit}
-        autoComplete="off"
-        sx={{
-          '& .MuiTextField-root': {m: 1},
-          '& button': {m: 1},
-        }}
-      >
-        <TextField
-          size="small"
-          label="Delete topic"
-          value={deleteTopic}
-          onChange={event => setDeleteTopic(event.target.value)}
-        />
-        <Button variant="outlined" size="medium " type="submit">
-          Delete
-        </Button>
-      </Box>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -160,6 +224,8 @@ const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
         <Button variant="outlined" size="medium " type="submit">
           Create
         </Button>
+
+        {errorMessage.length ? <Alert severity="error">{errorMessage}</Alert> : null}
       </Box>
 
       <Box sx={{height: 400, width: '1000'}}>
@@ -172,12 +238,19 @@ const TopicsDisplay = ({topicData, connectedCluster}: TopicsDisplayProps) => {
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 25]}
             checkboxSelection
+            onSelectionModelChange={ids => {
+              setSelectionModel(ids);
+              const selectedIds = new Set(ids);
+              const SelectedRowData = topicRows.filter(row => selectedIds.has(row.id));
+              setDeleteTopic(SelectedRowData);
+            }}
+            selectionModel={selectionModel}
             disableSelectionOnClick
             disableColumnFilter
             components={{
-              Toolbar: GridToolbar,
+              Toolbar: customToolBar,
             }}
-            componentsProps={{
+            componentProps={{
               toolbar: {
                 showQuickFilter: true,
                 quickFilterProps: {debounceMs: 500},
