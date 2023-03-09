@@ -1,5 +1,5 @@
 import kafkaController from './kafkaController';
-import {controller} from './../types';
+import {controller, OffsetCollection} from './../types';
 
 const adminController: controller = {};
 
@@ -128,6 +128,15 @@ adminController.getGroupData = async (req, res, next) => {
 
       const groupData = await admin.describeGroups(groupIds);
 
+      // iterate through res.locals.groupList; for each, call fetchoffsets
+      // use for loop because forEach doesn't work asynchronously
+      const groupOffsets: OffsetCollection = {};
+      for (const el of groupIds) {
+        groupOffsets[el] = await admin.fetchOffsets({groupId: el});
+      }
+
+      res.locals.groupOffsets = groupOffsets;
+
       // convert buffers for metadata and assignment
       res.locals.groupData = groupData.groups.map((group: any) => {
         group.members = group.members.map((member: any) => {
@@ -135,7 +144,6 @@ adminController.getGroupData = async (req, res, next) => {
           member.memberAssignment = member.memberAssignment.toString();
           return member;
         });
-
         return group;
       });
 
