@@ -38,11 +38,11 @@ clusterController.getClientConnections = async (req, res, next) => {
       // initialize kafka instance
       // {clientId, brokers, ssl, sasl: {saslMechanism, saslUsername, saslPassword}}
     });
-    //     // if there's no sasl, use seedBrokers to initiate Kafka
+    // if there's no sasl, use seedBrokers to initiate Kafka
     res.locals.clusters = result;
   }
 
-  //   // return next();
+  // return next();
 };
 
 clusterController.storeClientConnection = async (req, res, next) => {
@@ -58,36 +58,52 @@ clusterController.storeClientConnection = async (req, res, next) => {
   }
 
   // create Cluster record and connect it to an existing User record via id
+  // nest the query to create a cluster connection and a seed broker record
   try {
     if (!sasl) {
-      await prisma.cluster.create({
-        data: {
-          clientId,
-          seedBrokers: {
-            create: [{broker: brokers}],
+      await prisma.$transaction(async (prisma) => {
+        const cluster = await prisma.cluster.create({
+          data: {
+            clientId,
+            user: {
+              connect: {id},
+            },
           },
-          user: {
-            connect: {id},
+        });
+        
+        await prisma.seedBroker.create({
+          data: {
+            broker: brokers,
+            cluster: {
+              connect: {id: cluster.id},
+            },
           },
-        },
+        });
       });
     } else {
       const {mechanism, username, password} = sasl;
       const encryptedPassword = AES.encrypt(password, ENCRYPT_KEY);
 
-      await prisma.cluster.create({
-        data: {
-          clientId,
-          seedBrokers: {
-            create: [{broker: brokers}],
+      await prisma.$transaction(async (prisma) => {
+        const cluster = await prisma.cluster.create({
+          data: {
+            clientId,
+            saslMechanism: mechanism,
+            saslUsername: username,
+            saslPassword: encryptedPassword,
+            user: {
+              connect: {id},
+            },
           },
-          saslMechanism: mechanism,
-          saslUsername: username,
-          saslPassword: encryptedPassword,
-          user: {
-            connect: {id},
+        });
+        await prisma.seedBroker.create({
+          data: {
+            broker: brokers,
+            cluster: {
+              connect: {id: cluster.id},
+            },
           },
-        },
+        });
       });
     }
   } catch (err) {
