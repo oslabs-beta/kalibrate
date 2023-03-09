@@ -47,12 +47,10 @@ function App() {
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
-    console.log('useEffect start');
     // polling for all clusters is slow - poll for only active cluster
     // take this out to poll for all clusters
     if (currentPollInterval) clearInterval(currentPollInterval);
     // only runs if a cluster has been connected to the app
-    console.log(connectedCluster);
     if (connectedCluster.length) {
       fetch(`api/data/${connectedCluster}`, {
         headers: {
@@ -79,17 +77,13 @@ function App() {
   // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
   // possible todo: modularize poll into a different file
   const poll = () => {
-    console.log('polling data for ', connectedCluster);
     fetch(`/api/data/${connectedCluster}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-      .then(res => {
-        console.log(res);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
         const newPoll: newPollType = {
           cluster: connectedCluster,
