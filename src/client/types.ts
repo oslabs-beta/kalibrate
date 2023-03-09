@@ -99,6 +99,7 @@ export type TopicsProps = {
 
 export type TopicsDisplayProps = {
   topicData: topicData;
+  connectedCluster: string;
 };
 
 export interface ConsumerProps {

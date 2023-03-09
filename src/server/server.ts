@@ -9,6 +9,7 @@ import kafkaController from './controllers/kafkaController';
 import topicController from './controllers/topicController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
+// import crudController from './controllers/crudController';
 
 const app = express();
 
@@ -40,6 +41,14 @@ app.get('/api/data', getClusterData, getTopicData, getGroupData, (req, res) => {
 app.get('/api/:topic/messages', topicController.getMessages, (req, res) => {
   return res.status(200).json(res.locals.topicMessages);
 });
+
+app.post('/api/:topic/topic', topicController.createTopic, getTopicData, (req, res) => {
+  return res.status(200).json(res.locals.topicData);
+})
+
+app.delete('/api/:topic/topic', topicController.deleteTopic, getTopicData,(req, res) => {
+  return res.status(200).json(res.locals.topicData);
+})
 
 // Catch all handler
 app.use('*', (req, res) => {

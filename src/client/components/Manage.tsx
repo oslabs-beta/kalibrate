@@ -15,7 +15,8 @@ import {useState} from 'react';
 const drawerWidth = 200;
 
 // Display, in sidebar, management options for a selected cluster
-const Manage = () => {
+const Manage = props => {
+  const {connectedCluster} = props;
   const navigate = useNavigate();
 
   const [openManage, setOpenManage] = useState(false);
@@ -40,7 +41,20 @@ const Manage = () => {
         }}
       >
         <Toolbar />
+
         <Box sx={{overflow: 'auto', background: lightBlue}}>
+
+        <List className="no-padding-list">
+            <ListItem key="Overview" disablePadding sx={{background: '#edf8fe'}}>
+              <ListItemButton
+                onClick={() => navigate('/' + connectedCluster)}
+                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+              >
+                <ListItemText primary="Overview" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+          
           <List className="no-padding-list">
             <ListItem key="Manage" disablePadding sx={{background: '#edf8fe'}}>
               <ListItemButton
