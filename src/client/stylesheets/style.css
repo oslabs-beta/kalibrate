@@ -43,6 +43,16 @@ h1 {
 .no-padding-list {
   padding-top: 0px;
 }
+/* styling for account settings*/
+.settings {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete {
+  color: red;
+  border: solid 1px;
+}
 
 /* animation styling for crow */
 

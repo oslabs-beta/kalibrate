@@ -20,6 +20,7 @@ import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
@@ -106,6 +107,7 @@ function App() {
               </Route>
               <Route path="login" element={<Login />}></Route>
               <Route path="signup" element={<Signup />}></Route>
+              <Route path="settings" element={<Settings />}></Route>
               <Route path=":clusterName" element={<Manage />}>
                 <Route
                   index

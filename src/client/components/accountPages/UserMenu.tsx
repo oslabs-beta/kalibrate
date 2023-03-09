@@ -16,9 +16,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
-import {DarkMode} from '@mui/icons-material';
-import {Props} from './Navbar';
-import {ColorModeContext, tokens} from '../theme';
+import InfoIcon from '@mui/icons-material/Info';
+import {DarkMode, Info} from '@mui/icons-material';
+import {Props} from '../Navbar';
+import {ColorModeContext, tokens} from '../../theme';
 
 const UserMenu = (props: Props) => {
   const navigate = useNavigate();
@@ -86,10 +87,15 @@ const UserMenu = (props: Props) => {
             />
           </FormGroup>
         </MenuItem>
-        <MenuItem key={'account'}>
+        <MenuItem key={'account'} onClick={() => navigate('settings')}>
           <ManageAccountsOutlinedIcon />
           <Typography textAlign="center">Account</Typography>
         </MenuItem>
+        <MenuItem>
+          <InfoIcon />
+          <Typography>About Kalibrate</Typography>
+        </MenuItem>
+        <hr />
         <MenuItem onClick={handleLogout}>
           <LogoutIcon />
           <Typography>Logout</Typography>

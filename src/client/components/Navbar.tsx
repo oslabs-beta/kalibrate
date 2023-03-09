@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {
   AppBar,
@@ -11,11 +11,16 @@ import {
   Badge,
   Menu,
   MenuItem,
+  Switch,
+  FormGroup,
+  FormControlLabel,
+  useTheme,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import crow from './assets/crow2.png';
-import UserMenu from './UserMenu';
+import UserMenu from './accountPages/UserMenu';
+import {ColorModeContext, tokens} from '../theme';
 
 export interface Props {
   isConnected: boolean;
@@ -30,6 +35,11 @@ const Navbar = (props: Props) => {
   const navigate = useNavigate();
   const {isConnected, logout} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
+  //manges light/dark mode
+  const [checked, setChecked] = useState<boolean>(true);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const colorMode = useContext(ColorModeContext);
 
   const handleOpenAlertsMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElAlerts(event.currentTarget);
@@ -39,6 +49,12 @@ const Navbar = (props: Props) => {
     setAnchorElAlerts(null);
   };
 
+  const handleDarkMode = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    //set them to dark
+    setChecked(event.target.checked);
+    colorMode.toggleColorMode();
+    console.log('THEME SET', checked);
+  };
   return (
     <AppBar position="static">
       <Container
@@ -74,7 +90,15 @@ const Navbar = (props: Props) => {
           >
             KALIBRATE
           </Typography>
-
+          <MenuItem key={'darkmode'}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch checked={checked} onChange={handleDarkMode} />}
+                label="Dark Mode"
+                labelPlacement="start"
+              />
+            </FormGroup>
+          </MenuItem>
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (
               <Button
