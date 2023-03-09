@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import ClientCache from './ClientCache';
 import ConsumerCache from './ConsumerCache';
 import {errorObject} from './types';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,6 +13,18 @@ import consumerController from './controllers/consumerController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
 
+// Create rate limiter for connection requests: max 5 per IP address within one minute
+const connectionLimiter = rateLimit({
+  windowMs: 60000,
+  max: 5,
+  message: 'Exceeded the number of allowed connection attempts. Please try again in a few minutes.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+console.log(rateLimit);
+
+// Create caches
 const clientCache = new ClientCache();
 const consumerCache = new ConsumerCache();
 
@@ -45,6 +58,8 @@ app.get(
 // create and save a new sever connection for a given user
 app.post(
   '/api/connection',
+  // rate-limit connection attempts
+  connectionLimiter,
   authController.verifySessionCookie,
   kafkaController.initiateKafka,
   kafkaController.cacheClient,
