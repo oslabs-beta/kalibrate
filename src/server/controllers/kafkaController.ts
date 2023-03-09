@@ -69,9 +69,12 @@ kafkaController.cacheClients = (req, res, next) => {
 
 kafkaController.getCachedClient = (req, res, next) => {
   const {id} = res.locals.user;
-  const {clientId} = req.body;
+  const {clientId} = req.params;
 
-  clientCache.getUnique(id, clientId);
+  if (res.locals.topicMessages) return next(); // move on if cache hit for messages
+
+  const cachedClient = clientCache.getUnique(id, clientId);
+  res.locals.kafka = cachedClient;
 
   return next();
 };

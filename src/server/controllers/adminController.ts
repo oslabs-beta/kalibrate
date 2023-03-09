@@ -1,35 +1,42 @@
 import kafkaController from './kafkaController';
-import {controller} from './../types';
+import {controller, OffsetCollection} from './../types';
 
 const adminController: controller = {};
 
 // get cluster info
 adminController.getClusterData = async (req, res, next) => {
-  let admin;
+  const {kafka} = res.locals;
+  let admin; // outer scoped so can disconnect in case of error
+
+  // attempt to connect admin to instance of kafka
   try {
-    // attempt to connect admin to instance of kafka
-    admin = kafkaController.kafka.admin();
+    admin = kafka.admin();
     await admin.connect();
+
+    // if successful fetch cluster data
     res.locals.clusterData = await admin.describeCluster();
+
     return next();
   } catch (err) {
-    await admin.disconnect();
+    if (admin) await admin.disconnect();
+
     return next({
-      log: 'adminController.getClusterData failed to get cluster details',
+      log: `ERROR - adminController.getClusterData failed to get cluster data: ${err}`,
       status: 400,
-      message: err,
+      message: {err: 'Failed to connect to Kafka cluster'},
     });
   }
 };
 
 // get topic metadata
 adminController.getTopicData = async (req, res, next) => {
-  // declare variables scoped for access from all try blocks
-  let topicList, topicMetadata, admin;
+  const {kafka} = res.locals;
+  let topicList, topicMetadata, admin; // outer scoped so can disconnect in case of error
+
   // get array of topics
   try {
-    // attempt to connect admin to instance of kafka - use var to escape block scope
-    admin = kafkaController.kafka.admin();
+    // attempt to connect admin to instance of kafka
+    admin = kafka.admin();
     await admin.connect();
 
     topicList = await admin.listTopics();
@@ -41,10 +48,11 @@ adminController.getTopicData = async (req, res, next) => {
     }
   } catch (err) {
     await admin.disconnect();
+
     return next({
-      log: 'adminController.getTopicData failed to get list of topics',
+      log: `ERROR - adminController.getTopicData failed to get list of topics: ${err}`,
       status: 400,
-      message: err,
+      message: {err: 'Failed to connect to Kafka cluster'},
     });
   }
 
@@ -55,10 +63,11 @@ adminController.getTopicData = async (req, res, next) => {
     });
   } catch (err) {
     await admin.disconnect();
+
     return next({
-      log: 'adminController.getTopicData failed to get topic metadata',
+      log: `ERROR - adminController.getTopicData failed to get topic metadata: ${err}`,
       status: 400,
-      message: err,
+      message: {err: 'Failed to fetch Kafka cluster topic metadata'},
     });
   }
 
@@ -72,39 +81,45 @@ adminController.getTopicData = async (req, res, next) => {
     }
   } catch (err) {
     await admin.disconnect();
+
     return next({
-      log: 'adminController.getTopicData failed to add offset data to topic metadata',
+      log: `ERROR - adminController.getTopicData failed to add offset data to topic offsets: ${err}`,
       status: 400,
-      message: err,
+      message: {err: 'Failed to fetch Kafka cluster topic metadata'},
     });
   }
 
   try {
     res.locals.topicData = topicMetadata;
     await admin.disconnect();
+
     return next();
   } catch (err) {
     return next({
-      log: 'adminController.getTopicData failed to pass data back on res.local',
+      log: `ERROR - adminController.getTopicData failed to pass data back on res.local: ${err}`,
       status: 400,
-      message: err,
+      message: {err: 'Failed to fetch Kafka cluster topic metadata'},
     });
   }
 };
 
 // get group data
 adminController.getGroupData = async (req, res, next) => {
-  let admin;
+  const {kafka} = res.locals;
+  let admin; // outer scoped so can disconnect in case of error
+
   try {
     // attempt to connect admin to instance of kafka
-    admin = kafkaController.kafka.admin();
+    admin = kafka.admin();
     await admin.connect();
+
     const listObj = await admin.listGroups();
     res.locals.groupList = listObj.groups;
 
     // if there are no groups present, return nothing
     if (res.locals.groupList.length === 0) {
       res.locals.groups = [];
+
       return next();
     } else {
       const groupIds: string[] = res.locals.groupList.map(
@@ -113,6 +128,15 @@ adminController.getGroupData = async (req, res, next) => {
 
       const groupData = await admin.describeGroups(groupIds);
 
+      // iterate through res.locals.groupList; for each, call fetchoffsets
+      // use for loop because forEach doesn't work asynchronously
+      const groupOffsets: OffsetCollection = {};
+      for (const el of groupIds) {
+        groupOffsets[el] = await admin.fetchOffsets({groupId: el});
+      }
+
+      res.locals.groupOffsets = groupOffsets;
+
       // convert buffers for metadata and assignment
       res.locals.groupData = groupData.groups.map((group: any) => {
         group.members = group.members.map((member: any) => {
@@ -120,7 +144,6 @@ adminController.getGroupData = async (req, res, next) => {
           member.memberAssignment = member.memberAssignment.toString();
           return member;
         });
-
         return group;
       });
 
@@ -128,10 +151,11 @@ adminController.getGroupData = async (req, res, next) => {
     }
   } catch (err) {
     await admin.disconnect();
+
     return next({
-      log: 'adminController.describeGroups failed to get cluster details',
+      log: `ERROR - adminController.describeGroups failed to get cluster group data: ${err}`,
       status: 400,
-      message: err,
+      message: {err: 'Failed to fetch cluster group data'},
     });
   }
 };

@@ -21,7 +21,7 @@ class ClientCache {
   }
 
   // gets a single cached client for a user
-  getUnique(userId: number, clientId: number) {
+  getUnique(userId: number, clientId: string) {
     if (!Object.hasOwn(this.cache, userId)) {
       return undefined;
     }
