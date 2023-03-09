@@ -29,6 +29,9 @@ function App() {
   const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
   const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
+  const [currentPollInterval, setCurrentPollInterval] = useState<typeof setInterval | undefined>(
+    undefined
+  );
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
     clusterData: {
@@ -44,8 +47,16 @@ function App() {
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
+    console.log('useEffect start');
+    console.log(currentPollInterval);
+    // if we remove this if block, it will poll for all connected clusters, but this is potentially very slow
+    // currently polling for one cluster at once
+    if (currentPollInterval) {
+      console.log('clearing interval: ', currentPollInterval);
+      clearInterval(currentPollInterval);
+    }
     // only runs if a cluster has been connected to the app
-    let interval: ReturnType<typeof setInterval> | undefined;
+    console.log(connectedCluster);
     if (connectedCluster.length) {
       fetch(`api/data/${connectedCluster}`, {
         headers: {
@@ -56,12 +67,14 @@ function App() {
         .then(data => {
           setConnectedClusterData(data);
           //set interval for polling
-          interval = setInterval(poll, pollInterval * 1000);
+          const interval: ReturnType<typeof setInterval> = setInterval(poll, pollInterval * 1000);
+          console.log('setting interval: ', interval);
+          setCurrentPollInterval(interval);
         })
         .catch(err => console.log(`Error from app loading cluster data: ${err}`));
 
       // remove interval on unmount
-      return () => clearInterval(interval);
+      return () => clearInterval(currentPollInterval);
     }
   }, [connectedCluster]);
 
@@ -76,7 +89,9 @@ function App() {
     })
       .then(res => res.json())
       .then(data => {
-        const newPoll: newPollType = {};
+        const newPoll: newPollType = {
+          cluster: connectedCluster,
+        };
         newPoll.time = Date.now();
         setConnectedClusterData(data);
 
