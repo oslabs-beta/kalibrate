@@ -172,22 +172,27 @@ const Connect = (props: ConnectProps) => {
           <span className="loadingSpan">
             {
               // conditional rendering based on whether login attempt is in progress
-              loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null
+              loginInProgress ? (
+                <img className="rotocrow rotation" src={crow}></img>
+              ) : (
+                <Button
+                  variant="contained"
+                  size="medium"
+                  type="submit"
+                  sx={{fontWeight: 'bold', marginTop: '15px', marginBottom: '10px'}}
+                >
+                  {loginInProgress ? 'Connecting...' : 'Connect'}
+                </Button>
+              )
             }
-            <Button
-              variant="contained"
-              size="medium"
-              type="submit"
-              sx={{fontWeight: 'bold', marginTop: '15px'}}
-            >
-              {loginInProgress ? 'Connecting...' : 'Connect'}
-            </Button>
           </span>
         </Grid>
 
         {errorMessage.length ? (
           <Grid>
-            <Alert severity="error">{errorMessage}</Alert>
+            <Alert className="err" severity="error">
+              {errorMessage}
+            </Alert>
           </Grid>
         ) : null}
       </Box>
