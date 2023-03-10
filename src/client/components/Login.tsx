@@ -11,10 +11,13 @@ import {
   CircularProgress,
 } from '@mui/material';
 import {LoginProps} from '../types';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 
 const Login = ({setIsAuthenticated}: LoginProps) => {
   const navigate = useNavigate();
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   // form state
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -72,11 +75,11 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
           flexDirection: 'column',
           paddingX: '30px',
           paddingY: '15px',
-          outline: '1px solid #afafaf',
+          outline: '1px solid' + colors.info[300],
           borderRadius: '5px',
           alignItems: 'center',
           width: '100%',
-          backgroundColor: '#fefefe',
+          backgroundColor: colors.background[500],
         }}
       >
         <Typography variant="h5" sx={{marginBottom: '15px'}}>
@@ -90,7 +93,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
           variant="outlined"
           value={email}
           onChange={event => setEmail(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%', backgroundColor: '#fcfcfc'}}
+          sx={{marginBottom: '10px', width: '100%'}}
         />
 
         <TextField
@@ -101,7 +104,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
           type="password"
           value={password}
           onChange={event => setPassword(event.target.value)}
-          sx={{marginBottom: '20px', width: '100%', backgroundColor: '#fcfcfc'}}
+          sx={{marginBottom: '20px', width: '100%'}}
         />
 
         {isLoading ? (
@@ -117,17 +120,16 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
             Log in
           </Button>
         )}
-
         {isError ? (
           <Alert severity="error" sx={{marginTop: '10px'}}>
             Email or password is incorrect
           </Alert>
         ) : null}
 
-        <hr />
-
         <Typography>Don't have an account?</Typography>
-        <Link to="/signup">Sign up</Link>
+        <Link to="/signup">
+          <Typography sx={{color: colors.accent[300]}}>Sign up</Typography>
+        </Link>
       </Box>
     </Container>
   );

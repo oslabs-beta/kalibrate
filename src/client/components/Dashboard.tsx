@@ -1,4 +1,4 @@
-import {Outlet} from 'react-router-dom';
+import {useNavigate, Outlet} from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -12,13 +12,18 @@ import {
   ListSubheader,
   Typography,
   CircularProgress,
+  useTheme,
 } from '@mui/material';
 import {CloudDone, AddBox, Cloud} from '@mui/icons-material';
 import {DashboardProps} from '../types';
+import {tokens} from '../theme';
 
 // Display sidebar for connected client list
 const Dashboard = (props: DashboardProps) => {
   const {connectedClient, selectedClient, setSelectedClient, storedClients, isLoading} = props;
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   return (
     <>

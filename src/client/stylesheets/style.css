@@ -1,13 +1,18 @@
 :root {
   --lightestBlue: #edf8fe;
   --lighterBlue: #c2dfe3;
-  --blue: #9db4c0;
-
+  --blue: #9db4c0; /*navbar*/
   --darkerBlue: #5c6b73;
   --darkestBlue: #253237;
   --white: #fcfcfc;
   --black: #393e41;
   --error: #e17160;
+  --accent: #663399;
+}
+body,
+main {
+  max-height: 100%;
+  margin: 0;
 }
 
 h1 {
@@ -43,6 +48,16 @@ h1 {
 .no-padding-list {
   padding-top: 0px;
 }
+/* styling for account settings*/
+.settings {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete {
+  color: red;
+  border: solid 1px;
+}
 
 /* animation styling for crow */
 
@@ -60,15 +75,20 @@ h1 {
   animation: rotation 3s infinite linear;
 }
 .loadKrow {
-  display: inline;
   height: 80px;
 }
-
-.loadKrowJump {
-  display: inline;
-  height: 80px;
+.acorn {
+  height: 40px;
 }
-
+.jump {
+  animation: bounce 1s infinite linear;
+}
+.mirror {
+  transform: rotateY(180deg);
+}
+.move {
+  animation: sideways 5s infinite linear;
+}
 @keyframes rotation {
   from {
     transform: rotate(359deg);
@@ -77,9 +97,27 @@ h1 {
     transform: rotate(0deg);
   }
 }
-body,
-main {
-  max-height: 100%;
-  margin: 0;
-  background-color: var(--white);
+
+@keyframes bounce {
+  0% {
+    transform: translateY(10px);
+  }
+  50% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes sideways {
+  0% {
+    transform: translateX(50px);
+  }
+  50% {
+    transform: translateX(-50px);
+  }
+  100% {
+    transform: translateX(50px);
+  }
 }

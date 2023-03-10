@@ -1,16 +1,19 @@
 import {ImageList, Box, ImageListItem} from '@mui/material';
 import {OverviewProps} from '../types';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 
 // Display high-level cluster data (below navbar, right of dashboard)
 const Overview = (props: OverviewProps) => {
   const {connectedCluster, data} = props;
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   return (
     <Box
       sx={{
         width: '100%',
         height: '140px',
-        color: 'inherit',
+        color: colors.info[500],
         '& > .MuiBox-root > .MuiBox-root': {
           p: 1,
           borderRadius: 2,
@@ -20,7 +23,6 @@ const Overview = (props: OverviewProps) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          borderColor: '#253237',
           border: 1,
         },
       }}
@@ -37,54 +39,54 @@ const Overview = (props: OverviewProps) => {
         }}
       >
         <Box
-          bgcolor="#c2dfe3"
           sx={{
             gridArea: 'cluster',
+            backgroundColor: colors.secondary[300],
           }}
         >
           ClusterName: <br />
           {connectedCluster}
         </Box>
         <Box
-          bgcolor="#c2dfe3"
           sx={{
             gridArea: 'topic',
+            backgroundColor: colors.secondary[300],
           }}
         >
           Topics Count: <br />
           {data.topicData.topics.length}
         </Box>
         <Box
-          bgcolor="#e0fbfc"
           sx={{
             gridArea: 'partitions',
+            backgroundColor: colors.secondary[500],
           }}
         >
           Partitions: <br />
           {data.topicData.topics[0].partitions.length}
         </Box>
         <Box
-          bgcolor="#c2dfe3"
           sx={{
             gridArea: 'offset',
+            backgroundColor: colors.secondary[300],
           }}
         >
           Offsets: <br />
           {data.topicData.topics[0].offsets.length}
         </Box>
         <Box
-          bgcolor="#e0fbfc"
           sx={{
             gridArea: 'brokers',
+            backgroundColor: colors.secondary[500],
           }}
         >
           Brokers Count: <br />
           {data.clusterData.brokers.length}
         </Box>
         <Box
-          bgcolor="#c2dfe3"
           sx={{
             gridArea: 'consumer',
+            backgroundColor: colors.secondary[300],
           }}
         >
           Consumer Groups: <br />

@@ -3,8 +3,13 @@ import {Grid, Button, TextField, Box, Checkbox, Alert, Typography} from '@mui/ma
 import {ConnectProps, connectionConfig} from '../types';
 import '../stylesheets/style.css';
 import crow from './assets/crow2.png';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 
 const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectProps) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   // controlled state for form
   const [clientId, setClientId] = useState('');
   const [brokers, setBrokers] = useState('');
@@ -98,8 +103,9 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
         sx={{
           '& .MuiTextField-root': {m: 1, width: '350px'},
           padding: '30px',
-          outline: '1px solid #afafaf',
+          border: '1px solid' + colors.info[300],
           borderRadius: '5px',
+          backgroundColor: colors.background[500],
         }}
         noValidate
         autoComplete="off"

@@ -11,10 +11,13 @@ import {
   CircularProgress,
 } from '@mui/material';
 import {SignupProps} from '../types';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 
 const Signup = ({setIsAuthenticated}: SignupProps) => {
   const navigate = useNavigate();
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   // form state
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -153,11 +156,11 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           flexDirection: 'column',
           paddingX: '30px',
           paddingY: '15px',
-          outline: '1px solid #afafaf',
+          outline: '1px solid' + colors.info[300],
           borderRadius: '5px',
           alignItems: 'center',
           width: '100%',
-          backgroundColor: '#fefefe',
+          backgroundColor: colors.background[500],
         }}
       >
         <Typography variant="h5" sx={{marginBottom: '15px'}}>
@@ -171,7 +174,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           variant="outlined"
           value={firstName}
           onChange={event => setFirstName(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%', backgroundColor: '#fcfcfc'}}
+          sx={{marginBottom: '10px', width: '100%'}}
         />
 
         <TextField
@@ -181,7 +184,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           variant="outlined"
           value={lastName}
           onChange={event => setLastName(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%', backgroundColor: '#fcfcfc'}}
+          sx={{marginBottom: '10px', width: '100%'}}
         />
 
         <TextField
@@ -191,7 +194,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           variant="outlined"
           value={email}
           onChange={event => setEmail(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%', backgroundColor: '#fcfcfc'}}
+          sx={{marginBottom: '10px', width: '100%'}}
         />
 
         <TextField
@@ -202,7 +205,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           type="password"
           value={password}
           onChange={event => setPassword(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%', backgroundColor: '#fcfcfc'}}
+          sx={{marginBottom: '10px', width: '100%'}}
         />
 
         <TextField
@@ -213,7 +216,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           type="password"
           value={confirmedPassword}
           onChange={event => setConfirmedPassword(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%', backgroundColor: '#fcfcfc'}}
+          sx={{marginBottom: '10px', width: '100%'}}
         />
 
         {isLoading ? (
@@ -238,10 +241,10 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           </Alert>
         ) : null}
 
-        <hr />
-
         <Typography>Already have an account?</Typography>
-        <Link to="/login">Log in</Link>
+        <Link to="/login">
+          <Typography sx={{color: colors.accent[300]}}>Log in</Typography>
+        </Link>
       </Box>
     </Container>
   );

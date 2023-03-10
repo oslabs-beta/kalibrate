@@ -21,11 +21,14 @@ import TopicsDisplay from './components/managePages/TopicsDisplay';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
+import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
 import Protected from './components/Protected';
 import Redirect from './components/Redirect';
 import './stylesheets/style.css';
-import {GroupTopic, newPollType, storedClient} from './types';
+import {ColorModeContext, useMode} from './theme';
+import {ThemeProvider, CssBaseline} from '@mui/material';
+import {GroupTopic, newPollType, storedClient, topics} from './types';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -34,12 +37,14 @@ function App() {
   const [connectedClient, setConnectedClient] = useState<string>('');
   const [isConnectionLoading, setIsConnectionLoading] = useState<boolean>(false); // for client connection
   const [isConnectionError, setIsConnectionError] = useState<boolean>(false); // for client connection
+  const [theme, colorMode] = useMode();
   const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
   const [currentPollInterval, setCurrentPollInterval] = useState<number | undefined>(
     undefined // useInterval return object
   );
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
-  const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
+
+  const defaultClusterData = {
     clusterData: {
       brokers: [],
     },
@@ -47,10 +52,25 @@ function App() {
       topics: [],
     },
     groupData: [],
+  };
+  const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
+    ...defaultClusterData,
   });
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
+
+  //resets session when user logs out
+  const logout = (): void => {
+    setIsAuthenticated(false);
+    setSelectedClient('');
+    setConnectedClient('');
+    setStoredClients([]);
+    setConnectedClusterData({
+      ...defaultClusterData,
+    });
+    console.log('YOURE LOGGED OUT', isAuthenticated); //SUCCESS LOGOUT BUT isConnected still true
+  };
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -160,116 +180,147 @@ function App() {
 
   // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
   return (
-    <BrowserRouter>
-      <nav>
-        <Navbar isConnected={!!storedClients.length} />
-      </nav>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div>
+          <BrowserRouter>
+            <nav>
+              <Navbar isConnected={!!storedClients.length} />
+            </nav>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
+            <Routes>
+              <Route path="/" element={<Home />} />
 
-        <Route
-          path="login"
-          element={
-            <Redirect isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-              <Login setIsAuthenticated={setIsAuthenticated} />
-            </Redirect>
-          }
-        ></Route>
+              <Route
+                path="login"
+                element={
+                  <Redirect
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  >
+                    <Login setIsAuthenticated={setIsAuthenticated} />
+                  </Redirect>
+                }
+              ></Route>
 
-        <Route
-          path="signup"
-          element={
-            <Redirect isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-              <Signup setIsAuthenticated={setIsAuthenticated} />
-            </Redirect>
-          }
-        ></Route>
+              <Route
+                path="signup"
+                element={
+                  <Redirect
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  >
+                    <Signup setIsAuthenticated={setIsAuthenticated} />
+                  </Redirect>
+                }
+              ></Route>
 
-        <Route
-          path="dashboard"
-          element={
-            <Protected isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-              <Dashboard
-                connectedClient={connectedClient}
-                selectedClient={selectedClient}
-                setSelectedClient={setSelectedClient}
-                storedClients={storedClients}
-                isLoading={isConnectionLoading}
-              />
-            </Protected>
-          }
-        >
-          <Route
-            index
-            element={
-              <ConnectionContainer
-                selectedClient={selectedClient}
-                setSelectedClient={setSelectedClient}
-                connectedClient={connectedClient}
-                setConnectedClient={setConnectedClient}
-                storedClients={storedClients}
-                setStoredClients={setStoredClients}
-                isConnectionLoading={isConnectionLoading}
-                isConnectionError={isConnectionError}
-              />
-            }
-          />
-        </Route>
+              <Route
+                path="settings"
+                element={
+                  <Protected
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  >
+                    <Settings />
+                  </Protected>
+                }
+              ></Route>
 
-        <Route
-          path="client/:clientId"
-          element={
-            <Protected isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
-              <Manage connectedCluster={connectedClient} />
-            </Protected>
-          }
-        >
-          <Route
-            index
-            element={
-              <div className="overview">
-                <Overview data={connectedClusterData} connectedCluster={connectedClient} />
-              </div>
-            }
-          />
-          <Route
-            path="brokers"
-            element={<Brokers clusterData={clusterData} connectedCluster={connectedClient} />}
-          />
-          <Route
-            path="consumers"
-            element={<Consumers connectedCluster={connectedClient} groupData={groupData} />}
-          >
-            <Route index element={<ConsumersDisplay groupData={groupData} />} />
-            <Route path=":groupId/members" element={<MembersDisplay />} />
-          </Route>
-
-          <Route path="topics" element={<Topics connectedCluster={connectedClient} />}>
-            <Route
-              index
-              element={
-                <TopicsDisplay
-                  connectedCluster={connectedClient}
-                  topicData={topicData}
-                  setConnectedClusterData={setConnectedClusterData}
-                  connectedClusterData={connectedClusterData}
+              <Route
+                path="dashboard"
+                element={
+                  <Protected
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  >
+                    <Dashboard
+                      connectedClient={connectedClient}
+                      selectedClient={selectedClient}
+                      setSelectedClient={setSelectedClient}
+                      storedClients={storedClients}
+                      isLoading={isConnectionLoading}
+                    />
+                  </Protected>
+                }
+              >
+                <Route
+                  index
+                  element={
+                    <ConnectionContainer
+                      selectedClient={selectedClient}
+                      setSelectedClient={setSelectedClient}
+                      connectedClient={connectedClient}
+                      setConnectedClient={setConnectedClient}
+                      storedClients={storedClients}
+                      setStoredClients={setStoredClients}
+                      isConnectionLoading={isConnectionLoading}
+                      isConnectionError={isConnectionError}
+                    />
+                  }
                 />
-              }
-            />
-            <Route path=":topic/partitions" element={<PartitionsDisplay />} />
-            <Route path=":topic/messages" element={<MessagesDisplay />} />
-          </Route>
+              </Route>
 
-          <Route path="lag" element={<Lag />} />
-          <Route path="throughput" element={<Throughput />} />
-          <Route path="consume" element={<Consume />} />
-          <Route path="produce" element={<Produce />} />
-        </Route>
+              <Route
+                path="client/:clientId"
+                element={
+                  <Protected
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  >
+                    <Manage connectedCluster={connectedClient} />
+                  </Protected>
+                }
+              >
+                <Route
+                  index
+                  element={
+                    <div className="overview">
+                      <Overview data={connectedClusterData} connectedCluster={connectedClient} />
+                    </div>
+                  }
+                />
+                <Route
+                  path="brokers"
+                  element={<Brokers clusterData={clusterData} connectedCluster={connectedClient} />}
+                />
+                <Route
+                  path="consumers"
+                  element={<Consumers connectedCluster={connectedClient} groupData={groupData} />}
+                >
+                  <Route index element={<ConsumersDisplay groupData={groupData} />} />
+                  <Route path=":groupId/members" element={<MembersDisplay />} />
+                </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+                <Route path="topics" element={<Topics connectedCluster={connectedClient} />}>
+                  <Route
+                    index
+                    element={
+                      <TopicsDisplay
+                        connectedCluster={connectedClient}
+                        topicData={topicData}
+                        setConnectedClusterData={setConnectedClusterData}
+                        connectedClusterData={connectedClusterData}
+                      />
+                    }
+                  />
+                  <Route path=":topic/partitions" element={<PartitionsDisplay />} />
+                  <Route path=":topic/messages" element={<MessagesDisplay />} />
+                </Route>
+
+                <Route path="lag" element={<Lag />} />
+                <Route path="throughput" element={<Throughput />} />
+                <Route path="consume" element={<Consume />} />
+                <Route path="produce" element={<Produce />} />
+              </Route>
+
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 
