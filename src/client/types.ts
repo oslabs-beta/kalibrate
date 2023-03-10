@@ -2,6 +2,7 @@ import {MouseEvent, PropsWithChildren} from 'react';
 
 export type RedirectProps = {
   isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
   children: JSX.Element;
 };
 
@@ -13,8 +14,9 @@ export type SignupProps = {
   setIsAuthenticated: (isAuthenticated: boolean) => void;
 };
 
-export type ProtectedRouteProps = {
+export type ProtectedProps = {
   isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
   children: JSX.Element;
 };
 

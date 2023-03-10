@@ -50,15 +50,7 @@ function App() {
   });
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
-
   const {clusterData, topicData, groupData} = connectedClusterData;
-
-  // verify session on mount and set client-side authentication
-  useEffect(() => {
-    fetch('/api/session').then(res => {
-      if (res.ok) setIsAuthenticated(true);
-    });
-  }, []);
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
@@ -179,7 +171,7 @@ function App() {
         <Route
           path="login"
           element={
-            <Redirect isAuthenticated={isAuthenticated}>
+            <Redirect isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
               <Login setIsAuthenticated={setIsAuthenticated} />
             </Redirect>
           }
@@ -188,7 +180,7 @@ function App() {
         <Route
           path="signup"
           element={
-            <Redirect isAuthenticated={isAuthenticated}>
+            <Redirect isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
               <Signup setIsAuthenticated={setIsAuthenticated} />
             </Redirect>
           }
@@ -197,7 +189,7 @@ function App() {
         <Route
           path="dashboard"
           element={
-            <Protected isAuthenticated={isAuthenticated}>
+            <Protected isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
               <Dashboard
                 connectedClient={connectedClient}
                 selectedClient={selectedClient}
@@ -228,7 +220,7 @@ function App() {
         <Route
           path="client/:clientId"
           element={
-            <Protected isAuthenticated={isAuthenticated}>
+            <Protected isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}>
               <Manage connectedCluster={connectedClient} />
             </Protected>
           }

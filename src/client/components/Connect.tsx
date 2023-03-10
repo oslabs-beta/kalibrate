@@ -175,25 +175,17 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
                   variant="contained"
                   size="medium"
                   type="submit"
-                  sx={{fontWeight: 'bold', marginTop: '15px', marginBottom: '10px'}}
+                  disabled={
+                    !(sasl
+                      ? !!clientId && !!brokers && !!username && !!password
+                      : !!clientId && !!brokers)
+                  }
+                  sx={{fontWeight: 'bold', marginTop: '15px'}}
                 >
-                  {loginInProgress ? 'Connecting...' : 'Connect'}
+                  {loginInProgress ? 'Connecting...' : 'Save'}
                 </Button>
               )
             }
-            <Button
-              variant="contained"
-              size="medium"
-              type="submit"
-              disabled={
-                !(sasl
-                  ? !!clientId && !!brokers && !!username && !!password
-                  : !!clientId && !!brokers)
-              }
-              sx={{fontWeight: 'bold', marginTop: '15px'}}
-            >
-              {loginInProgress ? 'Connecting...' : 'Save'}
-            </Button>
           </span>
         </Grid>
 
