@@ -4,9 +4,12 @@ import {useNavigate} from 'react-router-dom';
 import {ConnectProps, connectionConfig} from '../types';
 import '../stylesheets/style.css';
 import crow from './assets/crow2.png';
-
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 const Connect = (props: ConnectProps) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected, isConnected} =
     props;
 
@@ -107,10 +110,10 @@ const Connect = (props: ConnectProps) => {
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
           padding: '30px',
-          border: '2px solid black',
+          border: '1px solid' + colors.info[300],
           borderRadius: '8px',
-          borderColor: '#253237',
           boxShadow: '2px 2px 2px grey',
+          backgroundColor: colors.background[500],
         }}
         noValidate
         autoComplete="off"

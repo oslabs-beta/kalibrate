@@ -1,12 +1,24 @@
 import {useNavigate, Outlet} from 'react-router-dom';
-import {Box, Drawer, Toolbar, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import {
+  Box,
+  Drawer,
+  Toolbar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  useTheme,
+} from '@mui/material';
 import {DashboardProps} from '../types';
+import {tokens} from '../theme';
 
 const drawerWidth = 200;
 
 // Display sidebar for connected cluster list
 const Dashboard = (props: DashboardProps) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const {isConnected, sessionClusters, setConnectedCluster} = props;
 
@@ -22,12 +34,13 @@ const Dashboard = (props: DashboardProps) => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            background: '#edf8fe',
+            border: '2px outset' + colors.secondary[300],
+            background: colors.manage[500],
           },
         }}
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto', background: '#edf8fe'}}>
+        <Box sx={{overflow: 'auto'}}>
           <List>
             {
               // List in the sidebar all currently connected clusters
@@ -35,9 +48,9 @@ const Dashboard = (props: DashboardProps) => {
                 <ListItem
                   key={text}
                   sx={{
-                    background: '#edf8fe',
-                    border: '1px outset #c2dfe3',
                     borderRadius: '5px',
+                    border: '2px outset' + colors.secondary[300],
+                    backgroundColor: colors.secondary[300],
                   }}
                   disablePadding
                 >

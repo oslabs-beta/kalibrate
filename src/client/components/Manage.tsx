@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {
   Box,
@@ -10,7 +11,8 @@ import {
   Collapse,
 } from '@mui/material';
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
-import {useState} from 'react';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 
 const drawerWidth = 200;
 
@@ -18,12 +20,14 @@ const drawerWidth = 200;
 const Manage = props => {
   const {connectedCluster} = props;
   const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
 
-  const lightBlue = 'c8d6de';
+  // const lightBlue = 'c8d6de';
 
   // Drawer = wrapper for sidebar
   return (
@@ -36,30 +40,38 @@ const Manage = props => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            background: '#edf8fe',
+            border: '2px outset' + colors.secondary[300],
+            background: colors.manage[500],
           },
         }}
       >
         <Toolbar />
 
-        <Box sx={{overflow: 'auto', background: lightBlue}}>
-
-        <List className="no-padding-list">
-            <ListItem key="Overview" disablePadding sx={{background: '#edf8fe'}}>
+        <Box sx={{overflow: 'auto'}}>
+          <List className="no-padding-list">
+            <ListItem key="Overview" disablePadding>
               <ListItemButton
                 onClick={() => navigate('/' + connectedCluster)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Overview" />
               </ListItemButton>
             </ListItem>
           </List>
-          
+
           <List className="no-padding-list">
-            <ListItem key="Manage" disablePadding sx={{background: '#edf8fe'}}>
+            <ListItem key="Manage" disablePadding>
               <ListItemButton
                 onClick={() => setOpenManage(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Manage" />
                 {openManage ? <ExpandLess /> : <ExpandMore />}
@@ -85,10 +97,14 @@ const Manage = props => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Monitor" disablePadding sx={{background: lightBlue}}>
+            <ListItem key="Monitor" disablePadding>
               <ListItemButton
                 onClick={() => setOpenMonitor(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Monitor" />
                 {openMonitor ? <ExpandLess /> : <ExpandMore />}
@@ -107,10 +123,14 @@ const Manage = props => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Test" disablePadding sx={{background: lightBlue}}>
+            <ListItem key="Test" disablePadding>
               <ListItemButton
                 onClick={() => setOpenTest(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Test" />
                 {openTest ? <ExpandLess /> : <ExpandMore />}
