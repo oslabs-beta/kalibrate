@@ -15,7 +15,7 @@ h1 {
 }
 
 .err {
-  color: var(--error);
+  margin: 5px;
 }
 
 .loadingSpan {
@@ -52,6 +52,7 @@ h1 {
   display: inline;
   transition: 1;
   z-index: 5;
+  margin: 5px;
   transform: translate(-30px, -5px);
 }
 

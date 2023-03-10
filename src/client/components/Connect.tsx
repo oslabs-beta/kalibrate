@@ -58,14 +58,22 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
       });
 
       // handle failed connection
+      if (response.status === 429) {
+        setErrorMessage('Too many requests. Wait a minute and try again.');
+      } else if (response.status === 403) {
+        setErrorMessage('Failed to connect. Verify credentials.');
+      } else if (!response.ok) {
+        setErrorMessage('An unknown error occurred.');
+      }
       if (!response.ok) throw new Error();
+      setErrorMessage('');
 
       // update global state
       const client = await response.json();
       setStoredClients([...storedClients, client]); // add to the list
       setSelectedClient(client.clientId); // update selection to the addition
     } catch {
-      setErrorMessage('Failed to connect. Verify credentials.');
+      // if (errorMessage === '') setErrorMessage('Failed to connect. Verify credentials.');
     } finally {
       setLoginInProgress(false);
     }
@@ -160,7 +168,18 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
           <span className="loadingSpan">
             {
               // conditional rendering based on whether login attempt is in progress
-              loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null
+              loginInProgress ? (
+                <img className="rotocrow rotation" src={crow}></img>
+              ) : (
+                <Button
+                  variant="contained"
+                  size="medium"
+                  type="submit"
+                  sx={{fontWeight: 'bold', marginTop: '15px', marginBottom: '10px'}}
+                >
+                  {loginInProgress ? 'Connecting...' : 'Connect'}
+                </Button>
+              )
             }
             <Button
               variant="contained"
@@ -180,7 +199,9 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
 
         {errorMessage.length ? (
           <Grid>
-            <Alert severity="error">{errorMessage}</Alert>
+            <Alert className="err" severity="error">
+              {errorMessage}
+            </Alert>
           </Grid>
         ) : null}
       </Box>

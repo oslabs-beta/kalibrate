@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import ClientCache from './ClientCache';
 import ConsumerCache from './ConsumerCache';
 import {errorObject} from './types';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -11,7 +12,20 @@ import kafkaController from './controllers/kafkaController';
 import consumerController from './controllers/consumerController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
+import clusterController from './controllers/clusterController';
+import topicController from './controllers/topicController';
+// import crudController from './controllers/crudController';
 
+// Create rate limiter for connection requests: max 5 per IP address within one minute
+const connectionLimiter = rateLimit({
+  windowMs: 60000,
+  max: 5,
+  message: 'Exceeded the number of allowed connection attempts. Please try again in a few minutes.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Create caches
 const clientCache = new ClientCache();
 const consumerCache = new ConsumerCache();
 
@@ -39,20 +53,22 @@ app.get('/api/session', authController.verifySessionCookie, (req, res) => {
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
-  // todo: query database for all stored connections, decrypt passwords/intialize kafka instances/pass down chain
+  clusterController.getClientConnections,
   kafkaController.cacheClients,
   (req, res) => {
     return res.status(200).json(/* all cluster connection details to send*/);
   }
 );
 
-// create and save a new sever connection for a given user
+// create and save a new server connection for a given user
 app.post(
   '/api/connection',
+  // rate-limit connection attempts
+  connectionLimiter,
   authController.verifySessionCookie,
   kafkaController.initiateKafka,
   kafkaController.cacheClient,
-  // todo: controller(s) to encrypt and store in db
+  clusterController.storeClientConnection,
   (req, res) => {
     let {clientId, brokers, ssl, sasl} = res.locals.client;
 
@@ -90,16 +106,38 @@ app.get(
   adminController.getTopicData,
   adminController.getGroupData,
   (req, res) => {
-    const {clusterData, topicData, groupList, groupData} = res.locals;
-    const data = {clusterData, topicData, groupList, groupData};
+    const {clusterData, topicData, groupList, groupData, groupOffsets} = res.locals;
+    const data = {clusterData, topicData, groupList, groupData, groupOffsets};
 
     return res.status(200).json(data);
   }
 );
 
+app.post(
+  '/api/:clientId/topic',
+  authController.verifySessionCookie,
+  kafkaController.getCachedClient,
+  topicController.createTopic,
+  adminController.getTopicData,
+  (req, res) => {
+    return res.status(200).json(res.locals.topicData);
+  }
+);
+
+app.delete(
+  '/api/:clientId/topic',
+  authController.verifySessionCookie,
+  kafkaController.getCachedClient,
+  topicController.deleteTopic,
+  adminController.getTopicData,
+  (req, res) => {
+    return res.status(200).json(res.locals.topicData);
+  }
+);
+
 app.get(
   '/api/messages/:clientId/:topic',
-  authController.verifySessionCookie,
+  // authController.verifySessionCookie,
   consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,
@@ -107,6 +145,8 @@ app.get(
     return res.status(200).json(res.locals.topicMessages);
   }
 );
+
+
 
 // Catch all handler
 app.use('*', (req, res) => {

@@ -35,6 +35,9 @@ function App() {
   const [isConnectionLoading, setIsConnectionLoading] = useState<boolean>(false); // for client connection
   const [isConnectionError, setIsConnectionError] = useState<boolean>(false); // for client connection
   const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
+  const [currentPollInterval, setCurrentPollInterval] = useState<number | undefined>(
+    undefined // useInterval return object
+  );
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
     clusterData: {
@@ -45,6 +48,8 @@ function App() {
     },
     groupData: [],
   });
+
+  // setConnectedClusterData({...connectedClusterData, topicData, groupData})
 
   const {clusterData, topicData, groupData} = connectedClusterData;
 
@@ -57,8 +62,10 @@ function App() {
 
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
+    // polling for all clusters is slow - poll for only active cluster
+    // take this out to poll for all clusters
+    if (currentPollInterval) clearInterval(currentPollInterval);
     // only runs if a cluster has been connected to the app
-    let interval: ReturnType<typeof setInterval> | undefined;
     if (connectedClient.length) {
       setIsConnectionLoading(true);
       fetch(`api/data/${connectedClient}`, {
@@ -71,7 +78,8 @@ function App() {
           setConnectedClusterData(data);
           setIsConnectionLoading(false);
           //set interval for polling
-          interval = setInterval(poll, pollInterval * 1000);
+          const interval: number = window.setInterval(poll, pollInterval * 1000);
+          setCurrentPollInterval(interval);
         })
         .catch(err => {
           setIsConnectionError(true);
@@ -79,7 +87,9 @@ function App() {
         });
 
       // remove interval on unmount
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(currentPollInterval);
+      };
     }
   }, [connectedClient]);
 
@@ -89,12 +99,15 @@ function App() {
   const poll = () => {
     fetch(`api/data/${connectedClient}`, {
       headers: {
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
       .then(res => res.json())
       .then(data => {
-        const newPoll: newPollType = {};
+        const newPoll: newPollType = {
+          cluster: connectedClient,
+        };
         newPoll.time = Date.now();
         setConnectedClusterData(data);
 
@@ -135,15 +148,22 @@ function App() {
           });
           newPoll.groupOffsets[groupName] = sum;
         }
-
+        addTimeSeries(newPoll);
         // add timeseriesdata to state so we can drill it/use it for graphing
-        const newTimeSeriesData = timeSeriesData;
-        newTimeSeriesData.push(newPoll);
+        // limit to 50 columns for performance, for now
+        //const newTimeSeriesData = timeSeriesData;
+        //newTimeSeriesData.push(newPoll);
+        //if (newTimeSeriesData.length > 50) newTimeSeriesData.shift();
         // to help while figuring out graphs: this is the snapshot of graphable data, added to every <interval> seconds
-        console.log('graphable data: ', timeSeriesData);
-        setTimeSeriesData(newTimeSeriesData);
       })
       .catch(err => console.log(`Error polling data: ${err}`));
+  };
+
+  const addTimeSeries = (newPoll: newPollType) => {
+    const newTimeSeriesData = timeSeriesData;
+    newTimeSeriesData.push(newPoll);
+    console.log('graphable data: ', timeSeriesData);
+    setTimeSeriesData(newTimeSeriesData);
   };
 
   // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
@@ -209,7 +229,7 @@ function App() {
           path="client/:clientId"
           element={
             <Protected isAuthenticated={isAuthenticated}>
-              <Manage />
+              <Manage connectedCluster={connectedClient} />
             </Protected>
           }
         >
@@ -234,7 +254,17 @@ function App() {
           </Route>
 
           <Route path="topics" element={<Topics connectedCluster={connectedClient} />}>
-            <Route index element={<TopicsDisplay topicData={topicData} />} />
+            <Route
+              index
+              element={
+                <TopicsDisplay
+                  connectedCluster={connectedClient}
+                  topicData={topicData}
+                  setConnectedClusterData={setConnectedClusterData}
+                  connectedClusterData={connectedClusterData}
+                />
+              }
+            />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
             <Route path=":topic/messages" element={<MessagesDisplay />} />
           </Route>
