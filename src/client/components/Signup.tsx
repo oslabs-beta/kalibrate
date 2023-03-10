@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router';
 import {Link} from 'react-router-dom';
 import {
@@ -10,10 +10,11 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import {SignupProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 
-const Signup = () => {
+const Signup = ({setIsAuthenticated}: SignupProps) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -131,7 +132,8 @@ const Signup = () => {
         throw new Error(error.err);
       }
 
-      navigate('/'); // todo: may need to set global with response body state before navigating?
+      setIsAuthenticated(true);
+      navigate('/dashboard'); // todo: may need to set global with response body state before navigating?
     } catch (err: any) {
       // end loading, display error, and reset password fields on unsuccessful login
       setIsLoading(false);

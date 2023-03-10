@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router';
 import {Link} from 'react-router-dom';
 import {
@@ -10,10 +10,11 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import {LoginProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 
-const Login = () => {
+const Login = ({setIsAuthenticated}: LoginProps) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -51,8 +52,8 @@ const Login = () => {
       });
 
       if (!response.ok) throw new Error();
-
-      navigate('/');
+      setIsAuthenticated(true);
+      navigate('/dashboard');
     } catch (err) {
       // end loading, display error, and reset form on unsuccessful login
       setEmail('');

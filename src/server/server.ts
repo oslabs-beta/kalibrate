@@ -46,6 +46,10 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
   return res.status(201).json(user);
 });
 
+app.get('/api/session', authController.verifySessionCookie, (req, res) => {
+  return res.sendStatus(200);
+});
+
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
@@ -97,6 +101,7 @@ app.get(
   '/api/data/:clientId',
   authController.verifySessionCookie,
   kafkaController.getCachedClient,
+  // get from db if not in cache
   adminController.getClusterData,
   adminController.getTopicData,
   adminController.getGroupData,

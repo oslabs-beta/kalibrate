@@ -274,7 +274,7 @@ authController.verifySessionCookie = (req, res, next) => {
   if (!Object.hasOwn(req.cookies, 'kst')) {
     return next({
       log: `ERROR - authController.verifySessionCookie: Failed to extract session cookie.`,
-      status: 400,
+      status: 440,
       message: {err: 'User is not authenticated.'},
     });
   }
@@ -286,7 +286,7 @@ authController.verifySessionCookie = (req, res, next) => {
     if (err) {
       return next({
         log: `ERROR - authController.verifySessionCookie, failed to verify session token: ${err}`,
-        status: 400,
+        status: 440,
         message: {err: 'User is not authenticated.'},
       });
     }
