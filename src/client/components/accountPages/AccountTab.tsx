@@ -25,7 +25,7 @@ import SaveIcon from '@mui/icons-material/Save';
 --  Form Submit
 
 -- Delete stored clusters 
--- Delete Account
+-- Delete Account  
 -- Add avatar
 .*/
 type PasswordStateTypes = {

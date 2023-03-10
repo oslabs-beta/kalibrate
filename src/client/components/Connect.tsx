@@ -61,8 +61,15 @@ const Connect = (props: ConnectProps) => {
         body: JSON.stringify(connectionConfig),
       });
       // handle failed connection
+      if (response.status === 429) {
+        setErrorMessage('Too many requests. Wait a minute and try again.');
+      } else if (response.status === 403) {
+        setErrorMessage('Failed to connect. Verify credentials.');
+      } else if (!response.ok) {
+        setErrorMessage('An unknown error occurred.');
+      }
       if (!response.ok) throw new Error();
-      if (response.ok) setErrorMessage('');
+      setErrorMessage('');
 
       // update global state and navigate to dashboard
       setIsConnected(true);
@@ -78,7 +85,7 @@ const Connect = (props: ConnectProps) => {
 
       navigate('/');
     } catch {
-      setErrorMessage('Failed to connect. Verify credentials.');
+      // if (errorMessage === '') setErrorMessage('Failed to connect. Verify credentials.');
     } finally {
       setLoginInProgress(false);
     }
@@ -172,22 +179,27 @@ const Connect = (props: ConnectProps) => {
           <span className="loadingSpan">
             {
               // conditional rendering based on whether login attempt is in progress
-              loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null
+              loginInProgress ? (
+                <img className="rotocrow rotation" src={crow}></img>
+              ) : (
+                <Button
+                  variant="contained"
+                  size="medium"
+                  type="submit"
+                  sx={{fontWeight: 'bold', marginTop: '15px', marginBottom: '10px'}}
+                >
+                  {loginInProgress ? 'Connecting...' : 'Connect'}
+                </Button>
+              )
             }
-            <Button
-              variant="contained"
-              size="medium"
-              type="submit"
-              sx={{fontWeight: 'bold', marginTop: '15px'}}
-            >
-              {loginInProgress ? 'Connecting...' : 'Connect'}
-            </Button>
           </span>
         </Grid>
 
         {errorMessage.length ? (
           <Grid>
-            <Alert severity="error">{errorMessage}</Alert>
+            <Alert className="err" severity="error">
+              {errorMessage}
+            </Alert>
           </Grid>
         ) : null}
       </Box>

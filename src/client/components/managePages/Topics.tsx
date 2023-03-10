@@ -30,6 +30,7 @@ const Topics = ({connectedCluster}: TopicsProps) => {
         <Outlet
           // these props are passed to sibling components that are navigated to from here
           context={{
+            connectedCluster,
             selectedTopic: selectedTopic,
             topicPartitions: topicPartitions,
             handleComponentChange,

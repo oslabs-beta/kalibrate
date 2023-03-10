@@ -36,7 +36,7 @@ const Navbar = (props: Props) => {
   const {isConnected, logout} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
   //manges light/dark mode
-  const [checked, setChecked] = useState<boolean>(true);
+  const [checked, setChecked] = useState<boolean>(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -90,15 +90,6 @@ const Navbar = (props: Props) => {
           >
             KALIBRATE
           </Typography>
-          <MenuItem key={'darkmode'}>
-            <FormGroup>
-              <FormControlLabel
-                control={<Switch checked={checked} onChange={handleDarkMode} />}
-                label="Dark Mode"
-                labelPlacement="start"
-              />
-            </FormGroup>
-          </MenuItem>
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (
               <Button
@@ -116,7 +107,15 @@ const Navbar = (props: Props) => {
               </Button>
             ))}
           </Box>
-
+          <MenuItem key={'darkmode'}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch checked={checked} onChange={handleDarkMode} />}
+                label="Dark Mode"
+                labelPlacement="start"
+              />
+            </FormGroup>
+          </MenuItem>
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
             size="large"
