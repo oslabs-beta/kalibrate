@@ -186,7 +186,7 @@ function App() {
         <div>
           <BrowserRouter>
             <nav>
-              <Navbar isConnected={!!storedClients.length} />
+              <Navbar isConnected={!!storedClients.length} logout={logout} />
             </nav>
 
             <Routes>

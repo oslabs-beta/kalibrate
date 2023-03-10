@@ -1,11 +1,14 @@
-import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Grid, Button, Box, Alert, Typography, CircularProgress} from '@mui/material';
 import {Delete, Send, Cloud, CloudDone} from '@mui/icons-material';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 import {ClientProps} from '../types';
 
 const Client = (props: ClientProps) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const {selectedClient, connectedClient, setConnectedClient, storedClients, isLoading, isError} =
     props;
 
@@ -63,8 +66,9 @@ const Client = (props: ClientProps) => {
         sx={{
           '& .MuiTextField-root': {m: 1, width: '25ch'},
           padding: '30px',
-          outline: '1px solid #afafaf',
+          border: '1px solid' + colors.info[300],
           borderRadius: '5px',
+          backgroundColor: colors.background[500],
         }}
       >
         {selectedClientCredentialsList}

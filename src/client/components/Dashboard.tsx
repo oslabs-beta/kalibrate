@@ -33,12 +33,13 @@ const Dashboard = (props: DashboardProps) => {
         sx={{
           width: 250,
           flexShrink: 0,
-          background: '#edf8fe',
+          background: colors.manage[500],
           [`& .MuiDrawer-paper`]: {
             width: 250,
             boxSizing: 'border-box',
-            background: '#edf8fe',
             justifyContent: 'space-between',
+            outline: '1px outset' + colors.secondary[300],
+            background: colors.manage[500],
           },
         }}
       >
@@ -48,7 +49,7 @@ const Dashboard = (props: DashboardProps) => {
 
           <Box sx={{overflow: 'auto'}}>
             <List disablePadding>
-              <ListSubheader sx={{background: '#edf8fe'}}>My Clients</ListSubheader>
+              <ListSubheader sx={{background: colors.manage[500]}}>My Clients</ListSubheader>
               {
                 // List in the sidebar of all saved client
                 storedClients.map(client => (
