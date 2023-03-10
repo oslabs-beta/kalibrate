@@ -1,8 +1,7 @@
 :root {
   --lightestBlue: #edf8fe;
   --lighterBlue: #c2dfe3;
-  --blue: #9db4c0;
-
+  --blue: #9db4c0; /*navbar*/
   --darkerBlue: #5c6b73;
   --darkestBlue: #253237;
   --white: #fcfcfc;
@@ -91,5 +90,4 @@ body,
 main {
   max-height: 100%;
   margin: 0;
-  /* background-color: var(--white); */
 }

@@ -7,17 +7,19 @@ import {
   Typography,
   Box,
   Button,
-  IconButton,
   Badge,
   Menu,
   MenuItem,
   Switch,
   FormGroup,
   FormControlLabel,
-  useTheme,
 } from '@mui/material';
+import {useTheme, ThemeProvider, createTheme} from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
+import IconButton from '@mui/material/IconButton';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import crow from './assets/crow2.png';
 import UserMenu from './accountPages/UserMenu';
 import {ColorModeContext, tokens} from '../theme';
@@ -53,7 +55,6 @@ const Navbar = (props: Props) => {
     //set them to dark
     setChecked(event.target.checked);
     colorMode.toggleColorMode();
-    console.log('THEME SET', checked);
   };
   return (
     <AppBar position="static">
@@ -63,7 +64,7 @@ const Navbar = (props: Props) => {
           position: 'fixed',
           zIndex: theme => theme.zIndex.drawer + 1,
           width: '100vw',
-          bgcolor: '#9db4c0',
+          bgcolor: colors.primary[500],
         }}
       >
         <Toolbar disableGutters>
@@ -107,14 +108,11 @@ const Navbar = (props: Props) => {
               </Button>
             ))}
           </Box>
-          <MenuItem key={'darkmode'}>
-            <FormGroup>
-              <FormControlLabel
-                control={<Switch checked={checked} onChange={handleDarkMode} />}
-                label="Dark Mode"
-                labelPlacement="start"
-              />
-            </FormGroup>
+          <MenuItem key={'darkmode'} onClick={handleDarkMode}>
+            {colors} mode
+            <IconButton sx={{ml: 1}} color="inherit">
+              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
           </MenuItem>
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
