@@ -57,7 +57,7 @@ const Account = () => {
               <Tab disableRipple label="Notifications" value={2} />
             </Tabs>
           </AppBar>
-          <Paper variant="outlined" elevation={3} sx={{height: '100%', color: 'inherit'}}>
+          <Paper variant="outlined" sx={{height: '100%', color: 'inherit'}}>
             <TabPanel value="1">
               <AccountTab />
             </TabPanel>

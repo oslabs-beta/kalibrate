@@ -36,10 +36,10 @@ type FormStateTypes = {
   [k: string]: string;
 };
 const defaultForm = {
-  email: '',
-  old: '',
-  new: '',
-  confirm: '',
+  newEmail: '',
+  oldPass: '',
+  newPass: '',
+  confirmPass: '',
 };
 
 const AccountTab = () => {
@@ -51,10 +51,17 @@ const AccountTab = () => {
   });
   const [formChanges, setFormChanges] = useState<FormStateTypes>({...defaultForm});
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>, pass: string): void => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    pass: string
+  ) => {
+    const passKey =
+      pass === 'old' || pass === 'new' || pass === 'confirm' ? pass + 'Pass' : 'newEmail';
+
     //check new Name
     //check newpas and confirm pass are matching, will verity structure in back
-    setFormChanges({...formChanges, [pass]: e.target.value});
+    setFormChanges({...formChanges, [passKey]: e.target.value});
+    console.log(formChanges);
   };
   //logic to cancel changes made (clears form)
   const handleFormCancel = () => {
@@ -63,26 +70,30 @@ const AccountTab = () => {
 
   //logic to save user changes
   //will confirm here
-  //pass obj {newName, oldPass, newPass} to backend
+  //pass obj {newEmail, oldPass, newPass} to backend
   const handleFormSave = async () => {
-    //make sure old and new match
+    const {newEmail, oldPass, newPass, confirmPass} = formChanges;
+    //make sure confirm and new match
+    if (newPass !== confirmPass) {
+      return <div>NOT MATCHING CONFIRM AND NEW</div>;
+    }
     //check input structure
     const updateInfo = {
-      oldPass: formChanges.old,
-      newEmail: formChanges.email,
-      newPass: formChanges.new,
+      newEmail,
+      oldPass,
+      newPass,
     };
     //start loading button
     await handleLoading();
     //ADD SAVE FUNCTIONALITY
     await setTimeout(() => setLoadingSave(false), 2000);
-    const response = await fetch('/api/settings/account', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateInfo),
-    });
+    // const response = await fetch('/api/settings/account', {
+    //   method: 'PATCH',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(updateInfo),
+    // });
     // if (response) {
     // }
     //if successfully saved.
@@ -139,9 +150,9 @@ const AccountTab = () => {
   return (
     <Container>
       <Box>
-        <h6>Change Profile Name</h6>
+        <h6>Change Account Email</h6>
         <TextField
-          label="Update Name"
+          label="Update Email"
           value={formChanges['email']}
           onChange={e => handleFormChange(e, 'email')}
         />

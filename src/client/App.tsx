@@ -186,7 +186,11 @@ function App() {
         <div>
           <BrowserRouter>
             <nav>
-              <Navbar isConnected={!!storedClients.length} logout={logout} />
+              <Navbar
+                isAuthenticated={isAuthenticated}
+                isConnected={!!storedClients.length}
+                logout={logout}
+              />
             </nav>
 
             <Routes>
