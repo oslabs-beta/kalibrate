@@ -16,7 +16,6 @@ import {TabContext, TabList, TabPanel} from '@mui/lab';
 import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
 import AccountTab from './AccountTab';
 import NotificationsTab from './NotificationsTab';
-import MusicPlayerSlider from './musicplayer';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../../theme';
 
@@ -28,7 +27,7 @@ const Account = () => {
   const handleTab = (event: React.SyntheticEvent, newValue: string): void => {
     setValue(newValue);
   };
-  const handleChangeIndex = (index: number) => {
+  const handleChangeIndex = (index: string) => {
     setValue(index);
   };
   return (
@@ -55,7 +54,6 @@ const Account = () => {
             >
               <Tab disableRipple label="Account" value="1" />
               <Tab disableRipple label="Notifications" value="2" />
-              <Tab disableRipple label="Fun" value="3" />
             </TabList>
           </AppBar>
           <Paper variant="outlined" elevation={3} sx={{height: '100%'}}>
@@ -64,9 +62,6 @@ const Account = () => {
             </TabPanel>
             <TabPanel value="2">
               <NotificationsTab />
-            </TabPanel>
-            <TabPanel value="3">
-              <MusicPlayerSlider />
             </TabPanel>
           </Paper>
         </TabContext>
