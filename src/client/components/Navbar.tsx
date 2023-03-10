@@ -87,7 +87,7 @@ const Navbar = (props: Props) => {
             {pages.map(page => (
               <Button
                 key={page}
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/dashboard')}
                 sx={{
                   my: 2,
                   color: 'inherit',

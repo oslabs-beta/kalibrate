@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {connectedClusterData, OffsetCollection} from './types';
-import Connect from './components/Connect';
+import ConnectionContainer from './components/ConnectionContainer';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
 import ConsumersDisplay from './components/managePages/consumersDisplay';
@@ -20,14 +20,20 @@ import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Home from './components/Home';
 import NotFound from './components/NotFound';
+import Protected from './components/Protected';
+import Redirect from './components/Redirect';
 import './stylesheets/style.css';
-import {GroupTopic, newPollType, topics} from './types';
+import {GroupTopic, newPollType, storedClient} from './types';
 
 function App() {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [connectedCluster, setConnectedCluster] = useState<string>('');
-  const [sessionClusters, setSessionClusters] = useState<string[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [storedClients, setStoredClients] = useState<storedClient[]>([]);
+  const [selectedClient, setSelectedClient] = useState<string>('');
+  const [connectedClient, setConnectedClient] = useState<string>('');
+  const [isConnectionLoading, setIsConnectionLoading] = useState<boolean>(false); // for client connection
+  const [isConnectionError, setIsConnectionError] = useState<boolean>(false); // for client connection
   const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
@@ -42,12 +48,20 @@ function App() {
 
   const {clusterData, topicData, groupData} = connectedClusterData;
 
+  // verify session on mount and set client-side authentication
+  useEffect(() => {
+    fetch('/api/session').then(res => {
+      if (res.ok) setIsAuthenticated(true);
+    });
+  }, []);
+
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
     // only runs if a cluster has been connected to the app
     let interval: ReturnType<typeof setInterval> | undefined;
-    if (connectedCluster.length) {
-      fetch(`api/data/${connectedCluster}`, {
+    if (connectedClient.length) {
+      setIsConnectionLoading(true);
+      fetch(`api/data/${connectedClient}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -55,21 +69,25 @@ function App() {
         .then(res => res.json())
         .then(data => {
           setConnectedClusterData(data);
+          setIsConnectionLoading(false);
           //set interval for polling
           interval = setInterval(poll, pollInterval * 1000);
         })
-        .catch(err => console.log(`Error from app loading cluster data: ${err}`));
+        .catch(err => {
+          setIsConnectionError(true);
+          setIsConnectionLoading(false);
+        });
 
       // remove interval on unmount
       return () => clearInterval(interval);
     }
-  }, [connectedCluster]);
+  }, [connectedClient]);
 
   // long poll to connected kafka instance for data
   // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
   // possible todo: modularize poll into a different file
   const poll = () => {
-    fetch(`api/data/${connectedCluster}`, {
+    fetch(`api/data/${connectedClient}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -128,68 +146,105 @@ function App() {
       .catch(err => console.log(`Error polling data: ${err}`));
   };
 
+  // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
   return (
     <BrowserRouter>
       <nav>
-        <Navbar isConnected={isConnected} />
+        <Navbar isConnected={!!storedClients.length} />
       </nav>
 
       <Routes>
+        <Route path="/" element={<Home />} />
+
         <Route
-          path="/"
+          path="login"
           element={
-            <Dashboard
-              setConnectedCluster={setConnectedCluster}
-              sessionClusters={sessionClusters}
-              isConnected={isConnected}
-            />
+            <Redirect isAuthenticated={isAuthenticated}>
+              <Login setIsAuthenticated={setIsAuthenticated} />
+            </Redirect>
+          }
+        ></Route>
+
+        <Route
+          path="signup"
+          element={
+            <Redirect isAuthenticated={isAuthenticated}>
+              <Signup setIsAuthenticated={setIsAuthenticated} />
+            </Redirect>
+          }
+        ></Route>
+
+        <Route
+          path="dashboard"
+          element={
+            <Protected isAuthenticated={isAuthenticated}>
+              <Dashboard
+                connectedClient={connectedClient}
+                selectedClient={selectedClient}
+                setSelectedClient={setSelectedClient}
+                storedClients={storedClients}
+                isLoading={isConnectionLoading}
+              />
+            </Protected>
           }
         >
           <Route
             index
             element={
-              <Connect
-                setConnectedCluster={setConnectedCluster}
-                sessionClusters={sessionClusters}
-                setSessionClusters={setSessionClusters}
-                setIsConnected={setIsConnected}
-                isConnected={isConnected}
+              <ConnectionContainer
+                selectedClient={selectedClient}
+                setSelectedClient={setSelectedClient}
+                connectedClient={connectedClient}
+                setConnectedClient={setConnectedClient}
+                storedClients={storedClients}
+                setStoredClients={setStoredClients}
+                isConnectionLoading={isConnectionLoading}
+                isConnectionError={isConnectionError}
               />
             }
           />
         </Route>
-        <Route path="login" element={<Login />}></Route>
-        <Route path="signup" element={<Signup />}></Route>
-        <Route path=":clusterName" element={<Manage />}>
+
+        <Route
+          path="client/:clientId"
+          element={
+            <Protected isAuthenticated={isAuthenticated}>
+              <Manage />
+            </Protected>
+          }
+        >
           <Route
             index
             element={
               <div className="overview">
-                <Overview data={connectedClusterData} connectedCluster={connectedCluster} />
+                <Overview data={connectedClusterData} connectedCluster={connectedClient} />
               </div>
             }
           />
           <Route
             path="brokers"
-            element={<Brokers clusterData={clusterData} connectedCluster={connectedCluster} />}
+            element={<Brokers clusterData={clusterData} connectedCluster={connectedClient} />}
           />
           <Route
             path="consumers"
-            element={<Consumers connectedCluster={connectedCluster} groupData={groupData} />}
+            element={<Consumers connectedCluster={connectedClient} groupData={groupData} />}
           >
             <Route index element={<ConsumersDisplay groupData={groupData} />} />
             <Route path=":groupId/members" element={<MembersDisplay />} />
           </Route>
-          <Route path="topics" element={<Topics connectedCluster={connectedCluster} />}>
+
+          <Route path="topics" element={<Topics connectedCluster={connectedClient} />}>
             <Route index element={<TopicsDisplay topicData={topicData} />} />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
             <Route path=":topic/messages" element={<MessagesDisplay />} />
           </Route>
+
           <Route path="lag" element={<Lag />} />
           <Route path="throughput" element={<Throughput />} />
           <Route path="consume" element={<Consume />} />
-          <Route path="Produce" element={<Produce />} />
+          <Route path="produce" element={<Produce />} />
         </Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
