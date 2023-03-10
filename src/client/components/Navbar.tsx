@@ -13,8 +13,9 @@ import {
   Switch,
   FormGroup,
   FormControlLabel,
+  MenuList,
 } from '@mui/material';
-import {useTheme, ThemeProvider, createTheme} from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
@@ -51,9 +52,9 @@ const Navbar = (props: Props) => {
     setAnchorElAlerts(null);
   };
 
-  const handleDarkMode = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleDarkMode = (): void => {
     //set them to dark
-    setChecked(event.target.checked);
+    setChecked(true);
     colorMode.toggleColorMode();
   };
   return (
@@ -64,13 +65,13 @@ const Navbar = (props: Props) => {
           position: 'fixed',
           zIndex: theme => theme.zIndex.drawer + 1,
           width: '100vw',
-          bgcolor: colors.primary[500],
+          bgcolor: colors.primary[400],
         }}
       >
         <Toolbar disableGutters>
           <div className="logo">
             <Typography noWrap sx={{display: {xs: 'none', md: 'flex'}}}>
-              <img src={crow} length="25" width="35"></img>
+              <img src={crow} width="35"></img>
             </Typography>
           </div>
           <Typography
@@ -108,12 +109,13 @@ const Navbar = (props: Props) => {
               </Button>
             ))}
           </Box>
-          <MenuItem key={'darkmode'} onClick={handleDarkMode}>
-            {colors} mode
-            <IconButton sx={{ml: 1}} color="inherit">
+          <MenuItem>
+            {' '}
+            <IconButton color="inherit" onClick={handleDarkMode}>
               {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </MenuItem>
+
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
             size="large"
@@ -147,7 +149,6 @@ const Navbar = (props: Props) => {
               </MenuItem>
             ))}
           </Menu>
-
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
           <UserMenu isConnected={isConnected} logout={logout} />
         </Toolbar>

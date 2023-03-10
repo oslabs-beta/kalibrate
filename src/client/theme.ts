@@ -1,7 +1,7 @@
 import {createContext, useState, useMemo} from 'react';
 import {createTheme, ThemeOptions} from '@mui/material/styles';
 import {PaletteMode} from '@mui/material';
-type mode = string;
+type modeType = string;
 
 const theme = createTheme({
   palette: {
@@ -33,21 +33,20 @@ const theme = createTheme({
 });
 
 // export default theme;
-
-export const tokens = (mode: PaletteMode) => ({
+export const tokens = (mode: modeType) => ({
   ...(mode === 'light'
     ? {
         //--blue
         primary: {
-          100: '#ebf0f2',
-          200: '#d8e1e6',
-          300: '#c4d2d9',
-          400: '#b1c3cd',
-          500: '#9db4c0',
-          600: '#7e909a',
-          700: '#5e6c73',
-          800: '#3f484d',
-          900: '#1f2426',
+          100: '#e5e9eb',
+          200: '#cbd3d7',
+          300: '#b2bcc2',
+          400: '#9db4c0',
+          500: '#7e909a',
+          600: '#65737b',
+          700: '#4c565c',
+          800: '#323a3e',
+          900: '#191d1f',
         },
         //--lighterblue
         secondary: {
@@ -63,15 +62,15 @@ export const tokens = (mode: PaletteMode) => ({
         },
         //--white
         background: {
-          100: '#fdfdfd',
-          200: '#fbfbfb',
-          300: '#f9f9f9',
-          400: '#f7f7f7',
-          500: '#f5f5f5',
-          600: '#c4c4c4',
-          700: '#939393',
-          800: '#626262',
-          900: '#313131',
+          100: '#fefefe',
+          200: '#fefefe',
+          300: '#fdfdfd',
+          400: '#fdfdfd',
+          500: '#fcfcfc',
+          600: '#cacaca',
+          700: '#979797',
+          800: '#656565',
+          900: '#323232',
         },
         //--error
         redError: {
@@ -120,18 +119,29 @@ export const tokens = (mode: PaletteMode) => ({
           800: '#5f6366',
           900: '#2f3233',
         },
+        accent: {
+          100: '#140a1f',
+          200: '#29143d',
+          300: '#3d1f5c',
+          400: '#52297a',
+          500: '#663399',
+          600: '#855cad',
+          700: '#a385c2',
+          800: '#c2add6',
+          900: '#e0d6eb',
+        },
       }
     : {
         primary: {
-          100: '#1f2426',
-          200: '#3f484d',
-          300: '#5e6c73',
-          400: '#7e909a',
-          500: '#9db4c0',
-          600: '#b1c3cd',
-          700: '#c4d2d9',
-          800: '#d8e1e6',
-          900: '#ebf0f2',
+          100: '#191d1f',
+          200: '#323a3e',
+          300: '#4c565c',
+          400: '#65737b',
+          500: '#7e909a',
+          600: '#9db4c0',
+          700: '#b2bcc2',
+          800: '#cbd3d7',
+          900: '#e5e9eb',
         },
         secondary: {
           100: '#272d2d',
@@ -143,6 +153,17 @@ export const tokens = (mode: PaletteMode) => ({
           700: '#daecee',
           800: '#e7f2f4',
           900: '#f3f9f9',
+        },
+        white: {
+          100: '#323232',
+          200: '#656565',
+          300: '#979797',
+          400: '#cacaca',
+          500: '#fcfcfc',
+          600: '#fdfdfd',
+          700: '#fdfdfd',
+          800: '#fefefe',
+          900: '#fefefe',
         },
         background: {
           100: '#060505',
@@ -199,10 +220,21 @@ export const tokens = (mode: PaletteMode) => ({
           800: '#acadad',
           900: '#d5d6d6',
         },
+        accent: {
+          100: '#e0d6eb',
+          200: '#c2add6',
+          300: '#a385c2',
+          400: '#855cad',
+          500: '#663399',
+          600: '#52297a',
+          700: '#3d1f5c',
+          800: '#29143d',
+          900: '#140a1f',
+        },
       }),
 });
 
-export const themeSettings = mode => {
+export const themeSettings = (mode: modeType) => {
   const colors = tokens(mode);
   return {
     palette: {

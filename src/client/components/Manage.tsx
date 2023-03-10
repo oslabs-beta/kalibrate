@@ -9,10 +9,10 @@ import {
   ListItemButton,
   ListItemText,
   Collapse,
-  useTheme,
 } from '@mui/material';
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
-import {ColorModeContext, tokens} from '../theme';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
 
 const drawerWidth = 200;
 
@@ -40,6 +40,7 @@ const Manage = props => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
+            border: '2px outset' + colors.secondary[300],
             background: colors.manage[500],
           },
         }}
@@ -48,10 +49,14 @@ const Manage = props => {
 
         <Box sx={{overflow: 'auto'}}>
           <List className="no-padding-list">
-            <ListItem key="Overview" disablePadding sx={{background: '#edf8fe'}}>
+            <ListItem key="Overview" disablePadding>
               <ListItemButton
                 onClick={() => navigate('/' + connectedCluster)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Overview" />
               </ListItemButton>
@@ -62,7 +67,11 @@ const Manage = props => {
             <ListItem key="Manage" disablePadding>
               <ListItemButton
                 onClick={() => setOpenManage(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Manage" />
                 {openManage ? <ExpandLess /> : <ExpandMore />}
@@ -91,7 +100,11 @@ const Manage = props => {
             <ListItem key="Monitor" disablePadding>
               <ListItemButton
                 onClick={() => setOpenMonitor(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Monitor" />
                 {openMonitor ? <ExpandLess /> : <ExpandMore />}
@@ -113,7 +126,11 @@ const Manage = props => {
             <ListItem key="Test" disablePadding>
               <ListItemButton
                 onClick={() => setOpenTest(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  borderRadius: '5px',
+                  border: '1px outset' + colors.secondary[300],
+                  backgroundColor: colors.secondary[300],
+                }}
               >
                 <ListItemText primary="Test" />
                 {openTest ? <ExpandLess /> : <ExpandMore />}

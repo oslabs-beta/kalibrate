@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import type {} from '@mui/lab/themeAugmentation';
 import {useNavigate} from 'react-router-dom';
 import {
   AppBar,
@@ -8,7 +9,6 @@ import {
   Button,
   Typography,
   Tab,
-  useTheme,
   TextField,
   InputAdornment,
 } from '@mui/material';
@@ -17,9 +17,13 @@ import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
 import AccountTab from './AccountTab';
 import NotificationsTab from './NotificationsTab';
 import MusicPlayerSlider from './musicplayer';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../../theme';
 
 const Account = () => {
   const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   const [value, setValue] = useState<string>('');
   const handleTab = (event: React.SyntheticEvent, newValue: string): void => {
     setValue(newValue);
@@ -34,20 +38,24 @@ const Account = () => {
         height: '100vh',
         display: 'flex',
         paddingY: '100px',
-        // justifyContent: 'center',
-        // alignItems: 'center',
         overflowy: 'scroll',
-        backgroundColor: 'pink',
+        backgroundColor: colors.background[500],
         '& .MuiTextField-root': {m: 1, width: '25ch'},
       }}
     >
       <Box sx={{width: '100%'}}>
         <TabContext value={value}>
-          <AppBar position="static">
-            <TabList value={value} onChange={handleTab} variant="fullWidth">
-              <Tab label="Account" value="1" />
-              <Tab label="Notifications" value="2" />
-              <Tab label="Fun" value="3" />
+          <AppBar position="static" color="inherit">
+            <TabList
+              value={value}
+              onChange={handleTab}
+              variant="fullWidth"
+              textColor="inherit"
+              indicatorColor="secondary"
+            >
+              <Tab disableRipple label="Account" value="1" />
+              <Tab disableRipple label="Notifications" value="2" />
+              <Tab disableRipple label="Fun" value="3" />
             </TabList>
           </AppBar>
           <Paper variant="outlined" elevation={3} sx={{height: '100%'}}>

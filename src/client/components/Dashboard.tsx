@@ -10,7 +10,7 @@ import {
   useTheme,
 } from '@mui/material';
 import {DashboardProps} from '../types';
-import {ColorModeContext, tokens} from '../theme';
+import {tokens} from '../theme';
 
 const drawerWidth = 200;
 
@@ -34,6 +34,7 @@ const Dashboard = (props: DashboardProps) => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
+            border: '2px outset' + colors.secondary[300],
             background: colors.manage[500],
           },
         }}
@@ -47,8 +48,9 @@ const Dashboard = (props: DashboardProps) => {
                 <ListItem
                   key={text}
                   sx={{
-                    border: '1px outset #c2dfe3',
                     borderRadius: '5px',
+                    border: '2px outset' + colors.secondary[300],
+                    backgroundColor: colors.secondary[300],
                   }}
                   disablePadding
                 >
