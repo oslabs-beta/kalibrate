@@ -6,7 +6,7 @@ import {message, TopicsContext} from '../../types';
 import crow from '../assets/crow2.png';
 
 const MessagesDisplay = () => {
-  const {selectedTopic}: TopicsContext = useOutletContext();
+  const {selectedTopic, connectedCluster}: TopicsContext = useOutletContext();
   const [pageSize, setPageSize] = useState<number>(25);
   const [messages, setMessages] = useState<message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -15,7 +15,7 @@ const MessagesDisplay = () => {
   // Fetches all messages for a given topic and update state
   const fetchTopicMessages = async () => {
     try {
-      const response = await fetch(`/api/${selectedTopic}/messages`);
+      const response = await fetch(`/api/messages/${connectedCluster}/${selectedTopic}`);
 
       if (!response.ok) throw new Error();
 

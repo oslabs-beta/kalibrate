@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {connectedClusterData} from './types';
+import {connectedClusterData, OffsetCollection} from './types';
 import Connect from './components/Connect';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
@@ -22,11 +22,14 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import NotFound from './components/NotFound';
 import './stylesheets/style.css';
+import {GroupTopic, newPollType, topics} from './types';
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [connectedCluster, setConnectedCluster] = useState<string>('');
   const [sessionClusters, setSessionClusters] = useState<string[]>([]);
+  const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
+  const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
     clusterData: {
       brokers: [],
@@ -44,8 +47,9 @@ function App() {
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
     // only runs if a cluster has been connected to the app
+    let interval: ReturnType<typeof setInterval> | undefined;
     if (connectedCluster.length) {
-      fetch('api/data', {
+      fetch(`api/data/${connectedCluster}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -53,10 +57,78 @@ function App() {
         .then(res => res.json())
         .then(data => {
           setConnectedClusterData(data);
+          //set interval for polling
+          interval = setInterval(poll, pollInterval * 1000);
         })
         .catch(err => console.log(`Error from app loading cluster data: ${err}`));
+
+      // remove interval on unmount
+      return () => clearInterval(interval);
     }
   }, [connectedCluster]);
+
+  // long poll to connected kafka instance for data
+  // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
+  // possible todo: modularize poll into a different file
+  const poll = () => {
+    fetch(`api/data/${connectedCluster}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        const newPoll: newPollType = {};
+        newPoll.time = Date.now();
+        setConnectedClusterData(data);
+
+        // process data from connected cluster into more graph-ready form:
+        // can be further processed if we want, maybe in the graph component
+
+        // percent of groups by status
+        let stable = 0,
+          empty = 0;
+        for (const el of data.groupData) {
+          if (el.state === 'Stable') stable++;
+          if (el.state === 'Empty') empty++;
+        }
+        newPoll.groupStatus = {
+          total: data.groupData.length,
+          stable,
+          empty,
+          other: data.groupData.length - stable - empty,
+        };
+
+        // count of offsets by topic
+        newPoll.topicOffsets = {};
+        for (const t of data.topicData.topics) {
+          newPoll.topicOffsets[t.name] = t.offsets.reduce((acc: number, curr: OffsetCollection) => {
+            return acc + Number(curr.offset);
+          }, 0);
+        }
+
+        // count of offsets by group
+        newPoll.groupOffsets = {};
+        for (const g in data.groupOffsets) {
+          const groupName = g;
+          let sum = 0;
+          data.groupOffsets[g].forEach((el: GroupTopic) => {
+            el.partitions.forEach(p => {
+              sum += Number(p.offset);
+            });
+          });
+          newPoll.groupOffsets[groupName] = sum;
+        }
+
+        // add timeseriesdata to state so we can drill it/use it for graphing
+        const newTimeSeriesData = timeSeriesData;
+        newTimeSeriesData.push(newPoll);
+        // to help while figuring out graphs: this is the snapshot of graphable data, added to every <interval> seconds
+        console.log('graphable data: ', timeSeriesData);
+        setTimeSeriesData(newTimeSeriesData);
+      })
+      .catch(err => console.log(`Error polling data: ${err}`));
+  };
 
   return (
     <BrowserRouter>
