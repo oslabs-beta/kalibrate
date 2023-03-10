@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import MuiAlert, {AlertProps} from '@mui/material/Alert';
 import {LoadingButton} from '@mui/lab';
-import {CloseIcon, Visibility, VisibilityOff} from '@mui/icons-material';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 // import Schnax from './Snackbar';
 
@@ -51,7 +51,7 @@ const AccountTab = () => {
   });
   const [formChanges, setFormChanges] = useState<FormStateTypes>({...defaultForm});
 
-  const handleFormChange = (e, pass) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>, pass: string): void => {
     setFormChanges({...formChanges, [pass]: e.target.value});
   };
   //logic to cancel changes made (clears form)
