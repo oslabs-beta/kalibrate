@@ -1,20 +1,18 @@
-import kafkaController from './kafkaController';
 import {controller} from './../types';
-
 
 const topicController: controller = {};
 
 topicController.createTopic = async (req, res, next) => {
+
   // declare admin
-  let admin;
-  console.log('hello from create topic');
+  const {kafka} = res.locals;
+
   try {
     // grab info needed to create new topic with partitions
-
     const {newTopicName, numPartitions} = req.body;
-    console.log(req.body, "req.body");
+
     // connect to admin
-    admin = kafkaController.kafka.admin();
+    const admin = kafka.admin();
     await admin.connect();
 
     // invoke create topics
@@ -57,20 +55,14 @@ topicController.createTopic = async (req, res, next) => {
 };
 
 topicController.deleteTopic = async (req, res, next) => {
+  
   // declare admin
-  let admin;
-  console.log('hello from deleteTopic');
+  const {kafka} = res.locals;
 
   try {
     //connect to admin
-    admin = kafkaController.kafka.admin();
+    const admin = kafka.admin();
     await admin.connect();
-
-    //grab topic to delete from req body
-    const {deleteTopicArray} = req.body;
-    console.log('delete topic array from controller',deleteTopicArray);
-    console.log(req.body);
-
 
     //delete topic
     await admin.deleteTopics({
@@ -82,7 +74,6 @@ topicController.deleteTopic = async (req, res, next) => {
 
     //return next
     return next();
-
   } catch (err) {
     next({
       log: `ERROR - topicController.deleteTopic: ${err}`,
