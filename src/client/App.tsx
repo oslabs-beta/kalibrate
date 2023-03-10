@@ -43,6 +43,8 @@ function App() {
     groupData: [],
   });
 
+  // setConnectedClusterData({...connectedClusterData, topicData, groupData})
+
   const {clusterData, topicData, groupData} = connectedClusterData;
 
   // when connectedCluster changes, query kafka for cluster info and update state
@@ -178,7 +180,7 @@ function App() {
         </Route>
         <Route path="login" element={<Login />}></Route>
         <Route path="signup" element={<Signup />}></Route>
-        <Route path=":clusterName" element={<Manage />}>
+        <Route path=":clusterName" element={<Manage connectedCluster={connectedCluster} />}>
           <Route
             index
             element={
@@ -199,7 +201,17 @@ function App() {
             <Route path=":groupId/members" element={<MembersDisplay />} />
           </Route>
           <Route path="topics" element={<Topics connectedCluster={connectedCluster} />}>
-            <Route index element={<TopicsDisplay topicData={topicData} />} />
+            <Route
+              index
+              element={
+                <TopicsDisplay
+                  connectedCluster={connectedCluster}
+                  topicData={topicData}
+                  setConnectedClusterData={setConnectedClusterData}
+                  connectedClusterData = {connectedClusterData}
+                />
+              }
+            />
             <Route path=":topic/partitions" element={<PartitionsDisplay />} />
             <Route path=":topic/messages" element={<MessagesDisplay />} />
           </Route>

@@ -12,6 +12,8 @@ import kafkaController from './controllers/kafkaController';
 import consumerController from './controllers/consumerController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
+import topicController from './controllers/topicController'
+// import crudController from './controllers/crudController';
 
 // Create rate limiter for connection requests: max 5 per IP address within one minute
 const connectionLimiter = rateLimit({
@@ -115,6 +117,14 @@ app.get(
     return res.status(200).json(res.locals.topicMessages);
   }
 );
+
+app.post('/api/:topic/topic', topicController.createTopic, adminController.getTopicData, (req, res) => {
+  return res.status(200).json(res.locals.topicData);
+})
+
+app.delete('/api/:topic/topic', topicController.deleteTopic, adminController.getTopicData,(req, res) => {
+  return res.status(200).json(res.locals.topicData);
+})
 
 // Catch all handler
 app.use('*', (req, res) => {
