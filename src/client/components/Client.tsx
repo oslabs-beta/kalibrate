@@ -19,12 +19,12 @@ const Client = (props: ClientProps) => {
 
   // generate list to render from selected client credentials
   const selectedClientCredentialsList = [
-    <Typography>
+    <Typography key="clientId">
       <strong>Client Id: </strong>
       {`${selectedClientCrendentials.clientId}`}
     </Typography>,
-    <Typography>
-      <strong>Seed Brokers: </strong>
+    <Typography key="brokers">
+      <strong>URI: </strong>
       {`${selectedClientCrendentials.brokers}`}
     </Typography>,
   ];
@@ -32,21 +32,17 @@ const Client = (props: ClientProps) => {
   // check if selected connection includes sasl and add to list
   if (selectedClientCrendentials.sasl) {
     selectedClientCredentialsList.push(
-      <Typography>
+      <Typography key="ssl">
         <strong>SSL: </strong>
         {`${selectedClientCrendentials.ssl}`}
       </Typography>,
-      <Typography>
+      <Typography key="mechanism">
         <strong>Mechanism: </strong>
         {`${selectedClientCrendentials.sasl.mechanism}`}
       </Typography>,
-      <Typography>
+      <Typography key="username">
         <strong>Username: </strong>
         {`${selectedClientCrendentials.sasl.username}`}
-      </Typography>,
-      <Typography>
-        <strong>Password: </strong>
-        {'********'}
       </Typography>
     );
   }

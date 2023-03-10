@@ -56,7 +56,9 @@ app.get(
   clusterController.getClientConnections,
   kafkaController.cacheClients,
   (req, res) => {
-    return res.status(200).json(/* all cluster connection details to send*/);
+    const clients = res.locals.clientCredentials;
+    console.log('response', clients);
+    return res.status(200).json(clients);
   }
 );
 
@@ -137,7 +139,7 @@ app.delete(
 
 app.get(
   '/api/messages/:clientId/:topic',
-  // authController.verifySessionCookie,
+  authController.verifySessionCookie,
   consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,
@@ -145,8 +147,6 @@ app.get(
     return res.status(200).json(res.locals.topicMessages);
   }
 );
-
-
 
 // Catch all handler
 app.use('*', (req, res) => {
