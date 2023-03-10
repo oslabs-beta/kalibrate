@@ -1,4 +1,4 @@
-import {MouseEvent} from 'react';
+gitimport {MouseEvent} from 'react';
 
 export type connectionConfig = {
   clientId: string;
@@ -28,6 +28,7 @@ export type DashboardProps = {
 export type OverviewProps = {
   connectedCluster: string;
   data: connectedClusterData;
+  timeSeriesData: any;
 };
 
 export type brokers = {

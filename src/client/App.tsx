@@ -208,7 +208,7 @@ function App() {
                   index
                   element={
                     <div className="overview">
-                      <Overview data={connectedClusterData} connectedCluster={connectedCluster} />
+                      <Overview data={connectedClusterData} connectedCluster={connectedCluster} timeSeriesData = {timeSeriesData} />
                     </div>
                   }
                 />

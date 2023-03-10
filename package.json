@@ -38,6 +38,7 @@
     "kafkajs": "^2.2.3",
     "node-fetch": "^3.3.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
     "uuid": "^9.0.0",
