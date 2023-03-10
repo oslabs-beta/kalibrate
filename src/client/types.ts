@@ -1,4 +1,24 @@
-import {MouseEvent} from 'react';
+import {MouseEvent, PropsWithChildren} from 'react';
+
+export type RedirectProps = {
+  isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+  children: JSX.Element;
+};
+
+export type LoginProps = {
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+};
+
+export type SignupProps = {
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+};
+
+export type ProtectedProps = {
+  isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+  children: JSX.Element;
+};
 
 export type connectionConfig = {
   clientId: string;
@@ -11,18 +31,52 @@ export type connectionConfig = {
   };
 };
 
+export type storedClient = {
+  clientId: string;
+  brokers: string[];
+  ssl?: boolean;
+  sasl?: {
+    mechanism: string;
+    username: string;
+  };
+};
+
+export type DefaultProps = {
+  storedClients: storedClient[];
+};
+
+export type ClientProps = {
+  selectedClient: string;
+  connectedClient: string;
+  setConnectedClient: (clientId: string) => void;
+  storedClients: storedClient[];
+  isLoading: boolean;
+  isError: boolean;
+};
+
 export type ConnectProps = {
-  setConnectedCluster: (clientId: string) => void;
-  setSessionClusters: (clientId: string[]) => void;
-  sessionClusters: string[];
-  setIsConnected: (clientId: boolean) => void;
-  isConnected: boolean;
+  setSelectedClient: (clientId: string) => void;
+  storedClients: storedClient[];
+  setStoredClients: (storedClient: storedClient[]) => void;
 };
 
 export type DashboardProps = {
-  isConnected: boolean;
-  sessionClusters: string[];
-  setConnectedCluster: (clientId: string) => void;
+  connectedClient: string;
+  selectedClient: string;
+  setSelectedClient: (clientId: string) => void;
+  storedClients: storedClient[];
+  isLoading: boolean;
+};
+
+export type ConnectionContainerProps = {
+  selectedClient: string;
+  setSelectedClient: (clientId: string) => void;
+  connectedClient: string;
+  setConnectedClient: (clientId: string) => void;
+  storedClients: storedClient[];
+  setStoredClients: (storedClient: storedClient[]) => void;
+  isConnectionLoading: boolean;
+  isConnectionError: boolean;
 };
 
 export type OverviewProps = {

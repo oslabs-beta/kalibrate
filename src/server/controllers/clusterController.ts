@@ -88,7 +88,7 @@ clusterController.storeClientConnection = async (req, res, next) => {
       message: 'Missing cluster data for database storage',
     });
   }
-
+  console.log(brokers);
   // create cluster record and connect it to an existing user record via id
   // nest the query to create a cluster connection and a seed broker record
   try {
@@ -105,7 +105,7 @@ clusterController.storeClientConnection = async (req, res, next) => {
 
         await prisma.seedBroker.create({
           data: {
-            broker: brokers,
+            broker: brokers[0], // need to update logic for multiple brokers
             cluster: {
               connect: {id: cluster.id},
             },
