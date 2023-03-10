@@ -142,6 +142,7 @@ export interface ConsumerProps {
 }
 
 export type newPollType = {
+  cluster?: string;
   time?: number;
   groupStatus?: {};
   topicOffsets?: OffsetCollection;

@@ -98,8 +98,8 @@ app.get(
   adminController.getTopicData,
   adminController.getGroupData,
   (req, res) => {
-    const {clusterData, topicData, groupList, groupData} = res.locals;
-    const data = {clusterData, topicData, groupList, groupData};
+    const {clusterData, topicData, groupList, groupData, groupOffsets} = res.locals;
+    const data = {clusterData, topicData, groupList, groupData, groupOffsets};
 
     return res.status(200).json(data);
   }
@@ -107,7 +107,7 @@ app.get(
 
 app.get(
   '/api/messages/:clientId/:topic',
-  authController.verifySessionCookie,
+  // authController.verifySessionCookie,
   consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,
