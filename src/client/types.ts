@@ -99,6 +99,9 @@ export type TopicsProps = {
 
 export type TopicsDisplayProps = {
   topicData: topicData;
+  connectedCluster: string;
+  setConnectedClusterData: any;
+  connectedClusterData: any;
 };
 
 export interface ConsumerProps {
@@ -142,6 +145,7 @@ export interface ConsumerProps {
 }
 
 export type newPollType = {
+  cluster?: string;
   time?: number;
   groupStatus?: {};
   topicOffsets?: OffsetCollection;

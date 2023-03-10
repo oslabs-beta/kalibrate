@@ -179,6 +179,7 @@ authController.verifySessionCookie = (req, res, next) => {
     }
 
     res.locals.user = decoded;
+
     return next();
   });
 };
