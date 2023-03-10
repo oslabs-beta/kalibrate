@@ -1,6 +1,7 @@
 import {controller} from './../types';
 import {PrismaClient} from '@prisma/client';
 const AES = require('crypto-js/aes');
+import {Kafka} from 'kafkajs';
 
 const prisma = new PrismaClient();
 const ENCRYPT_KEY: string = process.env.ENCRYPT_KEY || 'key';
@@ -18,31 +19,62 @@ clusterController.getClientConnections = async (req, res, next) => {
     });
   }
 
-  // query database for all clusters matching specified userId
-  // returns an array of objects
-  // [{ id: 1, email: 'alice@prisma.io', name: 'Alice' }]
+  // query db for all clusters matching specified userId and brokers matching clusterId
   const clusters = await prisma.cluster.findMany({
     where: {userId: id},
   });
-  console.log('clusters', clusters);
+  console.log('clusters retrieved from database', clusters);
 
-  // decrypt password, initiate kafka server, send connection details to browser
+  // instantiate Kafka instance for all kafka clusters associated with a user
   if (clusters.length) {
-    const result = '';
-    clusters.forEach(cluster => {
-      const {clientId, saslMechanism, saslUsername, saslPassword} = cluster;
+    const userClusters: {[k: string]: any} = {};
 
-      // decrypt passwords
+    for (const cluster of clusters) {
+      const {id, clientId, saslMechanism, saslUsername, saslPassword} = cluster;
+
+      const brokers = await prisma.seedBroker.findMany({
+        where: {clusterId: id},
+        select: {broker: true},
+      });
+
+      const brokersMap = brokers.map(obj => obj.broker);
+
       const decryptedPassword = saslPassword ? AES.decrypt(saslPassword, ENCRYPT_KEY) : null;
 
-      // initialize kafka instance
-      // {clientId, brokers, ssl, sasl: {saslMechanism, saslUsername, saslPassword}}
-    });
-    // if there's no sasl, use seedBrokers to initiate Kafka
-    res.locals.clusters = result;
+      let kafka;
+      if (brokers.length) {
+        if (decryptedPassword && saslUsername && saslPassword) {
+          kafka = new Kafka({
+            clientId,
+            brokers: brokersMap,
+            ssl: true,
+            sasl: {
+              mechanism: 'plain',
+              username: saslUsername,
+              password: saslPassword,
+            },
+          });
+        } else {
+          kafka = new Kafka({
+            clientId,
+            brokers: brokersMap,
+          });
+        }
+
+        userClusters['clientId'] = kafka;
+      } else {
+        return next({
+          log: `ERROR in clusterController.getClientConnections: Cluster ${clientId} for the logged in user has no associated brokers`,
+          status: 404,
+          message: 'Missing brokers to connect to Kafka',
+        });
+      }
+    }
+
+    res.locals.client = userClusters;
   }
 
-  // return next();
+  return next();
 };
 
 clusterController.storeClientConnection = async (req, res, next) => {
@@ -57,11 +89,11 @@ clusterController.storeClientConnection = async (req, res, next) => {
     });
   }
 
-  // create Cluster record and connect it to an existing User record via id
+  // create cluster record and connect it to an existing user record via id
   // nest the query to create a cluster connection and a seed broker record
   try {
     if (!sasl) {
-      await prisma.$transaction(async (prisma) => {
+      await prisma.$transaction(async prisma => {
         const cluster = await prisma.cluster.create({
           data: {
             clientId,
@@ -70,7 +102,7 @@ clusterController.storeClientConnection = async (req, res, next) => {
             },
           },
         });
-        
+
         await prisma.seedBroker.create({
           data: {
             broker: brokers,
@@ -84,7 +116,7 @@ clusterController.storeClientConnection = async (req, res, next) => {
       const {mechanism, username, password} = sasl;
       const encryptedPassword = AES.encrypt(password, ENCRYPT_KEY);
 
-      await prisma.$transaction(async (prisma) => {
+      await prisma.$transaction(async prisma => {
         const cluster = await prisma.cluster.create({
           data: {
             clientId,
