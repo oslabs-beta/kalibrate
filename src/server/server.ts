@@ -132,7 +132,7 @@ app.delete(
 
 app.get(
   '/api/messages/:clientId/:topic',
-  // authController.verifySessionCookie,
+  authController.verifySessionCookie,
   consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,
@@ -141,7 +141,14 @@ app.get(
   }
 );
 
-
+app.patch(
+  '/api/settings/account',
+  authController.verifySessionCookie,
+  authController.updateUser,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
 
 // Catch all handler
 app.use('*', (req, res) => {

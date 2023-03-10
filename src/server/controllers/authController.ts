@@ -146,6 +146,119 @@ authController.verifyUser = async (req, res, next) => {
   }
 };
 
+authController.updateUser = async (req, res, next) => {
+  //take in obj {newName, oldPass, newPass}, if no change, will return ''
+
+  const {newEmail, oldPass, newPass} = req.body;
+  console.log('ATTEMPTING TO UPDATE USER w/', newEmail, oldPass, newPass);
+  //verify oldPass, need to make changes
+  const {email} = res.locals.user;
+  console.log('EMail stored in res.locals.usr', email);
+  //check that user has existing profile in db
+  try {
+    // check if user exists
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (user === null) {
+      return next({
+        log: 'ERROR - authController.updateUser: user model does not contain record with matching email',
+        status: 400,
+        message: {err: 'Invalid email or password'},
+      });
+    }
+    // check if found user has a password set/signed up with Kalibrate
+    if (user.password === null) {
+      return next({
+        log: 'ERROR - authController.updateUser: found user does not have a password set and cannot be authenticated with provider Kalibrate',
+        status: 400,
+        message: {err: 'Invalid email or password'},
+      });
+    }
+
+    // validate password
+    const isAuthenticated = bcrypt.compare(oldPass, user.password);
+    if (!isAuthenticated) {
+      return next({
+        log: 'ERROR - authController.verifyUser: found user model password does not match submitted password',
+        status: 400,
+        message: {err: 'Invalid email or password'},
+      });
+    }
+  } catch (err) {
+    return next({
+      log: `ERROR - authController.updateUser: failed to verify user: ${err}`,
+      status: 400,
+      message: {err: 'Invalid email or password'},
+    });
+  }
+
+  //PASS VERIFIED
+  //if updating email, might need to relog
+  if (newEmail) {
+    //check email structure
+    if (typeof newEmail !== 'string')
+      return {
+        log: 'ERROR - authController.updateUser: email request body contains invalid type',
+        status: 400,
+        message: {err: 'Invalid form submission'},
+      };
+    //update logic
+    const updatedEmail = await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        email: newEmail,
+      },
+    });
+    if (!updatedEmail) {
+      return next({
+        log: 'ERROR - authController.updateUser: failed to update user email',
+        status: 400,
+        message: {err: 'Invalid update request'},
+      });
+    } else {
+      console.log('USER EMAIL UPDATED');
+    }
+  }
+  //if updating password
+  if (newPass) {
+    //check if newPass meets requirements
+    const passwordRequirements = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (typeof newPass !== 'string' || !newPass.match(passwordRequirements)) {
+      return next({
+        log: 'ERROR - authController.updateUser: request body contains invalid type',
+        status: 400,
+        message: {err: 'Invalid form submission'},
+      });
+    }
+    //update logic with hashed pw
+    const hashedPassword = await bcrypt.hash(newPass, SALT_WORK_FACTOR);
+    const updatedPass = await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    if (!updatedPass) {
+      return next({
+        log: 'ERROR - authController.updateUser: failed to update user password',
+        status: 400,
+        message: {err: 'Invalid update request'},
+      });
+    } else {
+      console.log('USER PASSWORD UPDATED');
+    }
+  }
+  return next();
+};
+
 authController.setSessionCookie = (req, res, next) => {
   const {id, firstName, lastName, email, authProvider} = res.locals.user;
 

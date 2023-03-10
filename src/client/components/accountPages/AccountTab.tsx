@@ -36,7 +36,7 @@ type FormStateTypes = {
   [k: string]: string;
 };
 const defaultForm = {
-  name: '',
+  email: '',
   old: '',
   new: '',
   confirm: '',
@@ -52,18 +52,39 @@ const AccountTab = () => {
   const [formChanges, setFormChanges] = useState<FormStateTypes>({...defaultForm});
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>, pass: string): void => {
+    //check new Name
+    //check newpas and confirm pass are matching, will verity structure in back
     setFormChanges({...formChanges, [pass]: e.target.value});
   };
   //logic to cancel changes made (clears form)
   const handleFormCancel = () => {
     setFormChanges({...defaultForm});
   };
+
   //logic to save user changes
+  //will confirm here
+  //pass obj {newName, oldPass, newPass} to backend
   const handleFormSave = async () => {
+    //make sure old and new match
+    //check input structure
+    const updateInfo = {
+      oldPass: formChanges.old,
+      newEmail: formChanges.email,
+      newPass: formChanges.new,
+    };
     //start loading button
     await handleLoading();
     //ADD SAVE FUNCTIONALITY
     await setTimeout(() => setLoadingSave(false), 2000);
+    const response = await fetch('/api/settings/account', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateInfo),
+    });
+    // if (response) {
+    // }
     //if successfully saved.
     handleFormCancel();
   };
@@ -72,7 +93,6 @@ const AccountTab = () => {
   const handleLoading = () => {
     setLoadingSave(true);
   };
-
   //logic to create visible password forms
   const handleShowPassword = (pass: string) => {
     let oldVal = showPassword[pass];
@@ -89,6 +109,7 @@ const AccountTab = () => {
       return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
     });
   };
+  //password text field components
   const FormPassword = (pass: string) => {
     return (
       <FormControl sx={{m: 1, width: '25ch'}}>
@@ -121,8 +142,8 @@ const AccountTab = () => {
         <h6>Change Profile Name</h6>
         <TextField
           label="Update Name"
-          value={formChanges['name']}
-          onChange={e => handleFormChange(e, 'name')}
+          value={formChanges['email']}
+          onChange={e => handleFormChange(e, 'email')}
         />
       </Box>
       <Box className="settings">

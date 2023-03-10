@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Typography,
+  Tabs,
   Tab,
   TextField,
   InputAdornment,
@@ -23,18 +24,18 @@ const Account = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const [value, setValue] = useState<string>('');
-  const handleTab = (event: React.SyntheticEvent, newValue: string): void => {
+  const [value, setValue] = useState<number>(1);
+  const handleTab = (event: React.SyntheticEvent, newValue: number): void => {
     setValue(newValue);
   };
-  const handleChangeIndex = (index: string) => {
+  const handleChangeIndex = (index: number) => {
     setValue(index);
   };
   return (
     <Container
       maxWidth="md"
       sx={{
-        height: '100vh',
+        // height: '100vh'
         display: 'flex',
         paddingY: '100px',
         overflowy: 'scroll',
@@ -43,20 +44,20 @@ const Account = () => {
       }}
     >
       <Box sx={{width: '100%'}}>
-        <TabContext value={value}>
+        <TabContext value={value.toString()}>
           <AppBar position="static" color="inherit">
-            <TabList
+            <Tabs
               value={value}
               onChange={handleTab}
               variant="fullWidth"
               textColor="inherit"
               indicatorColor="secondary"
             >
-              <Tab disableRipple label="Account" value="1" />
-              <Tab disableRipple label="Notifications" value="2" />
-            </TabList>
+              <Tab disableRipple label="Account" value={1} />
+              <Tab disableRipple label="Notifications" value={2} />
+            </Tabs>
           </AppBar>
-          <Paper variant="outlined" elevation={3} sx={{height: '100%'}}>
+          <Paper variant="outlined" elevation={3} sx={{height: '100%', color: 'inherit'}}>
             <TabPanel value="1">
               <AccountTab />
             </TabPanel>
