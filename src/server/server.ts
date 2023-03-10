@@ -12,9 +12,6 @@ import kafkaController from './controllers/kafkaController';
 import consumerController from './controllers/consumerController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
-import clusterController from './controllers/clusterController';
-import topicController from './controllers/topicController';
-// import crudController from './controllers/crudController';
 
 // Create rate limiter for connection requests: max 5 per IP address within one minute
 const connectionLimiter = rateLimit({
@@ -49,14 +46,14 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
-  clusterController.getClientConnections,
+  // todo: query database for all stored connections, decrypt passwords/intialize kafka instances/pass down chain
   kafkaController.cacheClients,
   (req, res) => {
     return res.status(200).json(/* all cluster connection details to send*/);
   }
 );
 
-// create and save a new server connection for a given user
+// create and save a new sever connection for a given user
 app.post(
   '/api/connection',
   // rate-limit connection attempts
@@ -64,7 +61,7 @@ app.post(
   authController.verifySessionCookie,
   kafkaController.initiateKafka,
   kafkaController.cacheClient,
-  clusterController.storeClientConnection,
+  // todo: controller(s) to encrypt and store in db
   (req, res) => {
     let {clientId, brokers, ssl, sasl} = res.locals.client;
 
@@ -108,31 +105,9 @@ app.get(
   }
 );
 
-app.post(
-  '/api/:clientId/topic',
-  authController.verifySessionCookie,
-  kafkaController.getCachedClient,
-  topicController.createTopic,
-  adminController.getTopicData,
-  (req, res) => {
-    return res.status(200).json(res.locals.topicData);
-  }
-);
-
-app.delete(
-  '/api/:clientId/topic',
-  authController.verifySessionCookie,
-  kafkaController.getCachedClient,
-  topicController.deleteTopic,
-  adminController.getTopicData,
-  (req, res) => {
-    return res.status(200).json(res.locals.topicData);
-  }
-);
-
 app.get(
   '/api/messages/:clientId/:topic',
-  // authController.verifySessionCookie,
+
   consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,
@@ -140,8 +115,6 @@ app.get(
     return res.status(200).json(res.locals.topicMessages);
   }
 );
-
-
 
 // Catch all handler
 app.use('*', (req, res) => {

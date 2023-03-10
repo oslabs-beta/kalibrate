@@ -1,4 +1,5 @@
 import {MouseEvent} from 'react';
+import TopicThroughput from './components/monitorPages/TopicThroughput';
 
 export type connectionConfig = {
   clientId: string;
@@ -28,6 +29,11 @@ export type DashboardProps = {
 export type OverviewProps = {
   connectedCluster: string;
   data: connectedClusterData;
+};
+
+export type TopicThroughputProps = {
+  connectedCluster: string;
+  timeSeriesData: object[];
 };
 
 export type brokers = {
@@ -165,4 +171,16 @@ export type TopicPartitions = {
   partition: number;
   offset: string;
   metadata: any;
+};
+
+export type throughputData = {
+  [k: string]: number | null;
+};
+
+export type timeSeriesData = {
+  cluster: string;
+  time: number;
+  groupOffsets: {};
+  groupStatus: {};
+  topicOffsets: {};
 };
