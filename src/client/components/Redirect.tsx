@@ -1,9 +1,11 @@
-import {useEffect} from 'react';
-import {Navigate, useNavigate} from 'react-router';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router';
+import Loading from './Loading';
 import {RedirectProps} from '../types';
 
 const Redirect = ({isAuthenticated, setIsAuthenticated, children}: RedirectProps) => {
   const navigate = useNavigate();
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   useEffect(() => {
     // redirect to dashboard if authenticated
@@ -14,11 +16,13 @@ const Redirect = ({isAuthenticated, setIsAuthenticated, children}: RedirectProps
       if (response.ok) {
         setIsAuthenticated(true);
         navigate('/dashboard');
+      } else {
+        setIsChecked(true);
       }
     });
   });
 
-  return <>{children}</>;
+  return isChecked ? <>{children}</> : <Loading />;
 };
 
 export default Redirect;

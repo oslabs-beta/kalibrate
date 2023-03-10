@@ -8,8 +8,15 @@ const Breadcrumb = ({topicName, topicComp}: BreadcrumbProps) => {
   const history = createBrowserHistory();
 
   // get the path names, split to list in breadcrumbs
-  const homePath = '/' + history.location.pathname.split('/').filter(x => x)[0] + '/topics';
-
+  const homePath =
+    '/' +
+    history.location.pathname
+      .split('/')
+      .filter(x => x)
+      .slice(0, 2)
+      .join('/') +
+    '/topics';
+  console.log(history.location.pathname.split('/').filter(x => x));
   // removes the extra crumbs after going back to topics grid
   const subCrumb = history.location.pathname === homePath ? [] : [topicName, topicComp];
   return (
@@ -17,8 +24,8 @@ const Breadcrumb = ({topicName, topicComp}: BreadcrumbProps) => {
       <Typography sx={{cursor: 'pointer'}} onClick={() => navigate(homePath)}>
         Topics
       </Typography>
-      {subCrumb.map(path => (
-        <Typography>{path.toLowerCase()}</Typography>
+      {subCrumb.map((path, idx) => (
+        <Typography key={idx}>{path.toLowerCase()}</Typography>
       ))}
     </Breadcrumbs>
   );

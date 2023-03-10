@@ -21,6 +21,7 @@ const PartitionsDisplay = () => {
   const partitionRows = topicPartitions.map((partition: partitions, index: number) => {
     return {
       id: index,
+      key: index,
       partId: partition.partitionId,
       leader: partition.leader,
       isr: partition.isr,

@@ -115,7 +115,6 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
 
         <Grid>
           <TextField
-            id="outlined-basic"
             size="small"
             label="Client ID"
             variant="outlined"
@@ -126,9 +125,8 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
 
         <Grid>
           <TextField
-            id="outlined-basic"
             size="small"
-            label="Seed Broker"
+            label="URI"
             variant="outlined"
             value={brokers}
             onChange={event => setBrokers(event.target.value)}
@@ -148,7 +146,6 @@ const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectPr
           <>
             <Grid>
               <TextField
-                id="outlined-basic"
                 label="Username"
                 variant="outlined"
                 size="small"

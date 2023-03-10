@@ -59,7 +59,7 @@ function App() {
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
-
+  console.log('connected cluster data:', connectedClusterData);
   //resets session when user logs out
   const logout = (): void => {
     setIsAuthenticated(false);
@@ -72,6 +72,23 @@ function App() {
     console.log('YOURE LOGGED OUT', isAuthenticated); //SUCCESS LOGOUT BUT isConnected still true
   };
 
+  // when user authenticated, fetch stored clients
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch('/api/connection')
+        .then(response => {
+          if (!response.ok) throw new Error();
+
+          return response.json();
+        })
+        .then(storedClients => {
+          console.log('storedClients:', storedClients);
+          return setStoredClients(storedClients);
+        })
+        .catch(err => console.log('err:', err));
+    }
+  }, [isAuthenticated]);
+
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
     // polling for all clusters is slow - poll for only active cluster
@@ -80,12 +97,15 @@ function App() {
     // only runs if a cluster has been connected to the app
     if (connectedClient.length) {
       setIsConnectionLoading(true);
-      fetch(`api/data/${connectedClient}`, {
+      fetch(`/api/data/${connectedClient}`, {
         headers: {
           'Content-Type': 'application/json',
         },
       })
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error();
+          return res.json();
+        })
         .then(data => {
           setConnectedClusterData(data);
           setIsConnectionLoading(false);
@@ -95,6 +115,8 @@ function App() {
         })
         .catch(err => {
           setIsConnectionError(true);
+          setConnectedClient('');
+          setConnectedClusterData(defaultClusterData);
           setIsConnectionLoading(false);
         });
 
@@ -109,7 +131,7 @@ function App() {
   // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
   // possible todo: modularize poll into a different file
   const poll = () => {
-    fetch(`api/data/${connectedClient}`, {
+    fetch(`/api/data/${connectedClient}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
