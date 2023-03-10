@@ -149,7 +149,7 @@ authController.verifyUser = async (req, res, next) => {
 authController.setSessionCookie = (req, res, next) => {
   const {id, firstName, lastName, email, authProvider} = res.locals.user;
 
-  // set cookie with encryped payload of user info
+  // set cookie with encrypted payload of user info
   const sessionToken = jwt.sign({id, firstName, lastName, email, authProvider}, JWT_SECRET);
   res.cookie('kst', sessionToken, {httpOnly: true}); // KST short for Kalibrate Session Token
 

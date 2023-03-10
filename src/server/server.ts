@@ -12,6 +12,7 @@ import kafkaController from './controllers/kafkaController';
 import consumerController from './controllers/consumerController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
+import clusterController from './controllers/clusterController';
 import topicController from './controllers/topicController';
 // import crudController from './controllers/crudController';
 
@@ -48,14 +49,14 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
-  // todo: query database for all stored connections, decrypt passwords/intialize kafka instances/pass down chain
+  clusterController.getClientConnections,
   kafkaController.cacheClients,
   (req, res) => {
     return res.status(200).json(/* all cluster connection details to send*/);
   }
 );
 
-// create and save a new sever connection for a given user
+// create and save a new server connection for a given user
 app.post(
   '/api/connection',
   // rate-limit connection attempts
@@ -63,7 +64,7 @@ app.post(
   authController.verifySessionCookie,
   kafkaController.initiateKafka,
   kafkaController.cacheClient,
-  // todo: controller(s) to encrypt and store in db
+  clusterController.storeClientConnection,
   (req, res) => {
     let {clientId, brokers, ssl, sasl} = res.locals.client;
 
