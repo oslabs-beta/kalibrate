@@ -36,8 +36,7 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
-  // to do: query database for all stored connections, decrypt broker and password (if sasl)/initialize kafka instances/pass down chain
-  // clusterController.getClientConnections,
+  clusterController.getClientConnections,
   kafkaController.cacheClients,
   (req, res) => {
     return res.status(200).json(/* all cluster connection details to send*/);
