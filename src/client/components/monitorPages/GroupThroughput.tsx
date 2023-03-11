@@ -13,10 +13,7 @@ import {
   Legend,
 } from 'chart.js';
 import options from '../../util/line-graph-options';
-import palette from '../../util/palette';
-import initializeDatasets from '../../util/initializeDatasets';
-import makeDataSet from '../../util/makeDataSet';
-
+import palette from '../../util/initializeDatasets.tsx';
 // filter for connected cluster? maybe even when passing props?
 
 const TopicThroughput = props => {
@@ -37,37 +34,37 @@ const TopicThroughput = props => {
   const [xScope, setxScope] = useState<number>(10);
 
   // create labels array and one chartJS dataset object per topic
-  // const initializeDatasets = () => {
-  //   console.log('initializing');
-  //   const blankArray = new Array(xScope);
-  //   blankArray.fill('');
-  //   setXSeries(blankArray);
-  //   const newDataSets: chartJSdataset[] = [];
-  //   for (const el in timeSeriesData[0].topicOffsets) {
-  //     const newDataSet = makeTopicDataSet(el);
-  //     newDataSet.data.length = xScope;
-  //     newDataSet.data.fill(0);
-  //     newDataSets.push(newDataSet);
-  //   }
-  //   setTopicDatasets(newDataSets);
-  // };
+  const initializeDatasets = () => {
+    console.log('initializing');
+    const blankArray = new Array(xScope);
+    blankArray.fill('');
+    setXSeries(blankArray);
+    const newDataSets: chartJSdataset[] = [];
+    for (const el in timeSeriesData[0].topicOffsets) {
+      const newDataSet = makeTopicDataSet(el);
+      newDataSet.data.length = xScope;
+      newDataSet.data.fill(0);
+      newDataSets.push(newDataSet);
+    }
+    setTopicDatasets(newDataSets);
+  };
 
-  // let colorIndex: number = 0;
-  // const makeTopicDataSet = (topic: string) => {
-  //   console.log('making topic');
-  //   const colorString: string = palette[colorIndex];
-  //   colorIndex++;
-  //   if (colorIndex == palette.length) colorIndex = 0;
-  //   const newTopicObj: chartJSdataset = {
-  //     label: topic,
-  //     data: [],
-  //     // return once converted to rbga to add .5 a to background color
-  //     borderColor: colorString,
-  //     backgroundColor: colorString,
-  //     hidden: false,
-  //   };
-  //   return newTopicObj;
-  // };
+  let colorIndex: number = 0;
+  const makeTopicDataSet = (topic: string) => {
+    console.log('making topic');
+    const colorString: string = palette[colorIndex];
+    colorIndex++;
+    if (colorIndex == palette.length) colorIndex = 0;
+    const newTopicObj: chartJSdataset = {
+      label: topic,
+      data: [],
+      // return once converted to rbga to add .5 a to background color
+      borderColor: colorString,
+      backgroundColor: colorString,
+      hidden: false,
+    };
+    return newTopicObj;
+  };
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
@@ -85,7 +82,7 @@ const TopicThroughput = props => {
     // copy throughput data object to change before updating state
     const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDataSets));
     if (topicDataSets.length === 0) {
-      initializeDatasets(xScope, setXSeries, timeSeriesData, makeDataSet, setTopicDatasets);
+      initializeDatasets();
       return;
     }
     for (const el in current.topicOffsets) {

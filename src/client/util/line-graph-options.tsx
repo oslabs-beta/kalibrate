@@ -1,10 +1,13 @@
 const options: {} = {
   scales: {
-    yAxes: [
-      {
-        id: 'messages/sec',
+    y: {
+      display: true,
+      title: {
+        display: true,
+        text: 'Messages/sec',
       },
-    ],
+      min: 0,
+    },
   },
   transitions: {
     show: {

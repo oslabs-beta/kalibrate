@@ -300,7 +300,11 @@ function App() {
                   index
                   element={
                     <div className="overview">
-                      <Overview data={connectedClusterData} connectedCluster={connectedClient} timeSeriesData = {timeSeriesData} />
+                      <Overview
+                        data={connectedClusterData}
+                        connectedCluster={connectedClient}
+                        timeSeriesData={timeSeriesData}
+                      />
                     </div>
                   }
                 />
@@ -336,7 +340,7 @@ function App() {
                   element={
                     <TopicThroughput
                       timeSeriesData={timeSeriesData}
-                      connectedCluster={connectedCluster}
+                      connectedCluster={connectedClient}
                     />
                   }
                 />
