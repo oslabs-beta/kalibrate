@@ -247,8 +247,21 @@ export type chartJSdataset = {
   borderColor: string;
   backgroundColor: string;
   hidden: boolean;
-} | null;
+};
 
 export type topicReplicaStatusType = {
   [k: string]: {};
+};
+
+export type chartJSradarProps = {
+  labels: string[];
+  datasets: chartJSradarDataset[];
+  options?: {};
+};
+
+export type chartJSradarDataset = {
+  label?: string;
+  backgroundColor?: string;
+  borderColor?: string;
+  data: number[];
 };

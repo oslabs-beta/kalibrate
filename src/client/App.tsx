@@ -140,7 +140,6 @@ function App() {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('data: ', data);
         const newPoll: newPollType = {
           cluster: connectedClient,
         };
