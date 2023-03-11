@@ -169,6 +169,15 @@ app.patch(
     return res.sendStatus(200);
   }
 );
+//Logout
+app.get(
+  '/api/reset',
+  authController.verifySessionCookie,
+  authController.clearSessionCookie,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
 // Catch all handler
 app.use('*', (req, res) => {
   return res.status(404).send('Not Found');
