@@ -122,7 +122,7 @@ const Overview = (props: OverviewProps) => {
           }}
         >
           Topics Count: <br />
-          {data.topicData.topics.length}
+          {data.topicData.topics ? data.topicData.topics.length : 0}
         </Box>
         <Box
           sx={{
@@ -131,7 +131,7 @@ const Overview = (props: OverviewProps) => {
           }}
         >
           Offsets: <br />
-          {data.topicData.topics[0].offsets.length}
+          {data.topicData.topics ? data.topicData.topics[0].offsets.length : 0}
         </Box>
         <Box
           sx={{
@@ -149,7 +149,7 @@ const Overview = (props: OverviewProps) => {
           }}
         >
           Partitions: <br />
-          {data.topicData.topics[0].partitions.length}
+          {data.topicData.topics ? data.topicData.topics[0].partitions.length : 0}
         </Box>
       </Box>
     </Box>

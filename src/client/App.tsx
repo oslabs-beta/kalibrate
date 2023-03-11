@@ -13,6 +13,8 @@ import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
 import TopicThroughput from './components/monitorPages/TopicThroughput';
 import Throughput from './components/monitorPages/Graphs';
+import Throughput from './components/monitorPages/Throughput';
+import Offsets from './components/monitorPages/Offsets';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -38,7 +40,8 @@ function App() {
   const [selectedClient, setSelectedClient] = useState<string>('');
   const [connectedClient, setConnectedClient] = useState<string>('');
   const [isConnectionLoading, setIsConnectionLoading] = useState<boolean>(false); // for client connection
-  const [isConnectionError, setIsConnectionError] = useState<boolean>(false); // for client connection
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false); // for client deletion
+  const [isConnectionError, setIsConnectionError] = useState<string>(''); // for client connection
   const [theme, colorMode] = useMode();
   const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
   const [currentPollInterval, setCurrentPollInterval] = useState<number | undefined>(
@@ -54,6 +57,7 @@ function App() {
       topics: [],
     },
     groupData: [],
+    groupList: [],
   };
   const [connectedClusterData, setConnectedClusterData] = useState<connectedClusterData>({
     ...defaultClusterData,
@@ -62,6 +66,8 @@ function App() {
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
   // console.log('connected cluster data:', connectedClusterData);
+  console.log(connectedClusterData);
+
   //resets session when user logs out
   const logout = (): void => {
     setIsAuthenticated(false);
@@ -71,7 +77,6 @@ function App() {
     setConnectedClusterData({
       ...defaultClusterData,
     });
-    console.log('YOURE LOGGED OUT', isAuthenticated); //SUCCESS LOGOUT BUT isConnected still true
   };
 
   // when user authenticated, fetch stored clients
@@ -83,10 +88,7 @@ function App() {
 
           return response.json();
         })
-        .then(storedClients => {
-          console.log('storedClients:', storedClients);
-          return setStoredClients(storedClients);
-        })
+        .then(storedClients => setStoredClients(storedClients))
         .catch(err => console.log('err:', err));
     }
   }, [isAuthenticated]);
@@ -98,6 +100,7 @@ function App() {
     if (currentPollInterval) clearInterval(currentPollInterval);
     // only runs if a cluster has been connected to the app
     if (connectedClient.length) {
+      setIsConnectionError('');
       setIsConnectionLoading(true);
       fetch(`/api/data/${connectedClient}`, {
         headers: {
@@ -116,7 +119,7 @@ function App() {
           setCurrentPollInterval(interval);
         })
         .catch(err => {
-          setIsConnectionError(true);
+          setIsConnectionError('Failed to connected to client');
           setConnectedClient('');
           setConnectedClusterData(defaultClusterData);
           setIsConnectionLoading(false);
@@ -178,13 +181,18 @@ function App() {
           newPoll.topicReplicaStatus[el.name] = {replicas, isr};
         }
         console.log('replicas ', newPoll.topicReplicaStatus);
-
         // count of offsets by topic
+
         newPoll.topicOffsets = {};
-        for (const t of data.topicData.topics) {
-          newPoll.topicOffsets[t.name] = t.offsets.reduce((acc: number, curr: OffsetCollection) => {
-            return acc + Number(curr.offset);
-          }, 0);
+        if (data.topicData.topics.length) {
+          for (const t of data.topicData.topics) {
+            newPoll.topicOffsets[t.name] = t.offsets.reduce(
+              (acc: number, curr: OffsetCollection) => {
+                return acc + Number(curr.offset);
+              },
+              0
+            );
+          }
         }
 
         // count of offsets by group
@@ -227,7 +235,11 @@ function App() {
         <div>
           <BrowserRouter>
             <nav>
-              <Navbar isConnected={!!storedClients.length} logout={logout} />
+              <Navbar
+                isAuthenticated={isAuthenticated}
+                isConnected={!!storedClients.length}
+                logout={logout}
+              />
             </nav>
 
             <Routes>
@@ -298,6 +310,9 @@ function App() {
                       setStoredClients={setStoredClients}
                       isConnectionLoading={isConnectionLoading}
                       isConnectionError={isConnectionError}
+                      setIsConnectionError={setIsConnectionError}
+                      isDeleteLoading={isDeleteLoading}
+                      setIsDeleteLoading={setIsDeleteLoading}
                     />
                   }
                 />

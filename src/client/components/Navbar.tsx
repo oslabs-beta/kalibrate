@@ -26,7 +26,8 @@ import UserMenu from './accountPages/UserMenu';
 import {ColorModeContext, tokens} from '../theme';
 
 export interface Props {
-  isConnected: boolean;
+  isAuthenticated: boolean;
+  isConnected?: boolean;
   logout: () => void;
 }
 
@@ -36,7 +37,7 @@ const Navbar = (props: Props) => {
   const alerts = ['Alert 1', 'Alert 2'];
 
   const navigate = useNavigate();
-  const {isConnected, logout} = props;
+  const {isAuthenticated, isConnected, logout} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
   //manges light/dark mode
   const [checked, setChecked] = useState<boolean>(false);
@@ -102,7 +103,7 @@ const Navbar = (props: Props) => {
                   color: 'inherit',
                   display: 'block',
                   m: 0,
-                  visibility: isConnected ? 'visible' : 'hidden',
+                  visibility: isAuthenticated ? 'visible' : 'hidden',
                 }}
               >
                 {page}
@@ -115,13 +116,12 @@ const Navbar = (props: Props) => {
               {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </MenuItem>
-
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
             size="large"
             color="inherit"
             onClick={handleOpenAlertsMenu}
-            sx={{visibility: isConnected ? 'visible' : 'hidden'}}
+            sx={{visibility: isAuthenticated ? 'visible' : 'hidden'}}
           >
             <Badge badgeContent={2} color="error">
               <NotificationsIcon aria-label="notification" />
@@ -150,7 +150,7 @@ const Navbar = (props: Props) => {
             ))}
           </Menu>
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
-          <UserMenu isConnected={isConnected} logout={logout} />
+          <UserMenu isAuthenticated={isAuthenticated} logout={logout} />
         </Toolbar>
       </Container>
     </AppBar>

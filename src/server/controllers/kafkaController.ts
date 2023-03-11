@@ -6,7 +6,6 @@ const kafkaController: controller = {};
 
 kafkaController.initiateKafka = async (req, res, next) => {
   let {clientId, brokers, ssl, sasl} = req.body;
-  console.log('initiating kafka instance', clientId, brokers, ssl, sasl);
   let kafkaClient;
 
   // two supported connection types: with ssl & sasl, or without ssl & sasl
@@ -50,9 +49,12 @@ kafkaController.initiateKafka = async (req, res, next) => {
 };
 
 kafkaController.cacheClient = (req, res, next) => {
+  // skip if cache hit for kafka from previous middleware
+  if (res.locals.kafka) return next();
+
   const {id} = res.locals.user;
   const {clientId, kafkaClient} = res.locals.client;
-  console.log('caching client', clientId, kafkaClient);
+
   clientCache.set(id, clientId, kafkaClient); // cache in client cache
 
   return next();
@@ -61,7 +63,7 @@ kafkaController.cacheClient = (req, res, next) => {
 kafkaController.cacheClients = (req, res, next) => {
   const {id} = res.locals.user;
   const clients = res.locals.clients;
-  console.log('caching clients', clients);
+
   clientCache.setMany(id, clients); // cache several clients for a given user
 
   return next();
@@ -72,6 +74,7 @@ kafkaController.getCachedClient = (req, res, next) => {
   const {clientId} = req.params;
 
   if (res.locals.topicMessages) return next(); // move on if cache hit for messages
+  if (res.locals.kafka) return next(); // skip if cache hit for kafka from previous middleware
 
   const cachedClient = clientCache.getUnique(id, clientId);
   res.locals.kafka = cachedClient;
