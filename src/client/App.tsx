@@ -11,9 +11,9 @@ import Brokers from './components/managePages/Brokers';
 import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
-import TopicThroughput from './components/monitorPages/TopicThroughput';
-import Throughput from './components/monitorPages/Graphs';
-import Throughput from './components/monitorPages/Throughput';
+// import TopicThroughput from './components/monitorPages/TopicThroughput';
+// import Throughput from './components/monitorPages/Graphs';
+// import Throughput from './components/monitorPages/Throughput';
 import Offsets from './components/monitorPages/Offsets';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
@@ -31,7 +31,6 @@ import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline} from '@mui/material';
 import {GroupTopic, newPollType, storedClient} from './types';
-import GroupThroughput from './components/monitorPages/GroupThroughput';
 import Graphs from './components/monitorPages/Graphs';
 
 function App() {
@@ -368,7 +367,7 @@ function App() {
                   <Route path=":topic/partitions" element={<PartitionsDisplay />} />
                   <Route path=":topic/messages" element={<MessagesDisplay />} />
                 </Route>
-                <Route
+                {/* <Route
                   path="lag"
                   element={
                     <TopicThroughput
@@ -376,9 +375,9 @@ function App() {
                       connectedCluster={connectedClient}
                     />
                   }
-                />
+                /> */}
                 <Route
-                  path="throughput"
+                  path="graphs"
                   element={
                     <Graphs timeSeriesData={timeSeriesData} connectedCluster={connectedClient} />
                   }

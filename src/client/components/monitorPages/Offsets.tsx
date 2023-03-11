@@ -121,12 +121,10 @@ const Offsets = props => {
     },
   };
 
-  return (
-    <div>
-      <Bar options={groupOptions} data={groupData} />
-      <Bar options={topicOptions} data={topicData} />
-    </div>
-  );
+  return [
+    <Bar options={groupOptions} data={groupData} />,
+    <Bar options={topicOptions} data={topicData} />,
+  ];
 };
 
 export default Offsets;
