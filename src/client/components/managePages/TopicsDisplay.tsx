@@ -165,6 +165,7 @@ const TopicsDisplay = ({
   const topicRows = topics.map((topic, index) => {
     return {
       id: index,
+      key: index,
       topicName: topic.name,
       offsets: topic.offsets.length,
       numPartitions: topic.partitions.length,
