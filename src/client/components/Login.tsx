@@ -87,7 +87,6 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
         </Typography>
 
         <TextField
-          id="outlined-basic"
           size="small"
           label="Email"
           variant="outlined"
@@ -97,7 +96,6 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
         />
 
         <TextField
-          id="outlined-basic"
           size="small"
           label="Password"
           variant="outlined"

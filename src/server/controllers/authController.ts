@@ -64,6 +64,7 @@ authController.createUser = async (req, res, next) => {
     });
 
     res.locals.user = {
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
@@ -164,10 +165,8 @@ authController.verifySessionCookie = (req, res, next) => {
       message: {err: 'User is not authenticated.'},
     });
   }
-
   // decrypt session token from session cookie
   const {kst} = req.cookies; // KST short for Kalibrate Session Token
-
   jwt.verify(kst, JWT_SECRET, (err: any, decoded: any) => {
     if (err) {
       return next({
@@ -176,9 +175,8 @@ authController.verifySessionCookie = (req, res, next) => {
         message: {err: 'User is not authenticated.'},
       });
     }
-
     res.locals.user = decoded;
-
+    console.log('cookie user credentials', res.locals.user);
     return next();
   });
 };

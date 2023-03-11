@@ -118,7 +118,7 @@ adminController.getGroupData = async (req, res, next) => {
 
     // if there are no groups present, return nothing
     if (res.locals.groupList.length === 0) {
-      res.locals.groups = [];
+      res.locals.groupData = [];
 
       return next();
     } else {

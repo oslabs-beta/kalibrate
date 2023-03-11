@@ -11,7 +11,7 @@ import Brokers from './components/managePages/Brokers';
 import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
-import Lag from './components/monitorPages/Lag';
+import TopicThroughput from './components/monitorPages/TopicThroughput';
 import Throughput from './components/monitorPages/Throughput';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
@@ -59,7 +59,7 @@ function App() {
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
-
+  console.log('connected cluster data:', connectedClusterData);
   //resets session when user logs out
   const logout = (): void => {
     setIsAuthenticated(false);
@@ -72,6 +72,23 @@ function App() {
     console.log('YOURE LOGGED OUT', isAuthenticated); //SUCCESS LOGOUT BUT isConnected still true
   };
 
+  // when user authenticated, fetch stored clients
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch('/api/connection')
+        .then(response => {
+          if (!response.ok) throw new Error();
+
+          return response.json();
+        })
+        .then(storedClients => {
+          console.log('storedClients:', storedClients);
+          return setStoredClients(storedClients);
+        })
+        .catch(err => console.log('err:', err));
+    }
+  }, [isAuthenticated]);
+
   // when connectedCluster changes, query kafka for cluster info and update state
   useEffect(() => {
     // polling for all clusters is slow - poll for only active cluster
@@ -80,12 +97,15 @@ function App() {
     // only runs if a cluster has been connected to the app
     if (connectedClient.length) {
       setIsConnectionLoading(true);
-      fetch(`api/data/${connectedClient}`, {
+      fetch(`/api/data/${connectedClient}`, {
         headers: {
           'Content-Type': 'application/json',
         },
       })
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error();
+          return res.json();
+        })
         .then(data => {
           setConnectedClusterData(data);
           setIsConnectionLoading(false);
@@ -95,6 +115,8 @@ function App() {
         })
         .catch(err => {
           setIsConnectionError(true);
+          setConnectedClient('');
+          setConnectedClusterData(defaultClusterData);
           setIsConnectionLoading(false);
         });
 
@@ -109,7 +131,7 @@ function App() {
   // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
   // possible todo: modularize poll into a different file
   const poll = () => {
-    fetch(`api/data/${connectedClient}`, {
+    fetch(`/api/data/${connectedClient}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -173,8 +195,9 @@ function App() {
 
   const addTimeSeries = (newPoll: newPollType) => {
     const newTimeSeriesData = timeSeriesData;
+    if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
     newTimeSeriesData.push(newPoll);
-    console.log('graphable data: ', timeSeriesData);
+    console.log('graphable data: ', newPoll);
     setTimeSeriesData(newTimeSeriesData);
   };
 
@@ -281,7 +304,7 @@ function App() {
                   index
                   element={
                     <div className="overview">
-                      <Overview data={connectedClusterData} connectedCluster={connectedClient} />
+                      <Overview data={connectedClusterData} connectedCluster={connectedClient} timeSeriesData = {timeSeriesData} />
                     </div>
                   }
                 />
@@ -312,9 +335,17 @@ function App() {
                   <Route path=":topic/partitions" element={<PartitionsDisplay />} />
                   <Route path=":topic/messages" element={<MessagesDisplay />} />
                 </Route>
-
-                <Route path="lag" element={<Lag />} />
+                <Route
+                  path="lag"
+                  element={
+                    <TopicThroughput
+                      timeSeriesData={timeSeriesData}
+                      connectedCluster={connectedCluster}
+                    />
+                  }
+                />
                 <Route path="throughput" element={<Throughput />} />
+
                 <Route path="consume" element={<Consume />} />
                 <Route path="produce" element={<Produce />} />
               </Route>

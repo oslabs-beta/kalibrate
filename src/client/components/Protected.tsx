@@ -1,5 +1,6 @@
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
+import Loading from './Loading';
 import {ProtectedProps} from '../types';
 
 const Protected = ({isAuthenticated, setIsAuthenticated, children}: ProtectedProps) => {
@@ -16,7 +17,7 @@ const Protected = ({isAuthenticated, setIsAuthenticated, children}: ProtectedPro
     }
   }, []);
 
-  return <>{children}</>;
+  return isAuthenticated ? <>{children}</> : <Loading />;
 };
 
 export default Protected;

@@ -168,7 +168,6 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
         </Typography>
 
         <TextField
-          id="outlined-basic"
           size="small"
           label="First name"
           variant="outlined"
@@ -178,7 +177,6 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
         />
 
         <TextField
-          id="outlined-basic"
           size="small"
           label="Last name"
           variant="outlined"
@@ -188,7 +186,6 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
         />
 
         <TextField
-          id="outlined-basic"
           size="small"
           label="Email"
           variant="outlined"
@@ -198,7 +195,6 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
         />
 
         <TextField
-          id="outlined-basic"
           size="small"
           label="Password"
           variant="outlined"
@@ -209,7 +205,6 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
         />
 
         <TextField
-          id="outlined-basic"
           size="small"
           label="Confirm password"
           variant="outlined"
