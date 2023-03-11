@@ -14,7 +14,6 @@ import adminController from './controllers/adminController';
 import authController from './controllers/authController';
 import clusterController from './controllers/clusterController';
 import topicController from './controllers/topicController';
-// import crudController from './controllers/crudController';
 
 // Create rate limiter for connection requests: max 5 per IP address within one minute
 const connectionLimiter = rateLimit({
@@ -65,7 +64,7 @@ app.get(
   }
 );
 
-// create and save a new server connection for a given user
+// create and save a new sever connection for a given user
 app.post(
   '/api/connection',
   // rate-limit connection attempts

@@ -11,7 +11,7 @@ import Brokers from './components/managePages/Brokers';
 import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
-import Lag from './components/monitorPages/Lag';
+import TopicThroughput from './components/monitorPages/TopicThroughput';
 import Throughput from './components/monitorPages/Throughput';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
@@ -200,8 +200,9 @@ function App() {
 
   const addTimeSeries = (newPoll: newPollType) => {
     const newTimeSeriesData = timeSeriesData;
+    if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
     newTimeSeriesData.push(newPoll);
-    console.log('graphable data: ', timeSeriesData);
+    console.log('graphable data: ', newPoll);
     setTimeSeriesData(newTimeSeriesData);
   };
 
@@ -307,7 +308,7 @@ function App() {
                   index
                   element={
                     <div className="overview">
-                      <Overview data={connectedClusterData} connectedCluster={connectedClient} />
+                      <Overview data={connectedClusterData} connectedCluster={connectedClient} timeSeriesData = {timeSeriesData} />
                     </div>
                   }
                 />
@@ -338,9 +339,17 @@ function App() {
                   <Route path=":topic/partitions" element={<PartitionsDisplay />} />
                   <Route path=":topic/messages" element={<MessagesDisplay />} />
                 </Route>
-
-                <Route path="lag" element={<Lag />} />
+                <Route
+                  path="lag"
+                  element={
+                    <TopicThroughput
+                      timeSeriesData={timeSeriesData}
+                      connectedCluster={connectedCluster}
+                    />
+                  }
+                />
                 <Route path="throughput" element={<Throughput />} />
+
                 <Route path="consume" element={<Consume />} />
                 <Route path="produce" element={<Produce />} />
               </Route>

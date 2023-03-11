@@ -179,6 +179,7 @@ clusterController.getClientConnection = async (req, res, next) => {
 };
 
 clusterController.storeClientConnection = async (req, res, next) => {
+  console.log(res.locals);
   const {id} = res.locals.user;
   const {clientId, brokers, sasl} = res.locals.client;
 
