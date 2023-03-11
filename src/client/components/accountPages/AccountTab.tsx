@@ -6,7 +6,6 @@ import {
   IconButton,
   FormControl,
   InputLabel,
-  useTheme,
   TextField,
   InputAdornment,
   OutlinedInput,
@@ -18,7 +17,7 @@ import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 // import Schnax from './Snackbar';
-
+import {PasswordStateTypes} from '../../types';
 /* Enter Functionality to ...
 -- Enter/Change Profile Name
 -- Change password:  enter old and confirm new twice
@@ -28,49 +27,72 @@ import SaveIcon from '@mui/icons-material/Save';
 -- Delete Account  
 -- Add avatar
 .*/
-type PasswordStateTypes = {
-  [k: string]: boolean;
-};
 
 type FormStateTypes = {
   [k: string]: string;
 };
 const defaultForm = {
-  name: '',
-  old: '',
-  new: '',
-  confirm: '',
+  newEmail: '',
+  oldPass: '',
+  newPass: '',
+  confirmPass: '',
 };
 
 const AccountTab = () => {
   const [loadingSave, setLoadingSave] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<PasswordStateTypes>({
     old: false,
-    new: false,
     confirm: false,
   });
   const [formChanges, setFormChanges] = useState<FormStateTypes>({...defaultForm});
+  const [inputOldPass, setInputOldPass] = useState<boolean>(false);
+  const [inputMatching, setInputMatching] = useState<boolean>(false);
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>, pass: string): void => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    pass: string
+  ) => {
     setFormChanges({...formChanges, [pass]: e.target.value});
+    console.log(formChanges);
   };
-  //logic to cancel changes made (clears form)
-  const handleFormCancel = () => {
+  const handleFormClear = () => {
     setFormChanges({...defaultForm});
-  };
-  //logic to save user changes
-  const handleFormSave = async () => {
-    //start loading button
-    await handleLoading();
-    //ADD SAVE FUNCTIONALITY
-    await setTimeout(() => setLoadingSave(false), 2000);
-    //if successfully saved.
-    handleFormCancel();
+    setInputMatching(false);
+    setInputOldPass(false);
   };
 
-  //logic to display loading Save button
-  const handleLoading = () => {
+  //WHERE TO CHECK EMAIL INPUT AND VALID PASSWORD
+  const handleFormSave = async () => {
+    const {newEmail, oldPass, newPass, confirmPass} = formChanges;
+    if (!oldPass) {
+      setInputOldPass(true);
+      return;
+    }
+    if (newPass !== confirmPass) {
+      setInputMatching(true);
+      return;
+    }
+    const updateInfo = {
+      newEmail,
+      oldPass,
+      newPass,
+    };
+    //start loading button
     setLoadingSave(true);
+    const response = await fetch('/api/settings/account', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateInfo),
+    });
+    setLoadingSave(false);
+    if (!response.ok) {
+      console.log('couldnt update ');
+    } else {
+      console.log('update ok');
+      handleFormClear();
+    }
   };
 
   //logic to create visible password forms
@@ -89,27 +111,31 @@ const AccountTab = () => {
       return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
     });
   };
+  //password text field components
   const FormPassword = (pass: string) => {
+    const passKey =
+      pass === 'old' || pass === 'new' || pass === 'confirm' ? pass + 'Pass' : 'newEmail';
+    const show = pass === 'new' || pass === 'confirm' ? 'confirm' : pass;
     return (
       <FormControl sx={{m: 1, width: '25ch'}}>
         <InputLabel>{titleCase(pass)} Password</InputLabel>
         <OutlinedInput
-          type={showPassword[pass] ? 'text' : 'password'}
+          type={showPassword[show] ? 'text' : 'password'}
+          label="Old Password"
+          value={formChanges[passKey]}
+          onChange={e => handleFormChange(e, passKey)}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibilty"
-                onClick={e => handleShowPassword(pass)}
+                onClick={e => handleShowPassword(show)}
                 onMouseDown={e => handleMouseDownPassword(e)}
                 edge="end"
               >
-                {showPassword[pass] ? <VisibilityOff /> : <Visibility />}
+                {showPassword[show] ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           }
-          label="Old Password"
-          value={formChanges[pass]}
-          onChange={e => handleFormChange(e, pass)}
         ></OutlinedInput>
       </FormControl>
     );
@@ -118,21 +144,26 @@ const AccountTab = () => {
   return (
     <Container>
       <Box>
-        <h6>Change Profile Name</h6>
+        <h6>Enter Password to make changes</h6>
+        {FormPassword('old')}
+        {inputOldPass ? <div>MUST ENTER PASSWORD</div> : <div></div>}
+      </Box>
+      <Box>
+        <h6>Change Account Email</h6>
         <TextField
-          label="Update Name"
-          value={formChanges['name']}
-          onChange={e => handleFormChange(e, 'name')}
+          label="Update Email"
+          value={formChanges['newEmail']}
+          onChange={e => handleFormChange(e, 'newEmail')}
         />
       </Box>
       <Box className="settings">
         <h6>Change Password</h6>
-        {FormPassword('old')}
         {FormPassword('new')}
         {FormPassword('confirm')}
+        {inputMatching ? <div>MUST BE MATCHING</div> : <div></div>}
       </Box>
       <Box>
-        <Button variant="outlined" size="small" onClick={handleFormCancel}>
+        <Button variant="outlined" size="small" onClick={handleFormClear}>
           Cancel
         </Button>
         <LoadingButton

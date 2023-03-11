@@ -9,7 +9,13 @@ import {
   TextField,
   Alert,
   CircularProgress,
+  InputLabel,
+  IconButton,
+  FormControl,
+  InputAdornment,
+  OutlinedInput,
 } from '@mui/material';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 import {SignupProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
@@ -27,7 +33,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   // verify names have been entered
   const isValidName = (firstName: string, lastName: string) => {
     return firstName.length > 0 && lastName.length > 0;
@@ -193,18 +199,49 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           onChange={event => setEmail(event.target.value)}
           sx={{marginBottom: '10px', width: '100%'}}
         />
-
-        <TextField
-          size="small"
-          label="Password"
-          variant="outlined"
-          type="password"
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%'}}
-        />
-
-        <TextField
+        <FormControl sx={{width: '100%'}}>
+          <InputLabel sx={{top: '-7px', width: '100%'}}>Password</InputLabel>
+          <OutlinedInput
+            size="small"
+            type={showPassword ? 'text' : 'password'}
+            label="Password"
+            value={password}
+            onChange={event => setPassword(event.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibilty"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          ></OutlinedInput>
+        </FormControl>
+        <FormControl sx={{m: 1, width: '100%'}}>
+          <InputLabel sx={{top: '-7px', width: '100%'}}>Confirm Password</InputLabel>
+          <OutlinedInput
+            size="small"
+            type={showPassword ? 'text' : 'password'}
+            label="Password"
+            value={confirmedPassword}
+            onChange={event => setConfirmedPassword(event.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibilty"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          ></OutlinedInput>
+        </FormControl>
+        {/* <TextField
           size="small"
           label="Confirm password"
           variant="outlined"
@@ -212,7 +249,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           value={confirmedPassword}
           onChange={event => setConfirmedPassword(event.target.value)}
           sx={{marginBottom: '10px', width: '100%'}}
-        />
+        /> */}
 
         {isLoading ? (
           <CircularProgress sx={{marginTop: '15px'}} />

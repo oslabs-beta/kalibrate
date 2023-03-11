@@ -48,11 +48,16 @@ export type DefaultProps = {
 
 export type ClientProps = {
   selectedClient: string;
+  setSelectedClient: (clientId: string) => void;
   connectedClient: string;
   setConnectedClient: (clientId: string) => void;
   storedClients: storedClient[];
-  isLoading: boolean;
-  isError: boolean;
+  setStoredClients: (storedClient: storedClient[]) => void;
+  isConnectionLoading: boolean;
+  isError: string;
+  setIsError: (clientId: string) => void;
+  isDeleteLoading: boolean;
+  setIsDeleteLoading: (clientId: boolean) => void;
 };
 
 export type ConnectProps = {
@@ -77,7 +82,10 @@ export type ConnectionContainerProps = {
   storedClients: storedClient[];
   setStoredClients: (storedClient: storedClient[]) => void;
   isConnectionLoading: boolean;
-  isConnectionError: boolean;
+  isConnectionError: string;
+  setIsConnectionError: (clientId: string) => void;
+  isDeleteLoading: boolean;
+  setIsDeleteLoading: (clientId: boolean) => void;
 };
 
 export type OverviewProps = {
@@ -246,4 +254,8 @@ export type chartJSdataset = {
   borderColor: string;
   backgroundColor: string;
   hidden: boolean;
+};
+
+export type PasswordStateTypes = {
+  [k: string]: boolean;
 };

@@ -12,17 +12,25 @@ const ConnectionContainer = (props: ConnectionContainerProps) => {
     setStoredClients,
     isConnectionLoading,
     isConnectionError,
+    setIsConnectionError,
+    isDeleteLoading,
+    setIsDeleteLoading,
   } = props;
 
   // if a client is selected, render client view; otherwise render connect view
   return selectedClient ? (
     <Client
       selectedClient={selectedClient}
+      setSelectedClient={setSelectedClient}
       setConnectedClient={setConnectedClient}
       connectedClient={connectedClient}
       storedClients={storedClients}
-      isLoading={isConnectionLoading}
+      setStoredClients={setStoredClients}
+      isConnectionLoading={isConnectionLoading}
       isError={isConnectionError}
+      setIsError={setIsConnectionError}
+      isDeleteLoading={isDeleteLoading}
+      setIsDeleteLoading={setIsDeleteLoading}
     />
   ) : (
     <Connect
