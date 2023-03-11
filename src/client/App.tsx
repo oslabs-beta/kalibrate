@@ -13,6 +13,7 @@ import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
 import TopicThroughput from './components/monitorPages/TopicThroughput';
 import Throughput from './components/monitorPages/Throughput';
+import Offsets from './components/monitorPages/Offsets';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -300,7 +301,11 @@ function App() {
                   index
                   element={
                     <div className="overview">
-                      <Overview data={connectedClusterData} connectedCluster={connectedClient} timeSeriesData = {timeSeriesData} />
+                      <Overview
+                        data={connectedClusterData}
+                        connectedCluster={connectedClient}
+                        timeSeriesData={timeSeriesData}
+                      />
                     </div>
                   }
                 />
@@ -336,12 +341,12 @@ function App() {
                   element={
                     <TopicThroughput
                       timeSeriesData={timeSeriesData}
-                      connectedCluster={connectedCluster}
+                      connectedCluster={connectedClient}
                     />
                   }
                 />
                 <Route path="throughput" element={<Throughput />} />
-
+                <Route path="offsets" element={<Offsets timeSeriesData={timeSeriesData} />} />
                 <Route path="consume" element={<Consume />} />
                 <Route path="produce" element={<Produce />} />
               </Route>
