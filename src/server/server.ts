@@ -43,13 +43,19 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
   return res.status(201).json(user);
 });
 
+app.get('/api/session', authController.verifySessionCookie, (req, res) => {
+  return res.sendStatus(200);
+});
+
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
   // todo: query database for all stored connections, decrypt passwords/intialize kafka instances/pass down chain
   kafkaController.cacheClients,
   (req, res) => {
-    return res.status(200).json(/* all cluster connection details to send*/);
+    const clients = res.locals.clientCredentials;
+    console.log('response', clients);
+    return res.status(200).json(clients);
   }
 );
 
@@ -94,6 +100,7 @@ app.get(
   '/api/data/:clientId',
   authController.verifySessionCookie,
   kafkaController.getCachedClient,
+  // get from db if not in cache
   adminController.getClusterData,
   adminController.getTopicData,
   adminController.getGroupData,
@@ -107,7 +114,7 @@ app.get(
 
 app.get(
   '/api/messages/:clientId/:topic',
-
+  authController.verifySessionCookie,
   consumerController.checkConsumerCache,
   kafkaController.getCachedClient,
   consumerController.getMessages,

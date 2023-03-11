@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 import React from 'react';
-import {throughputData, chartJSdataset} from '../../types';
+import {chartJSdataset} from '../../types';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,6 +21,7 @@ const TopicThroughput = props => {
   const {timeSeriesData, connectedCluster} = props;
   console.log(connectedCluster);
 
+  // todo:
   // initialize on load
   // include in initializaton render of unrendered data
   // catch early-load issue

@@ -51,7 +51,7 @@ const Manage = props => {
           <List className="no-padding-list">
             <ListItem key="Overview" disablePadding>
               <ListItemButton
-                onClick={() => navigate('/' + connectedCluster)}
+                onClick={() => navigate('/client/' + connectedCluster)}
                 sx={{
                   borderRadius: '5px',
                   border: '1px outset' + colors.secondary[300],

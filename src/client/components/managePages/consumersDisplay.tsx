@@ -5,7 +5,7 @@ import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 import {ConsumerDisplayProps} from '../../types';
 
 const ConsumersDisplay = (props: ConsumerDisplayProps) => {
-  const {groupData} = props;
+  let {groupData} = props;
   const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
 
@@ -35,7 +35,8 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
     },
   ];
 
-  // Create table rows
+  // Create table rows, setting group data to an array if it's undefined
+  if (!groupData) groupData = [];
   const consumerRows = groupData.map((group, index) => {
     return {
       id: index,
