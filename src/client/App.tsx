@@ -165,7 +165,7 @@ function App() {
 
         // count of offsets by topic
         newPoll.topicOffsets = {};
-        if (data.topicData.length) {
+        if (data.topicData.topics.length) {
           for (const t of data.topicData.topics) {
             newPoll.topicOffsets[t.name] = t.offsets.reduce(
               (acc: number, curr: OffsetCollection) => {
