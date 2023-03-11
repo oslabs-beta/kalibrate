@@ -28,46 +28,12 @@ const TopicThroughput = props => {
   // include in initializaton render of unrendered data
   // catch early-load issue
   // modify xscope?
-  // MAKE GROUPS ONE
   // situation in site
   // ISR?
 
   const [topicDataSets, setTopicDatasets] = useState<chartJSdataset[]>([]);
   const [xSeries, setXSeries] = useState<string[]>([]);
   const [xScope, setxScope] = useState<number>(10);
-
-  // create labels array and one chartJS dataset object per topic
-  // const initializeDatasets = () => {
-  //   console.log('initializing');
-  //   const blankArray = new Array(xScope);
-  //   blankArray.fill('');
-  //   setXSeries(blankArray);
-  //   const newDataSets: chartJSdataset[] = [];
-  //   for (const el in timeSeriesData[0].topicOffsets) {
-  //     const newDataSet = makeTopicDataSet(el);
-  //     newDataSet.data.length = xScope;
-  //     newDataSet.data.fill(0);
-  //     newDataSets.push(newDataSet);
-  //   }
-  //   setTopicDatasets(newDataSets);
-  // };
-
-  // let colorIndex: number = 0;
-  // const makeTopicDataSet = (topic: string) => {
-  //   console.log('making topic');
-  //   const colorString: string = palette[colorIndex];
-  //   colorIndex++;
-  //   if (colorIndex == palette.length) colorIndex = 0;
-  //   const newTopicObj: chartJSdataset = {
-  //     label: topic,
-  //     data: [],
-  //     // return once converted to rbga to add .5 a to background color
-  //     borderColor: colorString,
-  //     backgroundColor: colorString,
-  //     hidden: false,
-  //   };
-  //   return newTopicObj;
-  // };
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
@@ -129,6 +95,7 @@ const TopicThroughput = props => {
     options,
   };
 
+  data.options.plugins.title.text = 'Throughput by Topic';
   data.options.scales.y.title.text = 'Messages/sec';
 
   return <Line options={options} data={data} />;

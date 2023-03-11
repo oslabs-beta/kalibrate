@@ -26,24 +26,7 @@ const GroupThroughput = props => {
   const [xSeries, setXSeries] = useState<string[]>([]);
   const [xScope, setxScope] = useState<number>(10);
 
-  // let colorIndex: number = 0;
-  // const makeTopicDataSet = (topic: string) => {
-  //   console.log('making topic');
-  //   const colorString: string = palette[colorIndex];
-  //   colorIndex++;
-  //   if (colorIndex == palette.length) colorIndex = 0;
-  //   const newTopicObj: chartJSdataset = {
-  //     label: topic,
-  //     data: [],
-  //     // return once converted to rbga to add .5 a to background color
-  //     borderColor: colorString,
-  //     backgroundColor: colorString,
-  //     hidden: false,
-  //   };
-  //   return newTopicObj;
-  // };
-
-  // when new data is received, new data to topic arrays in throughput data object
+  // when new data is received, new data to group arrays in throughput data object
   useEffect(() => {
     console.log('gds: ', groupDataSets);
     // need at least two data point to calculate rate of messages
@@ -80,13 +63,6 @@ const GroupThroughput = props => {
         if (el === set.label) set.data.push(msgPerSec);
         if (set.data.length > xScope) set.data.shift();
       }
-      // if (newData.hasOwnProperty(el)) {
-      //   newData[el].push(current.topicOffsets[el] - previous.topicOffsets[el]);
-      //   // adjust data to fit desired amount of most recent data pts on graph
-      //   if (newData[el].length > xScope) newData[el].shift();
-      // } else {
-      //   newData[el] = [];
-      // }
     }
     console.log('setting gds');
     setGroupDatasets(newData);
@@ -104,6 +80,7 @@ const GroupThroughput = props => {
     options,
   };
 
+  data.options.plugins.title.text = 'Throughput by Consumer Group';
   data.options.scales.y.title.text = 'Messages/sec';
 
   return <Line options={options} data={data} />;

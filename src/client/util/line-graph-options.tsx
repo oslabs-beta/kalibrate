@@ -4,9 +4,19 @@ const options: {} = {
       display: true,
       title: {
         display: true,
-        text: 'Messages/sec',
+        text: '',
       },
       min: 0,
+    },
+  },
+  plugins: {
+    title: {
+      display: true,
+      text: '',
+      align: 'center',
+      font: {
+        size: 24,
+      },
     },
   },
   transitions: {
