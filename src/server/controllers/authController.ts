@@ -282,7 +282,7 @@ authController.verifySessionCookie = (req, res, next) => {
       });
     }
     res.locals.user = decoded;
-    console.log('cookie user credentials', res.locals.user);
+
     return next();
   });
 };
