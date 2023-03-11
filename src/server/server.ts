@@ -12,6 +12,8 @@ import kafkaController from './controllers/kafkaController';
 import consumerController from './controllers/consumerController';
 import adminController from './controllers/adminController';
 import authController from './controllers/authController';
+import clusterController from './controllers/clusterController';
+import topicController from './controllers/topicController';
 
 // Create rate limiter for connection requests: max 5 per IP address within one minute
 const connectionLimiter = rateLimit({
@@ -24,8 +26,11 @@ const connectionLimiter = rateLimit({
 
 // Create caches
 const clientCache = new ClientCache();
+clientCache.clear(1800000); // clear inactive clients from cache every 30 min
+
 const consumerCache = new ConsumerCache();
 
+// Instantiate server
 const app = express();
 
 // Parse requests
@@ -50,11 +55,11 @@ app.get('/api/session', authController.verifySessionCookie, (req, res) => {
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
-  // todo: query database for all stored connections, decrypt passwords/intialize kafka instances/pass down chain
+  clusterController.getClientConnections,
   kafkaController.cacheClients,
   (req, res) => {
     const clients = res.locals.clientCredentials;
-    console.log('response', clients);
+
     return res.status(200).json(clients);
   }
 );
@@ -67,7 +72,7 @@ app.post(
   authController.verifySessionCookie,
   kafkaController.initiateKafka,
   kafkaController.cacheClient,
-  // todo: controller(s) to encrypt and store in db
+  clusterController.storeClientConnection,
   (req, res) => {
     let {clientId, brokers, ssl, sasl} = res.locals.client;
 
@@ -90,9 +95,9 @@ app.delete(
   '/api/connection',
   authController.verifySessionCookie,
   kafkaController.clearCachedClient,
-  // todo: controller(s) to delete record from db
+  clusterController.deleteClientConnection,
   (req, res) => {
-    return res.status(202).json(/* deleted cluster connection details to send*/);
+    return res.sendStatus(204);
   }
 );
 
@@ -100,7 +105,9 @@ app.get(
   '/api/data/:clientId',
   authController.verifySessionCookie,
   kafkaController.getCachedClient,
-  // get from db if not in cache
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
+  kafkaController.getCachedClient,
   adminController.getClusterData,
   adminController.getTopicData,
   adminController.getGroupData,
@@ -112,10 +119,41 @@ app.get(
   }
 );
 
+app.post(
+  '/api/:clientId/topic',
+  authController.verifySessionCookie,
+  kafkaController.getCachedClient,
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
+  kafkaController.getCachedClient,
+  topicController.createTopic,
+  adminController.getTopicData,
+  (req, res) => {
+    return res.status(200).json(res.locals.topicData);
+  }
+);
+
+app.delete(
+  '/api/:clientId/topic',
+  authController.verifySessionCookie,
+  kafkaController.getCachedClient,
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
+  kafkaController.getCachedClient,
+  topicController.deleteTopic,
+  adminController.getTopicData,
+  (req, res) => {
+    return res.status(200).json(res.locals.topicData);
+  }
+);
+
 app.get(
   '/api/messages/:clientId/:topic',
   authController.verifySessionCookie,
   consumerController.checkConsumerCache,
+  kafkaController.getCachedClient,
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
   kafkaController.getCachedClient,
   consumerController.getMessages,
   (req, res) => {
