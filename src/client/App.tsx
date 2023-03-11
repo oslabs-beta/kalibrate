@@ -29,6 +29,7 @@ import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline} from '@mui/material';
 import {GroupTopic, newPollType, storedClient, topics} from './types';
+import {not} from 'ip';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -39,12 +40,18 @@ function App() {
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false); // for client deletion
   const [isConnectionError, setIsConnectionError] = useState<string>(''); // for client connection
   const [theme, colorMode] = useMode();
-  const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
+  const [timeSeriesData, setTimeSeriesData] = useState<newPollType[]>([]);
   const [currentPollInterval, setCurrentPollInterval] = useState<number | undefined>(
     undefined // useInterval return object
   );
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
 
+  // State for alert notifications
+  const [alerts, setAlerts] = useState<string[]>([]);
+  const [isConsumerGroupStatusAlertEnabled, setIsConsumerGroupStatusAlertEnabled] =
+    useState<boolean>(false);
+
+  // State for client data
   const defaultClusterData = {
     clusterData: {
       brokers: [],
@@ -61,8 +68,7 @@ function App() {
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
-  console.log(connectedClusterData);
-
+  console.log(timeSeriesData);
   //resets session when user logs out
   const logout = (): void => {
     setIsAuthenticated(false);
@@ -199,10 +205,39 @@ function App() {
   };
 
   const addTimeSeries = (newPoll: newPollType) => {
+    // if consumer group status alerts are enabled, check notification and notify if applicable
+    if (isConsumerGroupStatusAlertEnabled) {
+      // check whether group status has changed since last poll
+      const newGroup = newPoll.groupStatus;
+      const previousPollData = timeSeriesData.at(-1);
+      const previousGroup = previousPollData ? previousPollData.groupStatus : undefined;
+      let notifyChange = false;
+
+      for (const status in newGroup) {
+        if (previousGroup === undefined) break;
+        if (newGroup[status] !== previousGroup[status]) {
+          notifyChange = true;
+          break;
+        }
+      }
+
+      // notify if there has been a change
+      if (notifyChange) {
+        // enable a toast/snackbar alert
+
+        // update alert state for navbar
+        setAlerts([
+          ...alerts,
+          `${Date.now().toLocaleString()} - A change in consumer group statuses has occured`,
+        ]);
+      }
+    }
+
+    // update time series data state
     const newTimeSeriesData = timeSeriesData;
     if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
     newTimeSeriesData.push(newPoll);
-    console.log('graphable data: ', newPoll);
+
     setTimeSeriesData(newTimeSeriesData);
   };
 
@@ -218,6 +253,8 @@ function App() {
                 isAuthenticated={isAuthenticated}
                 isConnected={!!storedClients.length}
                 logout={logout}
+                alerts={alerts}
+                setAlerts={setAlerts}
               />
             </nav>
 
@@ -255,7 +292,9 @@ function App() {
                     isAuthenticated={isAuthenticated}
                     setIsAuthenticated={setIsAuthenticated}
                   >
-                    <Settings />
+                    <Settings
+                      setIsConsumerGroupStatusAlertEnabled={setIsConsumerGroupStatusAlertEnabled}
+                    />
                   </Protected>
                 }
               ></Route>

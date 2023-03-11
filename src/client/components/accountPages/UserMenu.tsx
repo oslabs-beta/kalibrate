@@ -15,10 +15,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import InfoIcon from '@mui/icons-material/Info';
-import {Props} from '../Navbar';
 import {ColorModeContext, tokens} from '../../theme';
 
-const UserMenu = (props: Props) => {
+export interface UserMenuProps {
+  isAuthenticated: boolean;
+  isConnected?: boolean;
+  logout: () => void;
+}
+
+const UserMenu = (props: UserMenuProps) => {
   const navigate = useNavigate();
   //manges light/dark mode
   const theme = useTheme();

@@ -216,7 +216,9 @@ export interface ConsumerProps {
 export type newPollType = {
   cluster?: string;
   time?: number;
-  groupStatus?: {};
+  groupStatus?: {
+    [k: string]: number;
+  };
   topicOffsets?: OffsetCollection;
   groupOffsets?: OffsetCollection;
 };
@@ -258,4 +260,12 @@ export type chartJSdataset = {
 
 export type PasswordStateTypes = {
   [k: string]: boolean;
+};
+
+export type SettingsProps = {
+  setIsConsumerGroupStatusAlertEnabled: (clientId: boolean) => void;
+};
+
+export type NotificationsProps = {
+  setIsConsumerGroupStatusAlertEnabled: (clientId: boolean) => void;
 };

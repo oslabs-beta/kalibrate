@@ -11,9 +11,13 @@ import {
   useTheme,
   TextField,
   InputAdornment,
+  FormGroup,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import {TabContext, TabList, TabPanel} from '@mui/lab';
 import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
+import {NotificationsProps} from '../../types';
 
 /* Enter functionality to:
 -- update user email
@@ -21,16 +25,41 @@ import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
 -- select which info to get get : " brokers vs paritions " : via toggle button
   -- cluster toggle will on/off ALL information  (fast on)
 */
-const NotificationsTab = () => {
+const NotificationsTab = (props: NotificationsProps) => {
+  const {setIsConsumerGroupStatusAlertEnabled} = props;
+
+  // controlled form state
+  const [isConsumerGroupStatusToggled, setIsConsumerGroupStatusToggled] = useState<boolean>(false);
+
+  // toggle alerts for consumer group status
+  const handleConsumerGroupStatusToggle = () => {
+    const newSwitchValue = !isConsumerGroupStatusToggled; // toggle switch value and use it for hadnler logic
+
+    setIsConsumerGroupStatusAlertEnabled(newSwitchValue); // set new state of parent prop that handles notifcations
+    setIsConsumerGroupStatusToggled(newSwitchValue); // set new state of switch component
+  };
+
   return (
     <Container>
+      <Box className="settings">
+        <h2>Enable Alerts</h2>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isConsumerGroupStatusToggled}
+                onChange={handleConsumerGroupStatusToggle}
+              />
+            }
+            label="Consumer Group Status Changes"
+          />
+        </FormGroup>
+      </Box>
       <Box className="settings default-email">
-        <h6>Notifications Email</h6>
+        <h2>Enable Integrations</h2>
+        <h5>Email</h5>
         <p>Specify where you would like your email to be sent.</p>
         <TextField label="Default Email" sx={{width: '50%'}} variant="standard" />
-      </Box>
-      <Box className="settings">
-        <h2>Subscriptions</h2>
       </Box>
     </Container>
   );
