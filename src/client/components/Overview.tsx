@@ -1,4 +1,4 @@
-import Box from '@mui/material/box';
+import Box from '@mui/material/Box';
 import {OverviewProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
