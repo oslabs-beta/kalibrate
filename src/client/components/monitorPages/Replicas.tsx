@@ -22,7 +22,6 @@ const Replicas = props => {
         label: '% replicas in sync by topic',
         backgroundColor: 'rgba(34, 202, 236, 1)',
         borderColor: 'rgba(34, 150, 150, 1)',
-        borderWidth: 5,
         data: [],
       },
     ],
