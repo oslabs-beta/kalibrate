@@ -85,7 +85,13 @@ const TopicThroughput = props => {
     // copy throughput data object to change before updating state
     const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDataSets));
     if (topicDataSets.length === 0) {
-      initializeDatasets(xScope, setXSeries, timeSeriesData, makeDataSet, setTopicDatasets);
+      initializeDatasets(
+        timeSeriesData[0].topicOffsets,
+        xScope,
+        setXSeries,
+        makeDataSet,
+        setTopicDatasets
+      );
       return;
     }
     for (const el in current.topicOffsets) {

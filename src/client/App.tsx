@@ -29,6 +29,7 @@ import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline} from '@mui/material';
 import {GroupTopic, newPollType, storedClient, topics} from './types';
+import GroupThroughput from './components/monitorPages/GroupThroughput';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -344,7 +345,15 @@ function App() {
                     />
                   }
                 />
-                <Route path="throughput" element={<Throughput />} />
+                <Route
+                  path="throughput"
+                  element={
+                    <GroupThroughput
+                      timeSeriesData={timeSeriesData}
+                      connectedCluster={connectedClient}
+                    />
+                  }
+                />
 
                 <Route path="consume" element={<Consume />} />
                 <Route path="produce" element={<Produce />} />
