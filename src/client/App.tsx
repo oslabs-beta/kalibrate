@@ -28,7 +28,7 @@ import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline} from '@mui/material';
-import {GroupTopic, newPollType, storedClient, topics} from './types';
+import {GroupTopic, newPollType, storedClient} from './types';
 import GroupThroughput from './components/monitorPages/GroupThroughput';
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
-  console.log('connected cluster data:', connectedClusterData);
+  // console.log('connected cluster data:', connectedClusterData);
   //resets session when user logs out
   const logout = (): void => {
     setIsAuthenticated(false);
@@ -140,6 +140,7 @@ function App() {
     })
       .then(res => res.json())
       .then(data => {
+        console.log('data: ', data);
         const newPoll: newPollType = {
           cluster: connectedClient,
         };
@@ -163,6 +164,21 @@ function App() {
           other: data.groupData.length - stable - empty,
         };
 
+        // topic replica status
+        newPoll.topicReplicaStatus = {};
+        for (const el of data.topicData.topics) {
+          console.log('el of topicData.topics');
+          let replicas = 0;
+          let isr = 0;
+          for (const p of el.partitions) {
+            console.log(replicas, isr);
+            replicas += p.replicas.length;
+            isr += p.isr.length;
+          }
+          newPoll.topicReplicaStatus[el.name] = {replicas, isr};
+        }
+        console.log('replicas ', newPoll.topicReplicaStatus);
+
         // count of offsets by topic
         newPoll.topicOffsets = {};
         for (const t of data.topicData.topics) {
@@ -183,6 +199,7 @@ function App() {
           });
           newPoll.groupOffsets[groupName] = sum;
         }
+        console.log('poll: ', newPoll);
         addTimeSeries(newPoll);
         // add timeseriesdata to state so we can drill it/use it for graphing
         // limit to 50 columns for performance, for now

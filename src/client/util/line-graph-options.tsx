@@ -5,6 +5,9 @@ const options: {} = {
       title: {
         display: true,
         text: '',
+        font: {
+          size: 18,
+        },
       },
       min: 0,
     },

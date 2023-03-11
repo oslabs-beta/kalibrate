@@ -211,6 +211,7 @@ export type newPollType = {
   groupStatus?: {};
   topicOffsets?: OffsetCollection;
   groupOffsets?: OffsetCollection;
+  topicReplicaStatus?: topicReplicaStatusType;
 };
 
 export type OffsetCollection = {
@@ -246,4 +247,8 @@ export type chartJSdataset = {
   borderColor: string;
   backgroundColor: string;
   hidden: boolean;
+} | null;
+
+export type topicReplicaStatusType = {
+  [k: string]: {};
 };
