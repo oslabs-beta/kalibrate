@@ -83,6 +83,7 @@ export type ConnectionContainerProps = {
 export type OverviewProps = {
   connectedCluster: string;
   data: connectedClusterData;
+  timeSeriesData: any;
 };
 
 export type TopicThroughputProps = {

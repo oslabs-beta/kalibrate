@@ -59,6 +59,16 @@ h1 {
   border: solid 1px;
 }
 
+/* styling for doughnut chart */
+
+.groupDoughnutChart {
+  height: 40vh;
+  position: relative;
+  margin-bottom: 1%;
+  margin-top: 1%;
+  padding: 1%
+}
+
 /* animation styling for crow */
 
 .rotocrow {
@@ -120,4 +130,10 @@ h1 {
   100% {
     transform: translateX(50px);
   }
+}
+
+/* styling for bigger loading crow icon */
+.bigger {
+  width: 150px;
+  height: 150px;
 }
