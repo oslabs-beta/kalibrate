@@ -121,6 +121,11 @@ const Manage = props => {
                   <ListItemText primary="Lag" />
                 </ListItemButton>
               </ListItem>
+              <ListItem key="Offsets" disablePadding>
+                <ListItemButton onClick={() => navigate('offsets')}>
+                  <ListItemText primary="Offsets" />
+                </ListItemButton>
+              </ListItem>
             </Collapse>
 
             <ListItem key="Test" disablePadding>
