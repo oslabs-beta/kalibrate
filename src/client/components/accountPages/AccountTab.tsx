@@ -6,7 +6,6 @@ import {
   IconButton,
   FormControl,
   InputLabel,
-  useTheme,
   TextField,
   InputAdornment,
   OutlinedInput,
@@ -18,7 +17,7 @@ import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 // import Schnax from './Snackbar';
-
+import {PasswordStateTypes} from '../../types';
 /* Enter Functionality to ...
 -- Enter/Change Profile Name
 -- Change password:  enter old and confirm new twice
@@ -28,9 +27,6 @@ import SaveIcon from '@mui/icons-material/Save';
 -- Delete Account  
 -- Add avatar
 .*/
-type PasswordStateTypes = {
-  [k: string]: boolean;
-};
 
 type FormStateTypes = {
   [k: string]: string;
@@ -46,64 +42,59 @@ const AccountTab = () => {
   const [loadingSave, setLoadingSave] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<PasswordStateTypes>({
     old: false,
-    new: false,
     confirm: false,
   });
   const [formChanges, setFormChanges] = useState<FormStateTypes>({...defaultForm});
+  const [inputOldPass, setInputOldPass] = useState<boolean>(false);
+  const [inputMatching, setInputMatching] = useState<boolean>(false);
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     pass: string
   ) => {
-    const passKey =
-      pass === 'old' || pass === 'new' || pass === 'confirm' ? pass + 'Pass' : 'newEmail';
-
-    //check new Name
-    //check newpas and confirm pass are matching, will verity structure in back
-    setFormChanges({...formChanges, [passKey]: e.target.value});
+    setFormChanges({...formChanges, [pass]: e.target.value});
     console.log(formChanges);
   };
-  //logic to cancel changes made (clears form)
-  const handleFormCancel = () => {
+  const handleFormClear = () => {
     setFormChanges({...defaultForm});
+    setInputMatching(false);
+    setInputOldPass(false);
   };
 
-  //logic to save user changes
-  //will confirm here
-  //pass obj {newEmail, oldPass, newPass} to backend
+  //WHERE TO CHECK EMAIL INPUT AND VALID PASSWORD
   const handleFormSave = async () => {
     const {newEmail, oldPass, newPass, confirmPass} = formChanges;
-    //make sure confirm and new match
-    if (newPass !== confirmPass) {
-      return <div>NOT MATCHING CONFIRM AND NEW</div>;
+    if (!oldPass) {
+      setInputOldPass(true);
+      return;
     }
-    //check input structure
+    if (newPass !== confirmPass) {
+      setInputMatching(true);
+      return;
+    }
     const updateInfo = {
       newEmail,
       oldPass,
       newPass,
     };
     //start loading button
-    await handleLoading();
-    //ADD SAVE FUNCTIONALITY
-    await setTimeout(() => setLoadingSave(false), 2000);
-    // const response = await fetch('/api/settings/account', {
-    //   method: 'PATCH',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(updateInfo),
-    // });
-    // if (response) {
-    // }
-    //if successfully saved.
-    handleFormCancel();
+    setLoadingSave(true);
+    const response = await fetch('/api/settings/account', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateInfo),
+    });
+    setLoadingSave(false);
+    if (!response.ok) {
+      console.log('couldnt update ');
+    } else {
+      console.log('update ok');
+      handleFormClear();
+    }
   };
 
-  //logic to display loading Save button
-  const handleLoading = () => {
-    setLoadingSave(true);
-  };
   //logic to create visible password forms
   const handleShowPassword = (pass: string) => {
     let oldVal = showPassword[pass];
@@ -122,26 +113,29 @@ const AccountTab = () => {
   };
   //password text field components
   const FormPassword = (pass: string) => {
+    const passKey =
+      pass === 'old' || pass === 'new' || pass === 'confirm' ? pass + 'Pass' : 'newEmail';
+    const show = pass === 'new' || pass === 'confirm' ? 'confirm' : pass;
     return (
       <FormControl sx={{m: 1, width: '25ch'}}>
         <InputLabel>{titleCase(pass)} Password</InputLabel>
         <OutlinedInput
-          type={showPassword[pass] ? 'text' : 'password'}
+          type={showPassword[show] ? 'text' : 'password'}
+          label="Old Password"
+          value={formChanges[passKey]}
+          onChange={e => handleFormChange(e, passKey)}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibilty"
-                onClick={e => handleShowPassword(pass)}
+                onClick={e => handleShowPassword(show)}
                 onMouseDown={e => handleMouseDownPassword(e)}
                 edge="end"
               >
-                {showPassword[pass] ? <VisibilityOff /> : <Visibility />}
+                {showPassword[show] ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           }
-          label="Old Password"
-          value={formChanges[pass]}
-          onChange={e => handleFormChange(e, pass)}
         ></OutlinedInput>
       </FormControl>
     );
@@ -150,21 +144,26 @@ const AccountTab = () => {
   return (
     <Container>
       <Box>
+        <h6>Enter Password to make changes</h6>
+        {FormPassword('old')}
+        {inputOldPass ? <div>MUST ENTER PASSWORD</div> : <div></div>}
+      </Box>
+      <Box>
         <h6>Change Account Email</h6>
         <TextField
           label="Update Email"
-          value={formChanges['email']}
-          onChange={e => handleFormChange(e, 'email')}
+          value={formChanges['newEmail']}
+          onChange={e => handleFormChange(e, 'newEmail')}
         />
       </Box>
       <Box className="settings">
         <h6>Change Password</h6>
-        {FormPassword('old')}
         {FormPassword('new')}
         {FormPassword('confirm')}
+        {inputMatching ? <div>MUST BE MATCHING</div> : <div></div>}
       </Box>
       <Box>
-        <Button variant="outlined" size="small" onClick={handleFormCancel}>
+        <Button variant="outlined" size="small" onClick={handleFormClear}>
           Cancel
         </Button>
         <LoadingButton

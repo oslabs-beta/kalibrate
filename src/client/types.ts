@@ -247,3 +247,7 @@ export type chartJSdataset = {
   backgroundColor: string;
   hidden: boolean;
 };
+
+export type PasswordStateTypes = {
+  [k: string]: boolean;
+};
