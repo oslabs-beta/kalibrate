@@ -184,3 +184,11 @@ export type timeSeriesData = {
   groupStatus: {};
   topicOffsets: {};
 };
+
+export type chartJSdataset = {
+  label: string;
+  data: (number | null)[];
+  borderColor: string;
+  backgroundColor: string;
+  hidden: boolean;
+};
