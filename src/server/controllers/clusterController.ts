@@ -101,6 +101,83 @@ clusterController.getClientConnections = async (req, res, next) => {
   return next();
 };
 
+clusterController.getClientConnection = async (req, res, next) => {
+  const {id} = res.locals.user;
+  const {clientId} = req.params;
+
+  // skip if cache hit from previous middleware
+  if (res.locals.kafka) return next();
+
+  if (!id) {
+    return next({
+      log: 'ERROR - clusterController.getConnectionDetail: Failed to read id for logged in user',
+      status: 404,
+      message: 'Unable to retrieve client information',
+    });
+  }
+
+  try {
+    // query db for requestedc client
+    let clientQuery = await prisma.cluster.findMany({
+      where: {userId: id, clientId},
+    });
+
+    if (!clientQuery.length) throw new Error('Query for requested client found no records');
+
+    const client = clientQuery[0]; // index found record out of array
+
+    // Find seed brokers/URI with found client
+    const brokersQuery = await prisma.seedBroker.findMany({
+      where: {clusterId: client.id},
+      select: {broker: true},
+    });
+
+    if (!brokersQuery.length)
+      throw new Error('Query for requested client URI/seed brokers found no records');
+
+    const brokers = brokersQuery[0].broker; // index found record out of array and access prop
+
+    // Create Kafka instance
+    const {saslUsername, saslPassword} = client;
+
+    const decryptedPassword = saslPassword
+      ? CryptoJS.AES.decrypt(saslPassword, ENCRYPT_KEY).toString(CryptoJS.enc.Utf8)
+      : null;
+
+    let kafka;
+    if (decryptedPassword && saslUsername) {
+      kafka = new Kafka({
+        clientId,
+        brokers: [brokers],
+        ssl: true,
+        sasl: {
+          mechanism: 'plain', // hardcoded for now, needs to be updated if we implement other mechanisms
+          username: saslUsername,
+          password: decryptedPassword,
+        },
+      });
+    } else {
+      kafka = new Kafka({
+        clientId,
+        brokers: [brokers],
+      });
+    }
+
+    res.locals.client = {
+      clientId,
+      kafkaClient: kafka,
+    };
+
+    return next();
+  } catch (err) {
+    return next({
+      log: `ERROR - clusterController.getClientConnection: ${err}`,
+      status: 404,
+      message: 'Unable to retrieve client information',
+    });
+  }
+};
+
 clusterController.storeClientConnection = async (req, res, next) => {
   const {id} = res.locals.user;
   const {clientId, brokers, sasl} = res.locals.client;

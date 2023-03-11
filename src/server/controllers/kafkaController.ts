@@ -49,6 +49,9 @@ kafkaController.initiateKafka = async (req, res, next) => {
 };
 
 kafkaController.cacheClient = (req, res, next) => {
+  // skip if cache hit for kafka from previous middleware
+  if (res.locals.kafka) return next();
+
   const {id} = res.locals.user;
   const {clientId, kafkaClient} = res.locals.client;
 
@@ -71,6 +74,7 @@ kafkaController.getCachedClient = (req, res, next) => {
   const {clientId} = req.params;
 
   if (res.locals.topicMessages) return next(); // move on if cache hit for messages
+  if (res.locals.kafka) return next(); // skip if cache hit for kafka from previous middleware
 
   const cachedClient = clientCache.getUnique(id, clientId);
   res.locals.kafka = cachedClient;

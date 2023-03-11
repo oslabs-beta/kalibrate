@@ -103,8 +103,9 @@ app.get(
   '/api/data/:clientId',
   authController.verifySessionCookie,
   kafkaController.getCachedClient,
-  // get from db if not in cache
-  // cache if feteched from db
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
+  kafkaController.getCachedClient,
   adminController.getClusterData,
   adminController.getTopicData,
   adminController.getGroupData,
@@ -120,6 +121,9 @@ app.post(
   '/api/:clientId/topic',
   authController.verifySessionCookie,
   kafkaController.getCachedClient,
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
+  kafkaController.getCachedClient,
   topicController.createTopic,
   adminController.getTopicData,
   (req, res) => {
@@ -130,6 +134,9 @@ app.post(
 app.delete(
   '/api/:clientId/topic',
   authController.verifySessionCookie,
+  kafkaController.getCachedClient,
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
   kafkaController.getCachedClient,
   topicController.deleteTopic,
   adminController.getTopicData,
@@ -142,6 +149,9 @@ app.get(
   '/api/messages/:clientId/:topic',
   authController.verifySessionCookie,
   consumerController.checkConsumerCache,
+  kafkaController.getCachedClient,
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
   kafkaController.getCachedClient,
   consumerController.getMessages,
   (req, res) => {
