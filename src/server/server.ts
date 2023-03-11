@@ -57,7 +57,7 @@ app.get(
   kafkaController.cacheClients,
   (req, res) => {
     const clients = res.locals.clientCredentials;
-    console.log('response', clients);
+
     return res.status(200).json(clients);
   }
 );
@@ -93,9 +93,9 @@ app.delete(
   '/api/connection',
   authController.verifySessionCookie,
   kafkaController.clearCachedClient,
-  // todo: controller(s) to delete record from db
+  clusterController.deleteClientConnection,
   (req, res) => {
-    return res.status(202).json(/* deleted cluster connection details to send*/);
+    return res.sendStatus(204);
   }
 );
 
@@ -104,6 +104,7 @@ app.get(
   authController.verifySessionCookie,
   kafkaController.getCachedClient,
   // get from db if not in cache
+  // cache if feteched from db
   adminController.getClusterData,
   adminController.getTopicData,
   adminController.getGroupData,

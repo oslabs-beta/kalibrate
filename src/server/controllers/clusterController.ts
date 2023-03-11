@@ -11,8 +11,6 @@ const clusterController: controller = {};
 clusterController.getClientConnections = async (req, res, next) => {
   const {id} = res.locals.user;
 
-  console.log('getting user id to get connections', id);
-
   if (!id) {
     return next({
       log: 'ERROR - clusterController.getConnectionDetails: Failed to read id for logged in user',
@@ -25,8 +23,6 @@ clusterController.getClientConnections = async (req, res, next) => {
   const clusters = await prisma.cluster.findMany({
     where: {userId: id},
   });
-
-  console.log('cluster query', clusters);
 
   // to store client information and send back in response
   const clientCredentials = [];
@@ -49,7 +45,7 @@ clusterController.getClientConnections = async (req, res, next) => {
       const decryptedPassword = saslPassword
         ? CryptoJS.AES.decrypt(saslPassword, ENCRYPT_KEY).toString(CryptoJS.enc.Utf8)
         : null;
-      console.log('decrypted:', decryptedPassword);
+
       let kafka;
       if (brokers.length) {
         if (saslPassword && saslUsername && saslPassword) {
@@ -92,14 +88,12 @@ clusterController.getClientConnections = async (req, res, next) => {
       } else {
         return next({
           log: `ERROR in clusterController.getClientConnections: Cluster ${clientId} for the logged in user has no associated brokers`,
-          status: 404,
+          status: 400,
           message: 'Missing brokers to connect to Kafka',
         });
       }
     }
   }
-  console.log('resulting creds', clientCredentials);
-  console.log('resulting instances', userClusters);
 
   res.locals.clientCredentials = clientCredentials;
   res.locals.clients = userClusters;
@@ -110,12 +104,12 @@ clusterController.getClientConnections = async (req, res, next) => {
 clusterController.storeClientConnection = async (req, res, next) => {
   const {id} = res.locals.user;
   const {clientId, brokers, sasl} = res.locals.client;
-  console.log('storing client', id, clientId, brokers, sasl);
+
   if (!id || !clientId || !brokers) {
     return next({
       log: `Error - clusterController.storeClient: Missing cluster data for database storage`,
       status: 404,
-      message: {err: 'Missing cluster data for database storage'},
+      message: {err: 'Missing required information to create client'},
     });
   }
 
@@ -152,7 +146,7 @@ clusterController.storeClientConnection = async (req, res, next) => {
     } else {
       const {mechanism, username, password} = sasl;
       const encryptedPassword = CryptoJS.AES.encrypt(password, ENCRYPT_KEY).toString();
-      console.log('encrypted:', encryptedPassword);
+
       await prisma.$transaction(async prisma => {
         const cluster = await prisma.cluster.create({
           data: {
@@ -178,12 +172,46 @@ clusterController.storeClientConnection = async (req, res, next) => {
   } catch (err) {
     return next({
       log: `ERROR - clusterController.storeClient: Failed to store new client: ${err}`,
-      status: 404,
-      message: {err: 'Failed to created new client'},
+      status: 400,
+      message: {err: 'Failed to create new client'},
     });
   }
 
   return next();
+};
+
+clusterController.deleteClientConnection = async (req, res, next) => {
+  const {clientId} = req.body;
+  const {id} = res.locals.user;
+
+  // find clusterId, then delete broker and client
+  try {
+    // will return array of obj, so afer query to access id index 0 and access id prop
+    await prisma.$transaction(async prisma => {
+      const clusterId = await prisma.cluster.findMany({
+        where: {clientId, userId: id},
+        select: {id: true},
+      });
+
+      if (!clusterId.length) throw new Error('Did not find requested cluster');
+      console.log('cluster id', clusterId);
+      const test = await prisma.seedBroker.deleteMany({
+        where: {clusterId: clusterId[0].id},
+      });
+      console.log('delete broker', test);
+      await prisma.cluster.deleteMany({
+        where: {clientId, userId: id},
+      });
+    });
+
+    return next();
+  } catch (err) {
+    return next({
+      log: `ERROR - clusterController.deleteClientConnection: Failed to delete client: ${err}`,
+      status: 400,
+      message: {err: 'Failed to delete client'},
+    });
+  }
 };
 
 export default clusterController;

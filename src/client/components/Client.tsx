@@ -9,8 +9,19 @@ const Client = (props: ClientProps) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const {selectedClient, connectedClient, setConnectedClient, storedClients, isLoading, isError} =
-    props;
+  const {
+    selectedClient,
+    setSelectedClient,
+    connectedClient,
+    setConnectedClient,
+    storedClients,
+    setStoredClients,
+    isConnectionLoading,
+    isError,
+    setIsError,
+    isDeleteLoading,
+    setIsDeleteLoading,
+  } = props;
 
   // filter for currently selected client object
   const selectedClientCrendentials = storedClients.filter(
@@ -47,6 +58,30 @@ const Client = (props: ClientProps) => {
     );
   }
 
+  const handleDelete = async () => {
+    setIsError('');
+    setIsDeleteLoading(true);
+    // set loading state todo
+    const response = await fetch('/api/connection', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({clientId: selectedClient}),
+    });
+
+    if (!response.ok) {
+      setIsDeleteLoading(false);
+      setIsError('Failed to delete client');
+      return;
+    }
+
+    if (connectedClient === selectedClient) setConnectedClient('');
+    setStoredClients(storedClients.filter(client => client.clientId !== selectedClient));
+    setSelectedClient('');
+    setIsDeleteLoading(false);
+  };
+
   // renders credentials for selected client
   // conditionally renders button disabled state and loading wheel based on loading state
   // conditionally renders error message based on error state
@@ -73,7 +108,7 @@ const Client = (props: ClientProps) => {
           <Button
             variant="contained"
             size="medium"
-            disabled={connectedClient !== selectedClient || isLoading}
+            disabled={connectedClient !== selectedClient || isConnectionLoading}
             onClick={() => navigate(`/client/${selectedClient}`)}
             endIcon={<Send />}
             sx={{fontWeight: 'bold', width: 'auto', marginX: '10px', marginTop: '20px'}}
@@ -81,7 +116,7 @@ const Client = (props: ClientProps) => {
             Manage
           </Button>
 
-          {isLoading ? (
+          {isConnectionLoading ? (
             <CircularProgress sx={{marginTop: '15px', marginX: '63px'}} />
           ) : (
             <Button
@@ -102,23 +137,26 @@ const Client = (props: ClientProps) => {
               {connectedClient === selectedClient ? 'Connected' : 'Connect'}
             </Button>
           )}
-
-          <Button
-            variant="outlined"
-            color="error"
-            size="medium"
-            disabled={isLoading}
-            onClick={() => console.log('todo delete button')}
-            endIcon={<Delete />}
-            sx={{fontWeight: 'bold', width: 'auto', marginX: '10px', marginTop: '20px'}}
-          >
-            Delete
-          </Button>
+          {isDeleteLoading ? (
+            <CircularProgress sx={{marginTop: '15px', marginX: '63px'}} />
+          ) : (
+            <Button
+              variant="outlined"
+              color="error"
+              size="medium"
+              disabled={isConnectionLoading}
+              onClick={handleDelete}
+              endIcon={<Delete />}
+              sx={{fontWeight: 'bold', width: 'auto', marginX: '10px', marginTop: '20px'}}
+            >
+              Delete
+            </Button>
+          )}
         </Box>
 
         {isError ? (
           <Alert severity="error" sx={{marginTop: '10px'}}>
-            Failed to connect.
+            {isError}
           </Alert>
         ) : null}
       </Box>
