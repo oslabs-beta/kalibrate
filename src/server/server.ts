@@ -27,8 +27,11 @@ const connectionLimiter = rateLimit({
 
 // Create caches
 const clientCache = new ClientCache();
+clientCache.clear(1800000); // clear inactive clients from cache every 30 min
+
 const consumerCache = new ConsumerCache();
 
+// Instantiate server
 const app = express();
 
 // Parse requests
