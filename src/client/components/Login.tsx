@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router';
 import {Link} from 'react-router-dom';
 import {
@@ -9,7 +9,13 @@ import {
   TextField,
   Alert,
   CircularProgress,
+  InputLabel,
+  IconButton,
+  FormControl,
+  InputAdornment,
+  OutlinedInput,
 } from '@mui/material';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 import {LoginProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
@@ -23,7 +29,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   // verify email and password meet length requirements
   const isValidLoginSubmission = (email: string, password: string) => {
     const isValidEmail = email.length > 0;
@@ -31,7 +37,6 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
 
     return isValidEmail && isValidPassword;
   };
-
   // login submission handler
   const handleLoginSubmit = async () => {
     setIsLoading(true);
@@ -94,17 +99,27 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
           onChange={event => setEmail(event.target.value)}
           sx={{marginBottom: '10px', width: '100%'}}
         />
-
-        <TextField
-          size="small"
-          label="Password"
-          variant="outlined"
-          type="password"
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-          sx={{marginBottom: '20px', width: '100%'}}
-        />
-
+        <FormControl sx={{width: '100%'}}>
+          <InputLabel sx={{top: '-7px', width: '100%'}}>Password</InputLabel>
+          <OutlinedInput
+            size="small"
+            type={showPassword ? 'text' : 'password'}
+            label="Password"
+            value={password}
+            onChange={event => setPassword(event.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibilty"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          ></OutlinedInput>
+        </FormControl>
         {isLoading ? (
           <CircularProgress sx={{marginTop: '15px'}} />
         ) : (

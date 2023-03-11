@@ -27,7 +27,7 @@ const UserMenu = (props: Props) => {
   //anchorEl: setup to be a toggle, if assigned, will display popover
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [checked, setChecked] = useState<boolean>(false);
-  const {isConnected, logout} = props;
+  const {isAuthenticated, logout} = props;
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
@@ -40,7 +40,7 @@ const UserMenu = (props: Props) => {
   const handleLogout = async () => {
     console.log('TRYING TO LOG OUT');
     await logout();
-    console.log(isConnected);
+    console.log(isAuthenticated);
     await navigate('/login'); //if send back to '/', return error bc expecting data... async problem?
   };
   const handleDarkMode = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -55,7 +55,7 @@ const UserMenu = (props: Props) => {
         size="large"
         color="inherit"
         onClick={handleOpenUserMenu}
-        sx={{visibility: isConnected ? 'visible' : 'hidden'}}
+        sx={{visibility: isAuthenticated ? 'visible' : 'hidden'}}
       >
         <SettingsIcon aria-label="settings" />
       </IconButton>

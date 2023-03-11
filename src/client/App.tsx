@@ -214,7 +214,11 @@ function App() {
         <div>
           <BrowserRouter>
             <nav>
-              <Navbar isConnected={!!storedClients.length} logout={logout} />
+              <Navbar
+                isAuthenticated={isAuthenticated}
+                isConnected={!!storedClients.length}
+                logout={logout}
+              />
             </nav>
 
             <Routes>
@@ -308,7 +312,11 @@ function App() {
                   index
                   element={
                     <div className="overview">
-                      <Overview data={connectedClusterData} connectedCluster={connectedClient} timeSeriesData = {timeSeriesData} />
+                      <Overview
+                        data={connectedClusterData}
+                        connectedCluster={connectedClient}
+                        timeSeriesData={timeSeriesData}
+                      />
                     </div>
                   }
                 />
@@ -344,7 +352,7 @@ function App() {
                   element={
                     <TopicThroughput
                       timeSeriesData={timeSeriesData}
-                      connectedCluster={connectedCluster}
+                      connectedCluster={connectedClient}
                     />
                   }
                 />
