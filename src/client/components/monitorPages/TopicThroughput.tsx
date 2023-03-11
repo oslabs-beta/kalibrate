@@ -20,8 +20,8 @@ import makeDataSet from '../../util/makeDataSet';
 // filter for connected cluster? maybe even when passing props?
 
 const TopicThroughput = props => {
+  console.log('rendering topic throughput');
   const {timeSeriesData, connectedCluster} = props;
-  console.log(connectedCluster);
 
   // todo:
   // initialize on load
@@ -37,7 +37,6 @@ const TopicThroughput = props => {
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    console.log('tds: ', topicDataSets);
     // need at least two data point to calculate rate of messages
     if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
@@ -79,7 +78,6 @@ const TopicThroughput = props => {
       //   newData[el] = [];
       // }
     }
-    console.log('setting tds');
     setTopicDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);

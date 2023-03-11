@@ -1,4 +1,6 @@
 const options: {} = {
+  // increase for smoother curves
+  lineTension: 0,
   scales: {
     y: {
       display: true,

@@ -12,7 +12,7 @@ import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
 import TopicThroughput from './components/monitorPages/TopicThroughput';
-import Throughput from './components/monitorPages/Throughput';
+import Throughput from './components/monitorPages/Graphs';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -30,6 +30,7 @@ import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline} from '@mui/material';
 import {GroupTopic, newPollType, storedClient} from './types';
 import GroupThroughput from './components/monitorPages/GroupThroughput';
+import Graphs from './components/monitorPages/Graphs';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -169,8 +170,8 @@ function App() {
           console.log('el of topicData.topics');
           let replicas = 0;
           let isr = 0;
+
           for (const p of el.partitions) {
-            console.log(replicas, isr);
             replicas += p.replicas.length;
             isr += p.isr.length;
           }
@@ -364,10 +365,7 @@ function App() {
                 <Route
                   path="throughput"
                   element={
-                    <GroupThroughput
-                      timeSeriesData={timeSeriesData}
-                      connectedCluster={connectedClient}
-                    />
+                    <Graphs timeSeriesData={timeSeriesData} connectedCluster={connectedClient} />
                   }
                 />
 

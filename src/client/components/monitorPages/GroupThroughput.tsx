@@ -20,7 +20,7 @@ import makeDataSet from '../../util/makeDataSet';
 
 const GroupThroughput = props => {
   const {timeSeriesData, connectedCluster} = props;
-  console.log(connectedCluster);
+  console.log('rendering group throughput');
 
   const [groupDataSets, setGroupDatasets] = useState<chartJSdataset[]>([]);
   const [xSeries, setXSeries] = useState<string[]>([]);
@@ -28,7 +28,6 @@ const GroupThroughput = props => {
 
   // when new data is received, new data to group arrays in throughput data object
   useEffect(() => {
-    console.log('gds: ', groupDataSets);
     // need at least two data point to calculate rate of messages
     if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
@@ -64,7 +63,6 @@ const GroupThroughput = props => {
         if (set.data.length > xScope) set.data.shift();
       }
     }
-    console.log('setting gds');
     setGroupDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);

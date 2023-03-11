@@ -2,14 +2,14 @@ import {useEffect, useState} from 'react';
 import {Radar} from 'react-chartjs-2';
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
+  RadialLinearScale,
   PointElement,
   LineElement,
-  Title,
+  Filler,
   Tooltip,
   Legend,
 } from 'chart.js';
+import radarOptions from '../../util/radar-chart-options';
 import {chartJSradarProps} from '../../types';
 
 const Replicas = props => {
@@ -20,8 +20,9 @@ const Replicas = props => {
     datasets: [
       {
         label: '% replicas in sync by topic',
-        backgroundColor: 'gray',
-        borderColor: 'black',
+        backgroundColor: 'rgba(34, 202, 236, 1)',
+        borderColor: 'rgba(34, 150, 150, 1)',
+        borderWidth: 5,
         data: [],
       },
     ],
@@ -32,31 +33,31 @@ const Replicas = props => {
   // on receiving new data, update radar data in state
   // rebuild arrays each time since order of iteration through object keys of topicReplicaStatus is not guaranteed
   useEffect(() => {
-    const newData = Object.assign({}, defaultRadarProps);
-    const current = timeSeriesData[timeSeriesData.length - 1];
-    for (const el in current.topicReplicaStatus) {
-      newData.labels.push(el);
-      newData.datasets[0].data.push(Math.round((current[el].isr / current[el].replicas) * 100));
+    if (timeSeriesData.length) {
+      console.log('length! ', timeSeriesData);
+      const newData = Object.assign({}, defaultRadarProps);
+      const current = timeSeriesData[timeSeriesData.length - 1];
+      console.log('c.trs ', current.topicReplicaStatus);
+      console.log('keys: ', Object.keys(current.topicReplicaStatus));
+      for (const el in current.topicReplicaStatus) {
+        console.log('el ', el);
+        console.log('c.el', current.topicReplicaStatus[el]);
+        newData.labels.push(el);
+        newData.datasets[0].data.push(
+          Math.round(
+            (current.topicReplicaStatus[el].isr / current.topicReplicaStatus[el].replicas) * 100
+          )
+        );
+      }
+      setRadarData(newData);
     }
-    setRadarData(newData);
   }, [timeSeriesData[timeSeriesData.length - 1]]);
 
-  const options = {
-    scale: {
-      ticks: {
-        min: 0,
-        max: 100,
-        stepSize: 20,
-      },
-      gridLines: {
-        circular: true,
-      },
-    },
-  };
+  ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
-  const data = {};
+  // global chart plugins - maybe move during refactoring
 
-  return <Radar options={options} data={radarData} />;
+  return <Radar options={radarOptions} data={radarData} />;
 };
 
 export default Replicas;
