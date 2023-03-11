@@ -1,3 +1,4 @@
+import TopicThroughput from './components/monitorPages/TopicThroughput';
 import {MouseEvent, PropsWithChildren} from 'react';
 
 export type RedirectProps = {
@@ -82,6 +83,11 @@ export type ConnectionContainerProps = {
 export type OverviewProps = {
   connectedCluster: string;
   data: connectedClusterData;
+};
+
+export type TopicThroughputProps = {
+  connectedCluster: string;
+  timeSeriesData: object[];
 };
 
 export type brokers = {
@@ -219,4 +225,24 @@ export type TopicPartitions = {
   partition: number;
   offset: string;
   metadata: any;
+};
+
+export type throughputData = {
+  [k: string]: number | null;
+};
+
+export type timeSeriesData = {
+  cluster: string;
+  time: number;
+  groupOffsets: {};
+  groupStatus: {};
+  topicOffsets: {};
+};
+
+export type chartJSdataset = {
+  label: string;
+  data: (number | null)[];
+  borderColor: string;
+  backgroundColor: string;
+  hidden: boolean;
 };
