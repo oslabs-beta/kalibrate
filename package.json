@@ -25,6 +25,7 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.14.2",
     "bcrypt": "^5.1.0",
+    "chart.js": "^4.2.1",
     "cookie-parser": "^1.4.6",
     "crypto-js": "^4.1.1",
     "daisyui": "^2.50.2",
