@@ -265,9 +265,17 @@ export type PasswordStateTypes = {
 export type SettingsProps = {
   isAlertEnabled: {[key: string]: boolean};
   setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
+  savedURIs: {[key: string]: string};
+  setSavedURIs: (uris: {[key: string]: string}) => void;
+  isSlackError: boolean;
+  setIsSlackError: (error: boolean) => void;
 };
 
 export type NotificationsProps = {
   isAlertEnabled: {[key: string]: boolean};
   setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
+  savedURIs: {[key: string]: string};
+  setSavedURIs: (uris: {[key: string]: string}) => void;
+  isSlackError: boolean;
+  setIsSlackError: (error: boolean) => void;
 };
