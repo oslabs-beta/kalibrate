@@ -28,7 +28,7 @@ import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
-import {GroupTopic, newPollType, storedClient, chartJSdataset} from './types';
+import {GroupTopic, newPollType, storedClient} from './types';
 import {not} from 'ip';
 import TrafficAndHealthGraphs from './components/monitorPages/TrafficAndHealthGraphs';
 
@@ -76,7 +76,6 @@ function App() {
 
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<chartJSdataset[]>([]);
-  const [groupDatasets, setGroupDatasets] = useState<chartJSdataset[]>([]);
   const [xSeries, setXSeries] = useState<string[]>([]);
 
   //resets session when user logs out
@@ -148,7 +147,7 @@ function App() {
   // since we have to get data from kafka with KJS I'm not sure websockets do anything but add an intermediate step
   // possible todo: modularize poll into a different file
   const poll = () => {
-    fetch(`/api/data/g${connectedClient}`, {
+    fetch(`/api/data/${connectedClient}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -477,8 +476,6 @@ function App() {
                       connectedCluster={connectedClient}
                       topicDatasets={topicDatasets}
                       setTopicDatasets={setTopicDatasets}
-                      groupDatasets={groupDatasets}
-                      setGroupDatasets={setGroupDatasets}
                       xSeries={xSeries}
                       setXSeries={setXSeries}
                     />
