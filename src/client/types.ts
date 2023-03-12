@@ -221,7 +221,7 @@ export type newPollType = {
   };
   topicOffsets?: OffsetCollection;
   groupOffsets?: OffsetCollection;
-  topicReplicaStatus?: topicReplicaStatusType;
+  topicReplicaStatus?: replicaStatus;
 };
 
 export type OffsetCollection = {
@@ -272,8 +272,8 @@ export type NotificationsProps = {
   setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
 };
 
-export type topicReplicaStatusType = {
-  [k: string]: {};
+export type replicaStatus = {
+  [k: string]: number;
 };
 
 export type chartJSradarProps = {

@@ -11,9 +11,6 @@ import Brokers from './components/managePages/Brokers';
 import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
-// import TopicThroughput from './components/monitorPages/TopicThroughput';
-// import Throughput from './components/monitorPages/Graphs';
-// import Throughput from './components/monitorPages/Throughput';
 import OffsetCharts from './components/monitorPages/OffsetCharts';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
@@ -31,7 +28,7 @@ import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
-import {GroupTopic, newPollType, storedClient, topics} from './types';
+import {GroupTopic, newPollType, storedClient} from './types';
 import {not} from 'ip';
 import TrafficAndHealthGraphs from './components/monitorPages/TrafficAndHealthGraphs';
 
@@ -189,7 +186,8 @@ function App() {
             replicas += p.replicas.length;
             isr += p.isr.length;
           }
-          newPoll.topicReplicaStatus[el.name] = {replicas, isr};
+
+          newPoll.topicReplicaStatus[el.name] = Math.round((isr / replicas) * 100);
         }
         console.log('replicas ', newPoll.topicReplicaStatus);
         // count of offsets by topic

@@ -30,23 +30,13 @@ const Replicas = props => {
   const [radarData, setRadarData] = useState<chartJSradarProps>(defaultRadarProps);
 
   // on receiving new data, update radar data in state
-  // rebuild arrays each time since order of iteration through object keys of topicReplicaStatus is not guaranteed
   useEffect(() => {
     if (timeSeriesData.length) {
-      console.log('length! ', timeSeriesData);
       const newData = Object.assign({}, defaultRadarProps);
-      const current = timeSeriesData[timeSeriesData.length - 1];
-      console.log('c.trs ', current.topicReplicaStatus);
-      console.log('keys: ', Object.keys(current.topicReplicaStatus));
+      const current = timeSeriesData.at(-1);
       for (const el in current.topicReplicaStatus) {
-        console.log('el ', el);
-        console.log('c.el', current.topicReplicaStatus[el]);
         newData.labels.push(el);
-        newData.datasets[0].data.push(
-          Math.round(
-            (current.topicReplicaStatus[el].isr / current.topicReplicaStatus[el].replicas) * 100
-          )
-        );
+        newData.datasets[0].data.push(current.topicReplicaStatus[el]);
       }
       setRadarData(newData);
     }
