@@ -19,8 +19,10 @@ import AccountTab from './AccountTab';
 import NotificationsTab from './NotificationsTab';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../../theme';
+import {SettingsProps} from '../../types';
 
-const Account = () => {
+const Account = (props: SettingsProps) => {
+  const {isAlertEnabled, setIsAlertEnabled} = props;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -62,7 +64,10 @@ const Account = () => {
               <AccountTab />
             </TabPanel>
             <TabPanel value="2">
-              <NotificationsTab />
+              <NotificationsTab
+                isAlertEnabled={isAlertEnabled}
+                setIsAlertEnabled={setIsAlertEnabled}
+              />
             </TabPanel>
           </Paper>
         </TabContext>

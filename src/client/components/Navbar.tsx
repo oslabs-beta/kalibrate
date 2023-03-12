@@ -14,10 +14,15 @@ import {
   FormGroup,
   FormControlLabel,
   MenuList,
+  ListItemIcon,
+  ListItemText,
+  Divider,
 } from '@mui/material';
 import {useTheme} from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
+import ClearIcon from '@mui/icons-material/Clear';
 import IconButton from '@mui/material/IconButton';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -25,19 +30,20 @@ import crow from './assets/crow2.png';
 import UserMenu from './accountPages/UserMenu';
 import {ColorModeContext, tokens} from '../theme';
 
-export interface Props {
+interface NavbarProps {
   isAuthenticated: boolean;
   isConnected?: boolean;
   logout: () => void;
+  alerts: string[];
+  setAlerts: (alerts: string[]) => void;
 }
 
 // Render navbar at top of page
-const Navbar = (props: Props) => {
+const Navbar = (props: NavbarProps) => {
   const pages = ['Dashboard'];
-  const alerts = ['Alert 1', 'Alert 2'];
 
   const navigate = useNavigate();
-  const {isAuthenticated, isConnected, logout} = props;
+  const {isAuthenticated, isConnected, logout, alerts, setAlerts} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
   //manges light/dark mode
   const [checked, setChecked] = useState<boolean>(false);
@@ -51,6 +57,10 @@ const Navbar = (props: Props) => {
 
   const handleCloseAlertsMenu = (): void => {
     setAnchorElAlerts(null);
+  };
+
+  const handleClearAlerts = () => {
+    setAlerts([]);
   };
 
   const handleDarkMode = (): void => {
@@ -123,7 +133,7 @@ const Navbar = (props: Props) => {
             onClick={handleOpenAlertsMenu}
             sx={{visibility: isAuthenticated ? 'visible' : 'hidden'}}
           >
-            <Badge badgeContent={2} color="error">
+            <Badge badgeContent={alerts.length} color="error">
               <NotificationsIcon aria-label="notification" />
             </Badge>
           </IconButton>
@@ -143,11 +153,30 @@ const Navbar = (props: Props) => {
             open={Boolean(anchorElAlerts)}
             onClose={handleCloseAlertsMenu}
           >
-            {alerts.map(alert => (
-              <MenuItem key={alert} onClick={handleCloseAlertsMenu}>
-                <Typography textAlign="center">{alert}</Typography>
+            <MenuItem
+              onClick={handleClearAlerts}
+              sx={{width: '400px', maxHeight: '50vh', overflow: 'auto'}}
+            >
+              <ListItemIcon>
+                <ClearIcon />
+              </ListItemIcon>
+              <ListItemText>Clear all alerts</ListItemText>
+            </MenuItem>
+            <Divider />
+            {alerts.length ? (
+              alerts.map(alert => (
+                <MenuItem key={alert}>
+                  <ListItemIcon>
+                    <InfoIcon />
+                  </ListItemIcon>
+                  <ListItemText>{alert}</ListItemText>
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem>
+                <ListItemText>No active alerts...</ListItemText>
               </MenuItem>
-            ))}
+            )}
           </Menu>
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
           <UserMenu isAuthenticated={isAuthenticated} logout={logout} />
