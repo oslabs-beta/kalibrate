@@ -263,9 +263,11 @@ export type PasswordStateTypes = {
 };
 
 export type SettingsProps = {
-  setIsConsumerGroupStatusAlertEnabled: (clientId: boolean) => void;
+  isAlertEnabled: {[key: string]: boolean};
+  setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
 };
 
 export type NotificationsProps = {
-  setIsConsumerGroupStatusAlertEnabled: (clientId: boolean) => void;
+  isAlertEnabled: {[key: string]: boolean};
+  setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
 };

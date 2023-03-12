@@ -27,7 +27,7 @@ import Protected from './components/Protected';
 import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
-import {ThemeProvider, CssBaseline} from '@mui/material';
+import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
 import {GroupTopic, newPollType, storedClient, topics} from './types';
 import {not} from 'ip';
 
@@ -48,8 +48,11 @@ function App() {
 
   // State for alert notifications
   const [alerts, setAlerts] = useState<string[]>([]);
-  const [isConsumerGroupStatusAlertEnabled, setIsConsumerGroupStatusAlertEnabled] =
-    useState<boolean>(false);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessages, setSnackbarMessages] = useState<string[]>([]);
+  const [isAlertEnabled, setIsAlertEnabled] = useState<{[key: string]: boolean}>({
+    consumerGroupStatus: false,
+  });
 
   // State for client data
   const defaultClusterData = {
@@ -68,7 +71,7 @@ function App() {
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
-  console.log(timeSeriesData);
+
   //resets session when user logs out
   const logout = (): void => {
     setIsAuthenticated(false);
@@ -115,6 +118,7 @@ function App() {
         .then(data => {
           setConnectedClusterData(data);
           setIsConnectionLoading(false);
+
           //set interval for polling
           const interval: number = window.setInterval(poll, pollInterval * 1000);
           setCurrentPollInterval(interval);
@@ -206,10 +210,10 @@ function App() {
 
   const addTimeSeries = (newPoll: newPollType) => {
     // if consumer group status alerts are enabled, check notification and notify if applicable
-    if (isConsumerGroupStatusAlertEnabled) {
+    if (isAlertEnabled.consumerGroupStatus) {
       // check whether group status has changed since last poll
       const newGroup = newPoll.groupStatus;
-      const previousPollData = timeSeriesData.at(-1);
+      const previousPollData = timeSeriesData.at(-1); // time series data doesn't need to be passed as arg because its a ref
       const previousGroup = previousPollData ? previousPollData.groupStatus : undefined;
       let notifyChange = false;
 
@@ -223,22 +227,37 @@ function App() {
 
       // notify if there has been a change
       if (notifyChange) {
-        // enable a toast/snackbar alert
+        // enable snackbar alert
+        setSnackbarOpen(true);
+        setSnackbarMessages(snackbarMessages => {
+          return [...snackbarMessages, 'A change in consumer group statuses has occured'];
+        });
 
         // update alert state for navbar
-        setAlerts([
-          ...alerts,
-          `${Date.now().toLocaleString()} - A change in consumer group statuses has occured`,
-        ]);
+        setAlerts(alerts => {
+          return [
+            ...alerts,
+            `${new Date().toLocaleString()} - A change in consumer group statuses has occured`,
+          ];
+        });
       }
     }
 
     // update time series data state
-    const newTimeSeriesData = timeSeriesData;
+    const newTimeSeriesData = timeSeriesData; // mutating to be also get state updates in the poll
     if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
     newTimeSeriesData.push(newPoll);
 
     setTimeSeriesData(newTimeSeriesData);
+  };
+
+  // displays newer messages by shifting the message out of the list
+  const handleSnackbarClose = (event: any, reason: string) => {
+    console.log('snack bar closing handler invoked');
+    if (reason === 'clickaway') return; // overide default behavior to close on any click
+
+    setSnackbarMessages(snackbarMessages.slice(1));
+    setSnackbarOpen(false);
   };
 
   // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
@@ -257,6 +276,16 @@ function App() {
                 setAlerts={setAlerts}
               />
             </nav>
+
+            <Snackbar
+              key={Date.now()}
+              open={snackbarOpen}
+              autoHideDuration={4000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+            >
+              <Alert severity="info">{snackbarMessages[0]}</Alert>
+            </Snackbar>
 
             <Routes>
               <Route path="/" element={<Home />} />
@@ -293,7 +322,8 @@ function App() {
                     setIsAuthenticated={setIsAuthenticated}
                   >
                     <Settings
-                      setIsConsumerGroupStatusAlertEnabled={setIsConsumerGroupStatusAlertEnabled}
+                      isAlertEnabled={isAlertEnabled}
+                      setIsAlertEnabled={setIsAlertEnabled}
                     />
                   </Protected>
                 }

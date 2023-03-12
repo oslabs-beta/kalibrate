@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {
   AppBar,
@@ -26,17 +26,17 @@ import {NotificationsProps} from '../../types';
   -- cluster toggle will on/off ALL information  (fast on)
 */
 const NotificationsTab = (props: NotificationsProps) => {
-  const {setIsConsumerGroupStatusAlertEnabled} = props;
+  const {isAlertEnabled, setIsAlertEnabled} = props; // ref obj that needs to be mutated for poll
 
-  // controlled form state
+  // controlled state for form
   const [isConsumerGroupStatusToggled, setIsConsumerGroupStatusToggled] = useState<boolean>(false);
 
   // toggle alerts for consumer group status
   const handleConsumerGroupStatusToggle = () => {
-    const newSwitchValue = !isConsumerGroupStatusToggled; // toggle switch value and use it for hadnler logic
+    const newSwitchValue = !isConsumerGroupStatusToggled;
 
-    setIsConsumerGroupStatusAlertEnabled(newSwitchValue); // set new state of parent prop that handles notifcations
-    setIsConsumerGroupStatusToggled(newSwitchValue); // set new state of switch component
+    isAlertEnabled.consumerGroupStatus = newSwitchValue; // for poll
+    setIsConsumerGroupStatusToggled(newSwitchValue); // for form
   };
 
   return (

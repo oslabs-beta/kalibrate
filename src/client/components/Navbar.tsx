@@ -59,6 +59,10 @@ const Navbar = (props: NavbarProps) => {
     setAnchorElAlerts(null);
   };
 
+  const handleClearAlerts = () => {
+    setAlerts([]);
+  };
+
   const handleDarkMode = (): void => {
     //set them to dark
     setChecked(true);
@@ -149,16 +153,19 @@ const Navbar = (props: NavbarProps) => {
             open={Boolean(anchorElAlerts)}
             onClose={handleCloseAlertsMenu}
           >
-            <MenuItem>
+            <MenuItem
+              onClick={handleClearAlerts}
+              sx={{width: '400px', maxHeight: '50vh', overflow: 'auto'}}
+            >
               <ListItemIcon>
                 <ClearIcon />
               </ListItemIcon>
-              <ListItemText>Clear alerts</ListItemText>
+              <ListItemText>Clear all alerts</ListItemText>
             </MenuItem>
             <Divider />
             {alerts.length ? (
               alerts.map(alert => (
-                <MenuItem key={alert} onClick={handleCloseAlertsMenu}>
+                <MenuItem key={alert}>
                   <ListItemIcon>
                     <InfoIcon />
                   </ListItemIcon>
@@ -166,7 +173,7 @@ const Navbar = (props: NavbarProps) => {
                 </MenuItem>
               ))
             ) : (
-              <MenuItem onClick={handleCloseAlertsMenu}>
+              <MenuItem>
                 <ListItemText>No active alerts...</ListItemText>
               </MenuItem>
             )}

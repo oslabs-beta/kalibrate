@@ -22,7 +22,7 @@ import {tokens} from '../../theme';
 import {SettingsProps} from '../../types';
 
 const Account = (props: SettingsProps) => {
-  const {setIsConsumerGroupStatusAlertEnabled} = props;
+  const {isAlertEnabled, setIsAlertEnabled} = props;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -65,7 +65,8 @@ const Account = (props: SettingsProps) => {
             </TabPanel>
             <TabPanel value="2">
               <NotificationsTab
-                setIsConsumerGroupStatusAlertEnabled={setIsConsumerGroupStatusAlertEnabled}
+                isAlertEnabled={isAlertEnabled}
+                setIsAlertEnabled={setIsAlertEnabled}
               />
             </TabPanel>
           </Paper>

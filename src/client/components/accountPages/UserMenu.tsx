@@ -37,6 +37,7 @@ const UserMenu = (props: UserMenuProps) => {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
   };
+
   const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
   };
@@ -48,6 +49,7 @@ const UserMenu = (props: UserMenuProps) => {
     console.log(isAuthenticated);
     await navigate('/login'); //if send back to '/', return error bc expecting data... async problem?
   };
+
   const handleDarkMode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     //set them to dark
     setChecked(event.target.checked);
