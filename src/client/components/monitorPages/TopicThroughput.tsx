@@ -16,19 +16,9 @@ import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
 import makeDataSet from '../../util/makeDataSet';
 
-// filter for connected cluster? maybe even when passing props?
-
+//verify that filtering of time series data by cluster works
 const TopicThroughput = props => {
-  const {
-    timeSeriesData,
-    connectedCluster,
-    isInitialized,
-    setInitialized,
-    topicDatasets,
-    setTopicDatasets,
-    xSeries,
-    setXSeries,
-  } = props;
+  const {timeSeriesData, topicDatasets, setTopicDatasets, xSeries, setXSeries} = props;
 
   // todo:
   // initialize on load
@@ -40,29 +30,32 @@ const TopicThroughput = props => {
 
   // on arrival, initialize datasets if not initialized
   useEffect(() => {
-    console.log('USEEFFECT');
-    console.log('TDS: ', topicDatasets);
-    const newDataSets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope, setXSeries);
-    console.log('tsd length: ', timeSeriesData.length);
-    console.log('newdatasets: ', newDataSets);
+    console.log('FIRST USEEFFECT: TOPIC');
+    console.log('tds: ', timeSeriesData);
+
+    const newDataSets = initializeDatasets(timeSeriesData, 'topicThroughputs', xScope, setXSeries);
+    console.log('nds:', newDataSets);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [...xSeries];
     let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
     for (i; i < timeSeriesData.length; i++) {
+      console.log('hello1?');
+
       timeArray.push(timeSeriesData[i].time);
       for (const el of newDataSets) {
+        console.log('hello2?');
         console.log('el: ', el);
         for (const t in timeSeriesData[i].topicThroughputs) {
           console.log(`t: ${t}, label: ${el.label}`);
           if (t === el.label) {
-            console.log('match: ', timeSeriesData[i].topicThroughputs[t]);
+            // console.log('match: ', timeSeriesData[i].topicThroughputs[t]);
             el.data.push(timeSeriesData[i].topicThroughputs[t]);
-            console.log('data add: ', el.data);
+            // console.log('data add: ', el.data);
           }
         }
       }
     }
-    console.log('newdatasets 2', newDataSets);
+    console.log('newdatasets 2 topics', newDataSets);
     setTopicDatasets(newDataSets);
     //   timeSeriesData[i].topicThroughputs) {
     //   const newDataSet = makeDataSet(el);
@@ -85,9 +78,10 @@ const TopicThroughput = props => {
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    console.log('SECOND USEEFFECT');
+    console.log('SECOND USEEFFECT: TOPIC');
+    console.log('tsd: ', timeSeriesData);
     // need at least two data point to calculate rate of messages
-    if (timeSeriesData.length <= 2) return;
+    if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {topicThroughputs} = current;
     // add time to x-axis data
@@ -96,24 +90,22 @@ const TopicThroughput = props => {
     newTime.push(time);
     if (newTime.length > xScope) newTime.shift();
     setXSeries(newTime);
-    console.log('tds: ', topicDatasets);
     const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDatasets));
     // copy throughput data object to change before updating state
-    if (topicDatasets.length === 0) {
-      return;
-    }
+    console.log('newData: ', newData);
     for (const el in topicThroughputs) {
       // push y-axis data to the appropriate array
       // shift oldest data point off to maintain current data on graph
       // update state
       for (const set of newData) {
+        console.log(`el: ${el}, set: ${set}`);
         if (el === set.label) set.data.push(topicThroughputs[el]);
         if (set.data.length > xScope) set.data.shift();
       }
     }
     setTopicDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
-  }, [timeSeriesData[timeSeriesData.length - 1]]);
+  }, [timeSeriesData.at(-1)]);
 
   // global chart plugins - maybe move during refactoring
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);

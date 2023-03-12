@@ -10,16 +10,20 @@ const initializeDatasets = (
   setXSeries
   // useStateFunction // setter function from whichever component calls initializeDatasets
 ) => {
-  console.log('initializing');
+  console.log('initializing with dataset: ', timeSeriesData[0]);
   const newDataSets: chartJSdataset[] = [];
   const blankArray = new Array(xScope);
   blankArray.fill('');
   setXSeries(blankArray);
+  console.log(timeSeriesData[0][subset]);
+  console.log('subset: ', subset);
+
   for (const el in timeSeriesData[0][subset]) {
     const newDataSet = makeDataSet(el);
+    console.log('in for loop: ', newDataSet);
     newDataSets.push(newDataSet);
   }
-
+  console.log('returning: ', newDataSets);
   return newDataSets;
 };
 
