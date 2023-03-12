@@ -40,24 +40,18 @@ const TopicThroughput = props => {
 
   // on arrival, initialize datasets if not initialized
   useEffect(() => {
-    console.log('USEEFFECT');
-    console.log('TDS: ', topicDatasets);
+    // the topicOffset keys are created first since they don't need two data points to compute, like topicThroughputs do
+    // the keys are all the same, so use topicOffsets to make sure that the throughput data has arrays initialized by the time it arrives
     const newDataSets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope, setXSeries);
-    console.log('tsd length: ', timeSeriesData.length);
-    console.log('newdatasets: ', newDataSets);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [...xSeries];
     let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
     for (i; i < timeSeriesData.length; i++) {
       timeArray.push(timeSeriesData[i].time);
       for (const el of newDataSets) {
-        console.log('el: ', el);
         for (const t in timeSeriesData[i].topicThroughputs) {
-          console.log(`t: ${t}, label: ${el.label}`);
           if (t === el.label) {
-            console.log('match: ', timeSeriesData[i].topicThroughputs[t]);
             el.data.push(timeSeriesData[i].topicThroughputs[t]);
-            console.log('data add: ', el.data);
           }
         }
       }
@@ -85,9 +79,8 @@ const TopicThroughput = props => {
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    console.log('SECOND USEEFFECT');
     // need at least two data point to calculate rate of messages
-    if (timeSeriesData.length <= 2) return;
+    if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {topicThroughputs} = current;
     // add time to x-axis data
@@ -96,12 +89,9 @@ const TopicThroughput = props => {
     newTime.push(time);
     if (newTime.length > xScope) newTime.shift();
     setXSeries(newTime);
-    console.log('tds: ', topicDatasets);
-    const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDatasets));
     // copy throughput data object to change before updating state
-    if (topicDatasets.length === 0) {
-      return;
-    }
+    const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDatasets));
+
     for (const el in topicThroughputs) {
       // push y-axis data to the appropriate array
       // shift oldest data point off to maintain current data on graph
