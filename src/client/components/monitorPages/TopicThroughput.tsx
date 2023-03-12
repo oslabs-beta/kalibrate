@@ -19,25 +19,75 @@ import makeDataSet from '../../util/makeDataSet';
 // filter for connected cluster? maybe even when passing props?
 
 const TopicThroughput = props => {
-  console.log('rendering topic throughput');
-  const {timeSeriesData, connectedCluster} = props;
+  const {
+    timeSeriesData,
+    connectedCluster,
+    isInitialized,
+    setInitialized,
+    topicDatasets,
+    setTopicDatasets,
+    xSeries,
+    setXSeries,
+  } = props;
 
   // todo:
   // initialize on load
   // include in initializaton render of unrendered data
   // catch early-load issue
   // modify xscope?
-  // situation in site
-  // ISR?
-
-  const [topicDataSets, setTopicDatasets] = useState<chartJSdataset[]>([]);
-  const [xSeries, setXSeries] = useState<string[]>([]);
   const [xScope, setxScope] = useState<number>(10);
+  //const [dataSetIsInitialized, setDataSetIsInitialized] = useState<boolean>(false);
+
+  // on arrival, initialize datasets if not initialized
+  useEffect(() => {
+    console.log('USEEFFECT');
+    console.log('TDS: ', topicDatasets);
+    const newDataSets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope, setXSeries);
+    console.log('tsd length: ', timeSeriesData.length);
+    console.log('newdatasets: ', newDataSets);
+    // fill initialized dataset with up to xScope columns of data, if available
+    const timeArray = [...xSeries];
+    let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
+    for (i; i < timeSeriesData.length; i++) {
+      timeArray.push(timeSeriesData[i].time);
+      for (const el of newDataSets) {
+        console.log('el: ', el);
+        for (const t in timeSeriesData[i].topicThroughputs) {
+          console.log(`t: ${t}, label: ${el.label}`);
+          if (t === el.label) {
+            console.log('match: ', timeSeriesData[i].topicThroughputs[t]);
+            el.data.push(timeSeriesData[i].topicThroughputs[t]);
+            console.log('data add: ', el.data);
+          }
+        }
+      }
+    }
+    console.log('newdatasets 2', newDataSets);
+    setTopicDatasets(newDataSets);
+    //   timeSeriesData[i].topicThroughputs) {
+    //   const newDataSet = makeDataSet(el);
+    //   newDataSet.data.push(timeSeriesData[i].topicThroughputs[el]);
+    // }
+  }, []);
+
+  //   const newDataSets: chartJSdataset[] = [];
+  //   const timeArray: number[] = [];
+  //   for (let i = 0; i < timeSeriesData.length; i++) {
+  //     timeArray.push(timeSeriesData[i].time);
+  //     const newDataSet = makeDataSet(timeSeriesData[i].cluster);
+  //     for (const el in timeSeriesData[i].topicThroughputs) {
+  //       newDataSet.data.push(timeSeriesData[i].topicThroughputs[el]);
+  //     }
+  //     newDataSt
+  //   }
+
+  // }, []);
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
+    console.log('SECOND USEEFFECT');
     // need at least two data point to calculate rate of messages
-    if (timeSeriesData.length <= 1) return;
+    if (timeSeriesData.length <= 2) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {topicThroughputs} = current;
     // add time to x-axis data
@@ -46,21 +96,10 @@ const TopicThroughput = props => {
     newTime.push(time);
     if (newTime.length > xScope) newTime.shift();
     setXSeries(newTime);
-    const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDataSets));
+    console.log('tds: ', topicDatasets);
+    const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDatasets));
     // copy throughput data object to change before updating state
-    if (topicDataSets.length === 0) {
-      initializeDatasets(
-        timeSeriesData[0].topicOffsets,
-        xScope,
-        setXSeries,
-        makeDataSet,
-        setTopicDatasets
-      );
-
-      // const newGraphOptions = Object.assign({}, graphOptions);
-      // newGraphOptions.plugins.title.text = 'Throughput by Topic';
-      // newGraphOptions.scales.y.title.text = 'Messages/sec';
-      // setGraphOptions(newGraphOptions);
+    if (topicDatasets.length === 0) {
       return;
     }
     for (const el in topicThroughputs) {
@@ -83,13 +122,13 @@ const TopicThroughput = props => {
 
   const data = {
     labels: xSeries, // x-axis labels are timestamps from state
-    datasets: topicDataSets,
-    options: {...lineGraphOptions},
+    datasets: topicDatasets,
+    options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
-  // without this shallow copy, titles and labels of the two line graphs get buggy
 
   data.options.plugins.title.text = 'Throughput by Topic Group';
   data.options.scales.y.title.text = 'Messages/sec';
+  data.options.scales.x.ticks.count = xScope;
 
   return <Line options={data.options} data={data} />;
 };

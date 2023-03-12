@@ -13,6 +13,9 @@ const lineGraphOptions: {} = {
       },
       min: 0,
     },
+    x: {
+      ticks: {},
+    },
   },
   plugins: {
     title: {

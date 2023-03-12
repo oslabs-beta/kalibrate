@@ -73,7 +73,10 @@ function App() {
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
   // console.log('connected cluster data:', connectedClusterData);
-  console.log(connectedClusterData);
+
+  // state to persist line graphs while user isn't on that page
+  const [topicDatasets, setTopicDatasets] = useState<chartJSdataset[]>([]);
+  const [xSeries, setXSeries] = useState<string[]>([]);
 
   //resets session when user logs out
   const logout = (): void => {
@@ -178,7 +181,6 @@ function App() {
         // topic replica status (percentage in sync)
         newPoll.topicReplicaStatus = {};
         for (const el of data.topicData.topics) {
-          console.log('el of topicData.topics');
           let replicas = 0;
           let isr = 0;
           for (const p of el.partitions) {
@@ -188,7 +190,6 @@ function App() {
 
           newPoll.topicReplicaStatus[el.name] = Math.round((isr / replicas) * 100);
         }
-        console.log('replicas ', newPoll.topicReplicaStatus);
 
         // count of offsets by topic
         newPoll.topicOffsets = {};
@@ -211,7 +212,6 @@ function App() {
                 ((newPoll.time - previous.time) / 1000);
             }
           }
-          console.log('ttp: ', newPoll.topicThroughputs);
         }
 
         // count of offsets by group
@@ -236,8 +236,6 @@ function App() {
               ((newPoll.time - previous.time) / 1000);
           }
         }
-        console.log('gtp: ', newPoll.groupThroughputs);
-        console.log('poll: ', newPoll);
         addTimeSeries(newPoll);
         // add timeseriesdata to state so we can drill it/use it for graphing
         // limit to 50 columns for performance, for now
@@ -476,6 +474,10 @@ function App() {
                         (el: newPollType) => el.cluster === connectedClient
                       )}
                       connectedCluster={connectedClient}
+                      topicDatasets={topicDatasets}
+                      setTopicDatasets={setTopicDatasets}
+                      xSeries={xSeries}
+                      setXSeries={setXSeries}
                     />
                   }
                 />
