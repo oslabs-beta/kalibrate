@@ -252,6 +252,7 @@ authController.updateUser = async (req, res, next) => {
   }
   return next();
 };
+
 authController.setSessionCookie = (req, res, next) => {
   const {id, firstName, lastName, email, authProvider} = res.locals.user;
 
