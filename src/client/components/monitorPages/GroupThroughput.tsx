@@ -72,11 +72,20 @@ const GroupThroughput = props => {
 
   // add x-axis size to state??
 
-  const data = {
-    labels: xSeries, // x-axis labels are timestamps from state
-    datasets: groupDataSets,
-    options,
-  };
+  // without this shallow copy, titles and labels of the two line graphs get buggy
+  // const graphOptions = JSON.parse(JSON.stringify(options));
+  // graphOptions.plugins.title.text = 'Throughput by Consumer Group';
+  // graphOptions.scales.y.title.text = 'Messages/sec';
+  // console.log('ggo ', graphOptions);
+
+  console.log('go: ', options);
+  const data = JSON.parse(
+    JSON.stringify({
+      labels: xSeries, // x-axis labels are timestamps from state
+      datasets: groupDataSets,
+      options,
+    })
+  );
 
   data.options.plugins.title.text = 'Throughput by Consumer Group';
   data.options.scales.y.title.text = 'Messages/sec';

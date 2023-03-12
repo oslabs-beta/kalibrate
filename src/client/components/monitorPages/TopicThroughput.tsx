@@ -32,6 +32,7 @@ const TopicThroughput = props => {
 
   const [topicDataSets, setTopicDatasets] = useState<chartJSdataset[]>([]);
   const [xSeries, setXSeries] = useState<string[]>([]);
+  const [graphOptions, setGraphOptions] = useState<object>(options);
   const [xScope, setxScope] = useState<number>(10);
 
   // when new data is received, new data to topic arrays in throughput data object
@@ -56,6 +57,11 @@ const TopicThroughput = props => {
         makeDataSet,
         setTopicDatasets
       );
+
+      // const newGraphOptions = Object.assign({}, graphOptions);
+      // newGraphOptions.plugins.title.text = 'Throughput by Topic';
+      // newGraphOptions.scales.y.title.text = 'Messages/sec';
+      // setGraphOptions(newGraphOptions);
       return;
     }
     for (const el in current.topicOffsets) {
@@ -86,13 +92,16 @@ const TopicThroughput = props => {
 
   // add x-axis size to state??
 
-  const data = {
-    labels: xSeries, // x-axis labels are timestamps from state
-    datasets: topicDataSets,
-    options,
-  };
+  const data = JSON.parse(
+    JSON.stringify({
+      labels: xSeries, // x-axis labels are timestamps from state
+      datasets: topicDataSets,
+      options,
+    })
+  );
+  // without this shallow copy, titles and labels of the two line graphs get buggy
 
-  data.options.plugins.title.text = 'Throughput by Topic';
+  data.options.plugins.title.text = 'Throughput by Topic Group';
   data.options.scales.y.title.text = 'Messages/sec';
 
   return <Line options={options} data={data} />;
