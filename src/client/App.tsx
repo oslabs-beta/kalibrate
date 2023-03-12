@@ -28,7 +28,7 @@ import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
-import {GroupTopic, newPollType, storedClient, chartJSdataset} from './types';
+import {GroupTopic, newPollType, storedClient} from './types';
 import {not} from 'ip';
 import TrafficAndHealthGraphs from './components/monitorPages/TrafficAndHealthGraphs';
 
@@ -76,7 +76,6 @@ function App() {
 
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<chartJSdataset[]>([]);
-  const [groupDatasets, setGroupDatasets] = useState<chartJSdataset[]>([]);
   const [xSeries, setXSeries] = useState<string[]>([]);
 
   //resets session when user logs out
@@ -237,7 +236,6 @@ function App() {
               ((newPoll.time - previous.time) / 1000);
           }
         }
-        console.log('np: ', newPoll);
         addTimeSeries(newPoll);
         // add timeseriesdata to state so we can drill it/use it for graphing
         // limit to 50 columns for performance, for now
@@ -478,8 +476,6 @@ function App() {
                       connectedCluster={connectedClient}
                       topicDatasets={topicDatasets}
                       setTopicDatasets={setTopicDatasets}
-                      groupDatasets={groupDatasets}
-                      setGroupDatasets={setGroupDatasets}
                       xSeries={xSeries}
                       setXSeries={setXSeries}
                     />
