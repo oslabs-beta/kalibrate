@@ -14,7 +14,7 @@ import Topics from './components/managePages/Topics';
 // import TopicThroughput from './components/monitorPages/TopicThroughput';
 // import Throughput from './components/monitorPages/Graphs';
 // import Throughput from './components/monitorPages/Throughput';
-import Offsets from './components/monitorPages/Offsets';
+import OffsetCharts from './components/monitorPages/OffsetCharts';
 import Produce from './components/testPages/Produce';
 import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -33,7 +33,7 @@ import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
 import {GroupTopic, newPollType, storedClient, topics} from './types';
 import {not} from 'ip';
-import Graphs from './components/monitorPages/Graphs';
+import TrafficAndHealthGraphs from './components/monitorPages/TrafficAndHealthGraphs';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -438,19 +438,22 @@ function App() {
                   <Route path=":topic/partitions" element={<PartitionsDisplay />} />
                   <Route path=":topic/messages" element={<MessagesDisplay />} />
                 </Route>
-                {/* <Route
-                  path="lag"
+                <Route
+                  path="offsets"
                   element={
-                    <TopicThroughput
+                    <OffsetCharts
                       timeSeriesData={timeSeriesData}
                       connectedCluster={connectedClient}
                     />
                   }
-                /> */}
+                />
                 <Route
-                  path="graphs"
+                  path="traffic"
                   element={
-                    <Graphs timeSeriesData={timeSeriesData} connectedCluster={connectedClient} />
+                    <TrafficAndHealthGraphs
+                      timeSeriesData={timeSeriesData}
+                      connectedCluster={connectedClient}
+                    />
                   }
                 />
 

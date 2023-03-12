@@ -1,13 +1,13 @@
 import GroupThroughput from './GroupThroughput';
 import TopicThroughput from './TopicThroughput';
 import Replicas from './Replicas';
-import Offsets from './Offsets';
+import Offsets from './OffsetCharts';
 
-const Graphs = props => {
+const TrafficAndHealthGraphs = props => {
   const {timeSeriesData, connectedCluster} = props;
 
   return (
-    <div className="graphGrid">
+    <div className="lineGraphGrid">
       <div className="throughputContainer">
         <TopicThroughput timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
         <GroupThroughput timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
@@ -15,9 +15,9 @@ const Graphs = props => {
       <div className="replicaContainer">
         <Replicas timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
       </div>
-      <Offsets timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
+      {/* <Offsets timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} /> */}
     </div>
   );
 };
 
-export default Graphs;
+export default TrafficAndHealthGraphs;

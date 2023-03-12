@@ -111,17 +111,17 @@ const Manage = props => {
               </ListItemButton>
             </ListItem>
             <Collapse in={openMonitor} timeout="auto" unmountOnExit>
-              <ListItem key="Graphs" disablePadding>
-                <ListItemButton onClick={() => navigate('graphs')}>
-                  <ListItemText primary="Graphs" />
+              <ListItem key="traffic" disablePadding>
+                <ListItemButton onClick={() => navigate('traffic')}>
+                  <ListItemText primary="Traffic And Health" />
                 </ListItemButton>
               </ListItem>
-              {/* <ListItem key="Lag" disablePadding>
-                <ListItemButton onClick={() => navigate('lag')}>
-                  <ListItemText primary="Lag" />
+              {/* <ListItem key="offsets" disablePadding>
+                <ListItemButton onClick={() => navigate('offsets')}>
+                  <ListItemText primary="offsets" />
                 </ListItemButton>
               </ListItem> */}
-              <ListItem key="Offsets" disablePadding>
+              <ListItem key="offsets" disablePadding>
                 <ListItemButton onClick={() => navigate('offsets')}>
                   <ListItemText primary="Offsets" />
                 </ListItemButton>

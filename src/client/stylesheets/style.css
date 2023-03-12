@@ -69,11 +69,18 @@ h1 {
   padding: 1%;
 }
 
-.graphGrid {
+.barChartGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.lineGraphGrid {
   display: grid;
   grid-template-columns: 13fr 7fr;
-  width: 50%;
-  height: auto;
+}
+
+.replicaContainer {
+  margin-top: 80px;
 }
 
 /* animation styling for crow */

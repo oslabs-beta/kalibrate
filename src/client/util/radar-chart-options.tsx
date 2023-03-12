@@ -11,7 +11,7 @@ const radarOptions: {} = {
       },
       pointLabels: {
         font: {
-          size: 16,
+          size: 14,
         },
       },
       min: 0,

@@ -13,7 +13,6 @@ import {
   Legend,
 } from 'chart.js';
 import options from '../../util/line-graph-options';
-import palette from '../../util/palette';
 import initializeDatasets from '../../util/initializeDatasets';
 import makeDataSet from '../../util/makeDataSet';
 
