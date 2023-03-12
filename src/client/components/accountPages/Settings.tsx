@@ -22,7 +22,15 @@ import {tokens} from '../../theme';
 import {SettingsProps} from '../../types';
 
 const Account = (props: SettingsProps) => {
-  const {isAlertEnabled, setIsAlertEnabled} = props;
+  const {
+    isAlertEnabled,
+    setIsAlertEnabled,
+    savedURIs,
+    setSavedURIs,
+    isSlackError,
+    setIsSlackError,
+  } = props;
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -67,6 +75,10 @@ const Account = (props: SettingsProps) => {
               <NotificationsTab
                 isAlertEnabled={isAlertEnabled}
                 setIsAlertEnabled={setIsAlertEnabled}
+                savedURIs={savedURIs}
+                setSavedURIs={setSavedURIs}
+                isSlackError={isSlackError}
+                setIsSlackError={setIsSlackError}
               />
             </TabPanel>
           </Paper>

@@ -153,10 +153,7 @@ const Navbar = (props: NavbarProps) => {
             open={Boolean(anchorElAlerts)}
             onClose={handleCloseAlertsMenu}
           >
-            <MenuItem
-              onClick={handleClearAlerts}
-              sx={{width: '400px', maxHeight: '50vh', overflow: 'auto'}}
-            >
+            <MenuItem onClick={handleClearAlerts}>
               <ListItemIcon>
                 <ClearIcon />
               </ListItemIcon>
