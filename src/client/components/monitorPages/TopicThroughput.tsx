@@ -40,15 +40,15 @@ const TopicThroughput = props => {
     // need at least two data point to calculate rate of messages
     if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
-    const previous = timeSeriesData[timeSeriesData.length - 2];
+    const {topicThroughputs} = current;
     // add time to x-axis data
     const newTime = [...xSeries];
     const time = new Date(current.time).toLocaleTimeString();
     newTime.push(time);
     if (newTime.length > xScope) newTime.shift();
     setXSeries(newTime);
-    // copy throughput data object to change before updating state
     const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDataSets));
+    // copy throughput data object to change before updating state
     if (topicDataSets.length === 0) {
       initializeDatasets(
         timeSeriesData[0].topicOffsets,
@@ -64,24 +64,14 @@ const TopicThroughput = props => {
       // setGraphOptions(newGraphOptions);
       return;
     }
-    for (const el in current.topicOffsets) {
+    for (const el in topicThroughputs) {
       // push y-axis data to the appropriate array
       // shift oldest data point off to maintain current data on graph
       // update state
       for (const set of newData) {
-        const msgPerSec: number =
-          (current.topicOffsets[el] - previous.topicOffsets[el]) /
-          ((current.time - previous.time) / 1000);
-        if (el === set.label) set.data.push(msgPerSec);
+        if (el === set.label) set.data.push(topicThroughputs[el]);
         if (set.data.length > xScope) set.data.shift();
       }
-      // if (newData.hasOwnProperty(el)) {
-      //   newData[el].push(current.topicOffsets[el] - previous.topicOffsets[el]);
-      //   // adjust data to fit desired amount of most recent data pts on graph
-      //   if (newData[el].length > xScope) newData[el].shift();
-      // } else {
-      //   newData[el] = [];
-      // }
     }
     setTopicDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50

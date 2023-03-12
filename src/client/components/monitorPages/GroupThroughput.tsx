@@ -31,7 +31,7 @@ const GroupThroughput = props => {
     // need at least two data point to calculate rate of messages
     if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
-    const previous = timeSeriesData[timeSeriesData.length - 2];
+    const {groupThroughputs} = current;
     // add time to x-axis data
     const newTime = [...xSeries];
     const time = new Date(current.time).toLocaleTimeString();
@@ -56,10 +56,7 @@ const GroupThroughput = props => {
       // shift oldest data point off to maintain current data on graph
       // update state
       for (const set of newData) {
-        const msgPerSec: number =
-          (current.groupOffsets[el] - previous.groupOffsets[el]) /
-          ((current.time - previous.time) / 1000);
-        if (el === set.label) set.data.push(msgPerSec);
+        if (el === set.label) set.data.push(groupThroughputs[el]);
         if (set.data.length > xScope) set.data.shift();
       }
     }

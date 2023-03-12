@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {connectedClusterData, OffsetCollection} from './types';
+import {connectedClusterData, OffsetCollection, timeSeriesData} from './types';
 import ConnectionContainer from './components/ConnectionContainer';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
@@ -175,13 +175,12 @@ function App() {
           other: data.groupData.length - stable - empty,
         };
 
-        // topic replica status
+        // topic replica status (percentage in sync)
         newPoll.topicReplicaStatus = {};
         for (const el of data.topicData.topics) {
           console.log('el of topicData.topics');
           let replicas = 0;
           let isr = 0;
-
           for (const p of el.partitions) {
             replicas += p.replicas.length;
             isr += p.isr.length;
@@ -190,9 +189,10 @@ function App() {
           newPoll.topicReplicaStatus[el.name] = Math.round((isr / replicas) * 100);
         }
         console.log('replicas ', newPoll.topicReplicaStatus);
-        // count of offsets by topic
 
+        // count of offsets by topic
         newPoll.topicOffsets = {};
+        newPoll.topicThroughputs = {};
         if (data.topicData.topics.length) {
           for (const t of data.topicData.topics) {
             newPoll.topicOffsets[t.name] = t.offsets.reduce(
@@ -201,20 +201,41 @@ function App() {
               },
               0
             );
+
+            // rate of throughtput by topic since last poll
+
+            if (timeSeriesData.at(-1)) {
+              const previous: newPollType = timeSeriesData.at(-1);
+              newPoll.topicThroughputs[t.name] =
+                (newPoll.topicOffsets[t.name] - previous.topicOffsets[t.name]) /
+                ((newPoll.time - previous.time) / 1000);
+            }
           }
+          console.log('ttp: ', newPoll.topicThroughputs);
         }
 
         // count of offsets by group
         newPoll.groupOffsets = {};
+        newPoll.groupThroughputs = {};
         for (const g in data.groupOffsets) {
-          const groupName = g;
+          //const groupName = g;
           let sum = 0;
           data.groupOffsets[g].forEach((el: GroupTopic) => {
             el.partitions.forEach(p => {
               sum += Number(p.offset);
             });
           });
-          newPoll.groupOffsets[groupName] = sum;
+          newPoll.groupOffsets[g] = sum;
+
+          // rate of throughtput by group since last poll
+
+          if (timeSeriesData.at(-1)) {
+            const previous: newPollType = timeSeriesData.at(-1);
+            newPoll.groupThroughputs[g] =
+              (newPoll.groupOffsets[g] - previous.groupOffsets[g]) /
+              ((newPoll.time - previous.time) / 1000);
+          }
+          console.log('gtp: ', newPoll.groupThroughputs);
         }
         console.log('poll: ', newPoll);
         addTimeSeries(newPoll);
