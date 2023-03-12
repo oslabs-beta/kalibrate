@@ -15,10 +15,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import InfoIcon from '@mui/icons-material/Info';
-import {Props} from '../Navbar';
 import {ColorModeContext, tokens} from '../../theme';
 
-const UserMenu = (props: Props) => {
+export interface UserMenuProps {
+  isAuthenticated: boolean;
+  isConnected?: boolean;
+  logout: () => void;
+}
+
+const UserMenu = (props: UserMenuProps) => {
   const navigate = useNavigate();
   //manges light/dark mode
   const theme = useTheme();
@@ -32,6 +37,7 @@ const UserMenu = (props: Props) => {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
   };
+
   const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
   };
@@ -39,10 +45,27 @@ const UserMenu = (props: Props) => {
   //end goal: should clear session data and send back to login/connect page
   const handleLogout = async () => {
     console.log('TRYING TO LOG OUT');
-    await logout();
-    console.log(isAuthenticated);
-    await navigate('/login'); //if send back to '/', return error bc expecting data... async problem?
+    //clear cookie
+    try {
+      const response = await fetch('/api/reset', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.err);
+      }
+      //state clear
+      logout();
+      navigate('/login'); //if send back to '/', return error bc expecting data... async problem?
+      console.log('logged out');
+    } catch (err) {
+      console.log('Unable to log ouy');
+    }
   };
+
   const handleDarkMode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     //set them to dark
     setChecked(event.target.checked);

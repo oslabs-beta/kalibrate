@@ -22,6 +22,7 @@ import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Forgot from './components/Forgot';
 import Home from './components/Home';
 import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
@@ -29,8 +30,9 @@ import Protected from './components/Protected';
 import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
-import {ThemeProvider, CssBaseline} from '@mui/material';
-import {GroupTopic, newPollType, storedClient} from './types';
+import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
+import {GroupTopic, newPollType, storedClient, topics} from './types';
+import {not} from 'ip';
 import Graphs from './components/monitorPages/Graphs';
 
 function App() {
@@ -42,12 +44,21 @@ function App() {
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false); // for client deletion
   const [isConnectionError, setIsConnectionError] = useState<string>(''); // for client connection
   const [theme, colorMode] = useMode();
-  const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
+  const [timeSeriesData, setTimeSeriesData] = useState<newPollType[]>([]);
   const [currentPollInterval, setCurrentPollInterval] = useState<number | undefined>(
     undefined // useInterval return object
   );
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
 
+  // State for alert notifications
+  const [alerts, setAlerts] = useState<string[]>([]);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessages, setSnackbarMessages] = useState<string[]>([]);
+  const [isAlertEnabled, setIsAlertEnabled] = useState<{[key: string]: boolean}>({
+    consumerGroupStatus: false,
+  });
+
+  // State for client data
   const defaultClusterData = {
     clusterData: {
       brokers: [],
@@ -113,6 +124,7 @@ function App() {
         .then(data => {
           setConnectedClusterData(data);
           setIsConnectionLoading(false);
+
           //set interval for polling
           const interval: number = window.setInterval(poll, pollInterval * 1000);
           setCurrentPollInterval(interval);
@@ -219,11 +231,55 @@ function App() {
   };
 
   const addTimeSeries = (newPoll: newPollType) => {
-    const newTimeSeriesData = timeSeriesData;
+    // if consumer group status alerts are enabled, check notification and notify if applicable
+    if (isAlertEnabled.consumerGroupStatus) {
+      // check whether group status has changed since last poll
+      const newGroup = newPoll.groupStatus;
+      const previousPollData = timeSeriesData.at(-1); // time series data doesn't need to be passed as arg because its a ref
+      const previousGroup = previousPollData ? previousPollData.groupStatus : undefined;
+      let notifyChange = false;
+
+      for (const status in newGroup) {
+        if (previousGroup === undefined) break;
+        if (newGroup[status] !== previousGroup[status]) {
+          notifyChange = true;
+          break;
+        }
+      }
+
+      // notify if there has been a change
+      if (notifyChange) {
+        // enable snackbar alert
+        setSnackbarOpen(true);
+        setSnackbarMessages(snackbarMessages => {
+          return [...snackbarMessages, 'A change in consumer group statuses has occured'];
+        });
+
+        // update alert state for navbar
+        setAlerts(alerts => {
+          return [
+            ...alerts,
+            `${new Date().toLocaleString()} - A change in consumer group statuses has occured`,
+          ];
+        });
+      }
+    }
+
+    // update time series data state
+    const newTimeSeriesData = timeSeriesData; // mutating to be also get state updates in the poll
     if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
     newTimeSeriesData.push(newPoll);
-    console.log('graphable data: ', newPoll);
+
     setTimeSeriesData(newTimeSeriesData);
+  };
+
+  // displays newer messages by shifting the message out of the list
+  const handleSnackbarClose = (event: any, reason: string) => {
+    console.log('snack bar closing handler invoked');
+    if (reason === 'clickaway') return; // overide default behavior to close on any click
+
+    setSnackbarMessages(snackbarMessages.slice(1));
+    setSnackbarOpen(false);
   };
 
   // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
@@ -238,8 +294,20 @@ function App() {
                 isAuthenticated={isAuthenticated}
                 isConnected={!!storedClients.length}
                 logout={logout}
+                alerts={alerts}
+                setAlerts={setAlerts}
               />
             </nav>
+
+            <Snackbar
+              key={Date.now()}
+              open={snackbarOpen}
+              autoHideDuration={4000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+            >
+              <Alert severity="info">{snackbarMessages[0]}</Alert>
+            </Snackbar>
 
             <Routes>
               <Route path="/" element={<Home />} />
@@ -275,11 +343,14 @@ function App() {
                     isAuthenticated={isAuthenticated}
                     setIsAuthenticated={setIsAuthenticated}
                   >
-                    <Settings />
+                    <Settings
+                      isAlertEnabled={isAlertEnabled}
+                      setIsAlertEnabled={setIsAlertEnabled}
+                    />
                   </Protected>
                 }
               ></Route>
-
+              <Route path="forgot" element={<Forgot />}></Route>
               <Route
                 path="dashboard"
                 element={

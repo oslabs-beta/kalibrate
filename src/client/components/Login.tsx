@@ -90,7 +90,6 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
         <Typography variant="h5" sx={{marginBottom: '15px'}}>
           Log into Kalibrate
         </Typography>
-
         <TextField
           size="small"
           label="Email"
@@ -128,7 +127,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
             size="medium"
             disabled={!isValidLoginSubmission(email, password)}
             onClick={handleLoginSubmit}
-            sx={{fontWeight: 'bold', width: 'auto'}}
+            sx={{fontWeight: 'bold', width: 'auto', margin: '10px'}}
           >
             Log in
           </Button>
@@ -138,11 +137,22 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
             Email or password is incorrect
           </Alert>
         ) : null}
-
-        <Typography>Don't have an account?</Typography>
-        <Link to="/signup">
-          <Typography sx={{color: colors.accent[300]}}>Sign up</Typography>
-        </Link>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography>Forgot password?</Typography>
+          <Link to="/forgot">
+            <Typography sx={{color: colors.accent[300]}}>Reset Password</Typography>
+          </Link>
+          <Typography>Don't have an account?</Typography>
+          <Link to="/signup">
+            <Typography sx={{color: colors.accent[300]}}>Sign up</Typography>
+          </Link>
+        </div>
       </Box>
     </Container>
   );

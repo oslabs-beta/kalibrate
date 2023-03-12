@@ -118,8 +118,9 @@ const AccountTab = () => {
     const show = pass === 'new' || pass === 'confirm' ? 'confirm' : pass;
     return (
       <FormControl sx={{m: 1, width: '25ch'}}>
-        <InputLabel>{titleCase(pass)} Password</InputLabel>
+        <InputLabel sx={{top: '-7px', width: '100%'}}>{titleCase(pass)} Password</InputLabel>
         <OutlinedInput
+          size="small"
           type={showPassword[show] ? 'text' : 'password'}
           label="Old Password"
           value={formChanges[passKey]}
@@ -151,6 +152,7 @@ const AccountTab = () => {
       <Box>
         <h6>Change Account Email</h6>
         <TextField
+          size="small"
           label="Update Email"
           value={formChanges['newEmail']}
           onChange={e => handleFormChange(e, 'newEmail')}

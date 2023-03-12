@@ -3,7 +3,6 @@ import {chartJSdataset} from '../types';
 
 let colorIndex: number = 0;
 const makeDataSet = (topic: string) => {
-  console.log('making topic');
   const colorString: string = palette[colorIndex];
   colorIndex++;
   if (colorIndex == palette.length) colorIndex = 0;
