@@ -213,20 +213,18 @@ export interface ConsumerProps {
   groupData: {[k: string]: any}[];
 }
 
-export type newPollType =
-  | {
-      cluster?: string;
-      time?: number;
-      groupStatus?: {
-        [k: string]: number;
-      };
-      topicOffsets?: OffsetCollection;
-      groupOffsets?: OffsetCollection;
-      topicThroughputs?: OffsetCollection;
-      groupThroughputs?: OffsetCollection;
-      topicReplicaStatus?: replicaStatus;
-    }
-  | undefined;
+export type newPollType = {
+  cluster?: string;
+  time?: number;
+  groupStatus?: {
+    [k: string]: number;
+  };
+  topicOffsets?: OffsetCollection;
+  groupOffsets?: OffsetCollection;
+  topicThroughputs?: OffsetCollection;
+  groupThroughputs?: OffsetCollection;
+  topicReplicaStatus?: replicaStatus;
+};
 
 export type OffsetCollection = {
   [k: string]: number;

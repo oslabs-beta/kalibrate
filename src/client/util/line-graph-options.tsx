@@ -1,4 +1,4 @@
-const options: {} = {
+const lineGraphOptions: {} = {
   // increase for smoother curves
   lineTension: 0,
   scales: {
@@ -48,4 +48,4 @@ const options: {} = {
   },
 };
 
-export default options;
+export default lineGraphOptions;

@@ -12,7 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import options from '../../util/line-graph-options';
+import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
 import makeDataSet from '../../util/makeDataSet';
 
@@ -75,19 +75,16 @@ const GroupThroughput = props => {
   // graphOptions.scales.y.title.text = 'Messages/sec';
   // console.log('ggo ', graphOptions);
 
-  console.log('go: ', options);
-  const data = JSON.parse(
-    JSON.stringify({
-      labels: xSeries, // x-axis labels are timestamps from state
-      datasets: groupDataSets,
-      options,
-    })
-  );
+  const data = {
+    labels: xSeries, // x-axis labels are timestamps from state
+    datasets: groupDataSets,
+    options: {...lineGraphOptions},
+  };
 
   data.options.plugins.title.text = 'Throughput by Consumer Group';
   data.options.scales.y.title.text = 'Messages/sec';
 
-  return <Line options={options} data={data} />;
+  return <Line options={data.options} data={data} />;
 };
 
 export default GroupThroughput;

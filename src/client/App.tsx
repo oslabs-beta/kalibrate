@@ -235,8 +235,8 @@ function App() {
               (newPoll.groupOffsets[g] - previous.groupOffsets[g]) /
               ((newPoll.time - previous.time) / 1000);
           }
-          console.log('gtp: ', newPoll.groupThroughputs);
         }
+        console.log('gtp: ', newPoll.groupThroughputs);
         console.log('poll: ', newPoll);
         addTimeSeries(newPoll);
         // add timeseriesdata to state so we can drill it/use it for graphing
@@ -461,7 +461,9 @@ function App() {
                   path="offsets"
                   element={
                     <OffsetCharts
-                      timeSeriesData={timeSeriesData}
+                      timeSeriesData={timeSeriesData.filter(
+                        (el: newPollType) => el.cluster === connectedClient
+                      )}
                       connectedCluster={connectedClient}
                     />
                   }
@@ -470,7 +472,9 @@ function App() {
                   path="traffic"
                   element={
                     <TrafficAndHealthGraphs
-                      timeSeriesData={timeSeriesData}
+                      timeSeriesData={timeSeriesData.filter(
+                        (el: newPollType) => el.cluster === connectedClient
+                      )}
                       connectedCluster={connectedClient}
                     />
                   }
