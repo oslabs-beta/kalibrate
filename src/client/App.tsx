@@ -45,7 +45,7 @@ function App() {
   const [currentPollInterval, setCurrentPollInterval] = useState<number | undefined>(
     undefined // useInterval return object
   );
-  const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
+  const [pollInterval, setPollInterval] = useState<number>(3); // poll interval in seconds
 
   // State for alert notifications
   const [alerts, setAlerts] = useState<string[]>([]);
@@ -77,7 +77,7 @@ function App() {
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<chartJSdataset[]>([]);
   const [groupDatasets, setGroupDatasets] = useState<chartJSdataset[]>([]);
-  const [xSeries, setXSeries] = useState<string[]>(new Array(10).fill(''));
+  const [xSeries, setXSeries] = useState<string[]>([]);
 
   //resets session when user logs out
   const logout = (): void => {
@@ -429,7 +429,9 @@ function App() {
                       <Overview
                         data={connectedClusterData}
                         connectedCluster={connectedClient}
-                        timeSeriesData={timeSeriesData}
+                        timeSeriesData={timeSeriesData.filter(
+                          (el: newPollType) => el.cluster === connectedClient
+                        )}
                       />
                     </div>
                   }

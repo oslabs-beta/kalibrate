@@ -21,7 +21,7 @@ import makeDataSet from '../../util/makeDataSet';
 const GroupThroughput = props => {
   const {timeSeriesData, connectedCluster, groupDatasets, setGroupDatasets, xSeries, setXSeries} =
     props;
-  console.log('rendering group throughput');
+  console.log('rendering group throughput: ', timeSeriesData);
 
   const [xScope, setxScope] = useState<number>(10);
 

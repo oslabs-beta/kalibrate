@@ -40,6 +40,8 @@ const TopicThroughput = props => {
 
   // on arrival, initialize datasets if not initialized
   useEffect(() => {
+    console.log('TOPIC USEEFFECT 1');
+
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDataSets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope, setXSeries);
@@ -47,7 +49,7 @@ const TopicThroughput = props => {
     const timeArray = [...xSeries];
     let i = timeSeriesData.length >= 10 ? timeSeriesData - 10 : 0;
     for (i; i < timeSeriesData.length; i++) {
-      timeArray.push(timeSeriesData[i].time);
+      timeArray[i] === timeSeriesData[i].time;
       for (const el of newDataSets) {
         for (const t in timeSeriesData[i].topicThroughputs) {
           if (t === el.label) {
@@ -56,6 +58,14 @@ const TopicThroughput = props => {
         }
       }
     }
+    // console.log('preinit timearray, ', timeArray);
+
+    // while (!timeArray[0]) {
+    //   timeArray.shift();
+    //   timeArray.push('');
+    // }
+    console.log('init timearray, ', timeArray);
+    setXSeries(timeArray);
     setTopicDatasets(newDataSets);
     //   timeSeriesData[i].topicThroughputs) {
     //   const newDataSet = makeDataSet(el);
@@ -65,17 +75,18 @@ const TopicThroughput = props => {
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    console.log('TOPIC USEEFFECT 1');
+    console.log('TOPIC USEEFFECT 2');
     // need at least two data point to calculate rate of messages
     if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {topicThroughputs} = current;
     // add time to x-axis data so that it "scrolls" as data arrives
     const newTime = [...xSeries];
-    console.log(newTime);
+    console.log('newteim: ', newTime);
     const time = new Date(current.time).toLocaleTimeString();
-    newTime.push(time);
-    if (newTime.length > xScope) newTime.shift();
+    newTime.unshift(time);
+    if (newTime.length > 10) newTime.pop();
+    console.log('topic updates timeseries');
     setXSeries(newTime);
     const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDatasets));
     // copy throughput data object to change before updating state
@@ -108,7 +119,7 @@ const TopicThroughput = props => {
 
   data.options.plugins.title.text = 'Throughput by Topic Group';
   data.options.scales.y.title.text = 'Messages/sec';
-  data.options.scales.x.ticks.count = xScope;
+  //data.options.scales.x.ticks.count = xScope;
 
   return <Line options={data.options} data={data} />;
 };

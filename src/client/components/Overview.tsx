@@ -15,6 +15,7 @@ const Overview = (props: OverviewProps) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  console.log('tsd: ', timeSeriesData);
   // console.log('time series data', timeSeriesData[0].groupStatus.empty);
 
   //initialize data for doughnut chart
