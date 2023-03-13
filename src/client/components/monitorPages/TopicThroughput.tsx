@@ -15,7 +15,6 @@ import {
 import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
 import makeDataSet from '../../util/makeDataSet';
-import {time} from 'console';
 
 // filter for connected cluster? maybe even when passing props?
 
@@ -23,15 +22,11 @@ const TopicThroughput = props => {
   const {timeSeriesData, connectedCluster, topicDatasets, setTopicDatasets, xSeries, setXSeries} =
     props;
 
-  // todo:
-  // initialize on load
-  // include in initializaton render of unrendered data
-  // catch early-load issue
-  // modify xscope?
+  // todo: allow modification of xscope?
+
   const [xScope, setxScope] = useState<number>(10);
   //const [dataSetIsInitialized, setDataSetIsInitialized] = useState<boolean>(false);
 
-  const localXSeries: string[] = [];
   // on arrival, initialize datasets if not initialized
   useEffect(() => {
     console.log('TOPIC USEEFFECT 1');
@@ -44,6 +39,7 @@ const TopicThroughput = props => {
     //const timeArray = [...xSeries];
     const timeArray = [];
     let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
+    // NOTE: wrap in for loop for rerendering?
     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
     while (timeArray.length < xScope - 1) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
@@ -58,17 +54,9 @@ const TopicThroughput = props => {
     }
     console.log('preinit timearray, ', timeArray);
 
-    // while (!timeArray[0]) {
-    //   timeArray.shift();
-    //   timeArray.push('');
-    // }
     console.log('init tds: ', newDatasets);
     //setXSeries(timeArray);
     setTopicDatasets(newDatasets);
-    //   timeSeriesData[i].topicThroughputs) {
-    //   const newDataSet = makeDataSet(el);
-    //   newDataSet.data.push(timeSeriesData[i].topicThroughputs[el]);
-    // }
   }, []);
 
   // when new data is received, new data to topic arrays in throughput data object
@@ -117,25 +105,32 @@ const TopicThroughput = props => {
   // global chart plugins - maybe move during refactoring
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-  // add x-axis size to state??
-
+  // sort empty strings to end of labels array so that timestamps scroll from left
   const labels = topicDatasets.length ? topicDatasets[0].timestamp : [];
-  labels.sort((a, b) => {
+  console.log('L presort ', labels);
+  console.log('gds length: ', topicDatasets.length ? topicDatasets[0].timestamp : []);
+
+  // move x axis window as time advances
+  let xStart = 1,
+    xEnd = xScope;
+  labels.sort((a: string, b: string) => {
     return !a.length && b.length ? 1 : -1;
   });
-  console.log('L ', labels);
-  // while (labels.length < 10) {
-  //   labels.push('');
-  // }
+  const firstBlank = labels.indexOf('');
+  console.log(firstBlank);
+  if (firstBlank > xScope) {
+    xEnd = firstBlank - 1;
+    xStart = firstBlank - xScope;
+  }
+
   const data = {
-    labels: labels.slice(1, xScope), // x-axis labels are timestamps from state
+    labels: labels.slice(xStart, xEnd), // x-axis labels are timestamps from state
     datasets: topicDatasets.map((el: datasetsObject) => el.data),
     options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
 
   data.options.plugins.title.text = 'Throughput by Topic Group';
   data.options.scales.y.title.text = 'Messages/sec';
-  //data.options.scales.x.ticks.count = xScope;
 
   return <Line options={data.options} data={data} />;
 };
