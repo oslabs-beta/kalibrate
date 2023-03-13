@@ -139,7 +139,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[500],
           }}
         >
-          Brokers Count: <br />
+          Brokers: <br />
           {data.clusterData.brokers.length}
         </Box>
         <Box
