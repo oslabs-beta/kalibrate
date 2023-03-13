@@ -76,7 +76,8 @@ function App() {
 
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<chartJSdataset[]>([]);
-  const [xSeries, setXSeries] = useState<string[]>([]);
+  const [groupDatasets, setGroupDatasets] = useState<chartJSdataset[]>([]);
+  const [xSeries, setXSeries] = useState<string[]>(new Array(10).fill(''));
 
   //resets session when user logs out
   const logout = (): void => {
@@ -476,6 +477,8 @@ function App() {
                       connectedCluster={connectedClient}
                       topicDatasets={topicDatasets}
                       setTopicDatasets={setTopicDatasets}
+                      groupDatasets={groupDatasets}
+                      setGroupDatasets={setGroupDatasets}
                       xSeries={xSeries}
                       setXSeries={setXSeries}
                     />

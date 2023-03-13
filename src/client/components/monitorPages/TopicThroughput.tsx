@@ -40,29 +40,22 @@ const TopicThroughput = props => {
 
   // on arrival, initialize datasets if not initialized
   useEffect(() => {
-    console.log('USEEFFECT');
-    console.log('TDS: ', topicDatasets);
+    // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
+    // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDataSets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope, setXSeries);
-    console.log('tsd length: ', timeSeriesData.length);
-    console.log('newdatasets: ', newDataSets);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [...xSeries];
-    let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
+    let i = timeSeriesData.length >= 10 ? timeSeriesData - 10 : 0;
     for (i; i < timeSeriesData.length; i++) {
       timeArray.push(timeSeriesData[i].time);
       for (const el of newDataSets) {
-        console.log('el: ', el);
         for (const t in timeSeriesData[i].topicThroughputs) {
-          console.log(`t: ${t}, label: ${el.label}`);
           if (t === el.label) {
-            console.log('match: ', timeSeriesData[i].topicThroughputs[t]);
             el.data.push(timeSeriesData[i].topicThroughputs[t]);
-            console.log('data add: ', el.data);
           }
         }
       }
     }
-    console.log('newdatasets 2', newDataSets);
     setTopicDatasets(newDataSets);
     //   timeSeriesData[i].topicThroughputs) {
     //   const newDataSet = makeDataSet(el);
@@ -70,33 +63,20 @@ const TopicThroughput = props => {
     // }
   }, []);
 
-  //   const newDataSets: chartJSdataset[] = [];
-  //   const timeArray: number[] = [];
-  //   for (let i = 0; i < timeSeriesData.length; i++) {
-  //     timeArray.push(timeSeriesData[i].time);
-  //     const newDataSet = makeDataSet(timeSeriesData[i].cluster);
-  //     for (const el in timeSeriesData[i].topicThroughputs) {
-  //       newDataSet.data.push(timeSeriesData[i].topicThroughputs[el]);
-  //     }
-  //     newDataSt
-  //   }
-
-  // }, []);
-
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    console.log('SECOND USEEFFECT');
+    console.log('TOPIC USEEFFECT 1');
     // need at least two data point to calculate rate of messages
-    if (timeSeriesData.length <= 2) return;
+    if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {topicThroughputs} = current;
-    // add time to x-axis data
+    // add time to x-axis data so that it "scrolls" as data arrives
     const newTime = [...xSeries];
+    console.log(newTime);
     const time = new Date(current.time).toLocaleTimeString();
     newTime.push(time);
     if (newTime.length > xScope) newTime.shift();
     setXSeries(newTime);
-    console.log('tds: ', topicDatasets);
     const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDatasets));
     // copy throughput data object to change before updating state
     if (topicDatasets.length === 0) {
