@@ -137,6 +137,11 @@ function App() {
           setIsConnectionLoading(false);
         });
 
+      // empty current arrays of line graph data
+      setTopicDatasets([]);
+      setGroupDatasets([]);
+      setXSeries(new Array(10).fill(''));
+
       // remove interval on unmount
       return () => {
         clearInterval(currentPollInterval);

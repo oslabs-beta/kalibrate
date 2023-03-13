@@ -27,6 +27,7 @@ const GroupThroughput = props => {
 
   // when new data is received, new data to group arrays in throughput data object
   useEffect(() => {
+    console.log('grp thrupt 1', groupDatasets);
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope, setXSeries);
@@ -49,6 +50,8 @@ const GroupThroughput = props => {
   }, []);
 
   useEffect(() => {
+    console.log('grp thrupt 2', groupDatasets);
+
     // need at least two data point to calculate rate of messages
     if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
