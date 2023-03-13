@@ -169,7 +169,7 @@ app.patch(
     return res.sendStatus(200);
   }
 );
-//Logout
+
 app.get(
   '/api/reset',
   authController.verifySessionCookie,
@@ -178,6 +178,15 @@ app.get(
     return res.sendStatus(200);
   }
 );
+//send reset password email
+app.post('/api/password/forgot', authController.sendResetPassword, (req, res) => {
+  return res.sendStatus(200);
+});
+//submit update password form
+app.patch('/api/password/reset', authController.resetPassword, (req, res) => {
+  return res.sendStatus(200);
+});
+
 // Catch all handler
 app.use('*', (req, res) => {
   return res.status(404).send('Not Found');

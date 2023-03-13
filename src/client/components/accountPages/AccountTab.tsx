@@ -17,7 +17,7 @@ import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 // import Schnax from './Snackbar';
-import {PasswordStateTypes} from '../../types';
+import {FormStateTypes, PasswordStateTypes} from '../../types';
 /* Enter Functionality to ...
 -- Enter/Change Profile Name
 -- Change password:  enter old and confirm new twice
@@ -27,10 +27,6 @@ import {PasswordStateTypes} from '../../types';
 -- Delete Account  
 -- Add avatar
 .*/
-
-type FormStateTypes = {
-  [k: string]: string;
-};
 const defaultForm = {
   newEmail: '',
   oldPass: '',
@@ -52,6 +48,8 @@ const AccountTab = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     pass: string
   ) => {
+    setInputOldPass(false);
+    setInputMatching(false);
     setFormChanges({...formChanges, [pass]: e.target.value});
     console.log(formChanges);
   };
@@ -68,6 +66,7 @@ const AccountTab = () => {
       setInputOldPass(true);
       return;
     }
+
     if (newPass !== confirmPass) {
       setInputMatching(true);
       return;
@@ -164,7 +163,7 @@ const AccountTab = () => {
         {FormPassword('confirm')}
         {inputMatching ? <div>MUST BE MATCHING</div> : <div></div>}
       </Box>
-      <Box>
+      <Box className="submit-buttons">
         <Button variant="outlined" size="small" onClick={handleFormClear}>
           Cancel
         </Button>

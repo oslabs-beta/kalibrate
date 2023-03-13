@@ -241,15 +241,6 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
             }
           ></OutlinedInput>
         </FormControl>
-        {/* <TextField
-          size="small"
-          label="Confirm password"
-          variant="outlined"
-          type="password"
-          value={confirmedPassword}
-          onChange={event => setConfirmedPassword(event.target.value)}
-          sx={{marginBottom: '10px', width: '100%'}}
-        /> */}
 
         {isLoading ? (
           <CircularProgress sx={{marginTop: '15px'}} />

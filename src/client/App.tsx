@@ -21,7 +21,7 @@ import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import Forgot from './components/Forgot';
+import {Forgot, Reset} from './components/Forgot';
 import Home from './components/Home';
 import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
@@ -261,7 +261,10 @@ function App() {
                   </Protected>
                 }
               ></Route>
-              <Route path="forgot" element={<Forgot />}></Route>
+              <Route path="forgot">
+                <Route index element={<Forgot />} />
+                <Route path=":reset" element={<Reset />} />
+              </Route>
               <Route
                 path="dashboard"
                 element={

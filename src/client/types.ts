@@ -259,3 +259,6 @@ export type chartJSdataset = {
 export type PasswordStateTypes = {
   [k: string]: boolean;
 };
+export type FormStateTypes = {
+  [k: string]: string;
+};

@@ -147,7 +147,6 @@ authController.verifyUser = async (req, res, next) => {
 };
 
 authController.updateUser = async (req, res, next) => {
-  console.log('ATTEMPTING TO UPDATE');
   const {newEmail, oldPass, newPass} = req.body;
   const {email} = res.locals.user;
 
@@ -253,6 +252,62 @@ authController.updateUser = async (req, res, next) => {
   return next();
 };
 
+//need to update to post with list of email to send to
+authController.sendResetPassword = async (req, res, next) => {
+  const sgMail = require('@sendgrid/mail');
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+  const {email} = req.body;
+  const msg = {
+    to: [email],
+    from: {name: 'Kalibrate', email: process.env.SENDGRID_EMAIL},
+    subject: 'Reset Password',
+    template_id: 'd-f274c453eb934a73bd3018bc4aa20493',
+  };
+  try {
+    await sgMail.send(msg);
+    console.log('sent!');
+  } catch (error) {
+    console.error(error);
+    return next({
+      log: `ERROR - adminController.sendResetPassowrd failed to send rest email`,
+      status: 400,
+      message: {err: 'Failed to fetch cluster group data'},
+    });
+  }
+};
+authController.resetPassword = async (req, res, next) => {
+  const {email, newPass} = req.body;
+  try {
+    const passwordRequirements = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (typeof newPass !== 'string' || !newPass.match(passwordRequirements)) {
+      return next({
+        log: 'ERROR - authController.resetPassword: request body contains invalid type',
+        status: 400,
+        message: {err: 'Invalid form submission'},
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPass, SALT_WORK_FACTOR);
+    const updatedPass = await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    if (!updatedPass) throw 400;
+    console.log('USER PASSWORD UPDATED', updatedPass);
+  } catch (err) {
+    return next({
+      log: 'ERROR - authController.updateUser: failed to update user password',
+      status: err,
+      message: {err: 'Invalid update request'},
+    });
+  }
+  return next();
+};
 authController.setSessionCookie = (req, res, next) => {
   const {id, firstName, lastName, email, authProvider} = res.locals.user;
 

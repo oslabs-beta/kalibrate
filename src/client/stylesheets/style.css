@@ -59,6 +59,12 @@ h1 {
   border: solid 1px;
 }
 
+.submit-buttons {
+  display: flex;
+  width: 60%;
+  margin-left: auto;
+  justify-content: space-between;
+}
 /* styling for doughnut chart */
 
 .groupDoughnutChart {
@@ -66,7 +72,7 @@ h1 {
   position: relative;
   margin-bottom: 1%;
   margin-top: 1%;
-  padding: 1%
+  padding: 1%;
 }
 
 /* animation styling for crow */
