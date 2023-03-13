@@ -99,7 +99,7 @@ const GroupThroughput = props => {
   // move x axis window as time advances
   let xStart = 1,
     xEnd = xScope;
-  labels.sort((a, b) => {
+  labels.sort((a: string, b: string) => {
     return !a.length && b.length ? 1 : -1;
   });
   const firstBlank = labels.indexOf('');
@@ -109,7 +109,7 @@ const GroupThroughput = props => {
     xStart = firstBlank - xScope;
   }
 
-  console.log('L ', labels);
+  //console.log('L ', labels);
 
   const data = {
     labels: labels.slice(xStart, xEnd), // x-axis labels are timestamps from state

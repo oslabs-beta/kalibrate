@@ -12,8 +12,9 @@ const initializeDatasets = (
 ) => {
   console.log('initializing');
   const newDatasets: datasetsObject[] = [];
-  const blankArray = new Array(xScope);
-  blankArray.fill('');
+  const blankArray: string[] = [];
+  //   new Array(xScope);
+  // blankArray.fill('');
   setXSeries(blankArray);
   for (const el in timeSeriesData[0][subset]) {
     const newDataset = makeDataSet(el);
