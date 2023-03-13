@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {
   AppBar,
@@ -11,9 +11,14 @@ import {
   useTheme,
   TextField,
   InputAdornment,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  Alert,
 } from '@mui/material';
 import {TabContext, TabList, TabPanel} from '@mui/lab';
 import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
+import {NotificationsProps} from '../../types';
 
 /* Enter functionality to:
 -- update user email
@@ -21,16 +26,101 @@ import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
 -- select which info to get get : " brokers vs paritions " : via toggle button
   -- cluster toggle will on/off ALL information  (fast on)
 */
-const NotificationsTab = () => {
+const NotificationsTab = (props: NotificationsProps) => {
+  const {
+    isAlertEnabled,
+    setIsAlertEnabled,
+    savedURIs,
+    setSavedURIs,
+    isSlackError,
+    setIsSlackError,
+  } = props;
+
+  // controlled state for form
+  const [isConsumerGroupStatusToggled, setIsConsumerGroupStatusToggled] = useState<boolean>(false);
+  const [localSlackURI, setLocalSlackURI] = useState<string>('');
+
+  const handleSlackUriSave = () => {
+    if (localSlackURI) {
+      const newSavedURIs = savedURIs;
+      setSavedURIs({...savedURIs, slackURI: localSlackURI}); // set state for form
+      newSavedURIs.slackURI = localSlackURI; // mutate for poll
+    }
+  };
+
+  const handleSlackUriClear = () => {
+    const newSavedURIs = savedURIs;
+    setSavedURIs({...savedURIs, slackURI: ''}); // set state for form
+    newSavedURIs.slackURI = ''; // mutate for poll
+
+    setLocalSlackURI('');
+    setIsSlackError(false);
+  };
+  console.log(savedURIs);
+  // toggle alerts for consumer group status
+  const handleConsumerGroupStatusToggle = () => {
+    const newSwitchValue = !isConsumerGroupStatusToggled;
+
+    isAlertEnabled.consumerGroupStatus = newSwitchValue; // mutate for poll
+    setIsConsumerGroupStatusToggled(newSwitchValue); // set state for form
+  };
+
   return (
     <Container>
+      <Box className="settings">
+        <h2>Enable Alerts</h2>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isConsumerGroupStatusToggled}
+                onChange={handleConsumerGroupStatusToggle}
+              />
+            }
+            label="Consumer Group Status Changes"
+          />
+        </FormGroup>
+      </Box>
+
       <Box className="settings default-email">
-        <h6>Notifications Email</h6>
+        <h2>Enable Integrations</h2>
+
+        {/* Slack integration */}
+        <Typography variant="h6">Slack</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            '& .css-1amac0x-MuiContainer-root': {width: '100%'},
+            '& .MuiTextField-root': {width: '100%'},
+          }}
+        >
+          <TextField
+            label="Slack Webhook URI"
+            variant="standard"
+            value={savedURIs.slackURI ? savedURIs.slackURI : localSlackURI}
+            onChange={e => setLocalSlackURI(e.target.value)}
+            disabled={!!savedURIs.slackURI}
+          />
+
+          <Button disabled={!!savedURIs.slackURI || !localSlackURI} onClick={handleSlackUriSave}>
+            Save
+          </Button>
+
+          <Button disabled={!savedURIs.slackURI} onClick={handleSlackUriClear}>
+            Clear
+          </Button>
+        </Box>
+
+        {isSlackError && (
+          <Alert severity="error">
+            Error occured while sending slack alert, please verify that provided URI is valid
+          </Alert>
+        )}
+
+        {/* Email integration */}
+        <h5>Email</h5>
         <p>Specify where you would like your email to be sent.</p>
         <TextField label="Default Email" sx={{width: '50%'}} variant="standard" />
-      </Box>
-      <Box className="settings">
-        <h2>Subscriptions</h2>
       </Box>
     </Container>
   );

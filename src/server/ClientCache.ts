@@ -93,8 +93,6 @@ class ClientCache {
       for (const user in this.cache) {
         if (this.cache[user].lastActive < now - interval) delete this.cache[user];
       }
-
-      console.log('cleared cache');
     }, interval);
   }
 

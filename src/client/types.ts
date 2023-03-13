@@ -216,7 +216,9 @@ export interface ConsumerProps {
 export type newPollType = {
   cluster?: string;
   time?: number;
-  groupStatus?: {};
+  groupStatus?: {
+    [k: string]: number;
+  };
   topicOffsets?: OffsetCollection;
   groupOffsets?: OffsetCollection;
 };
@@ -261,4 +263,21 @@ export type PasswordStateTypes = {
 };
 export type FormStateTypes = {
   [k: string]: string;
+};
+export type SettingsProps = {
+  isAlertEnabled: {[key: string]: boolean};
+  setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
+  savedURIs: {[key: string]: string};
+  setSavedURIs: (uris: {[key: string]: string}) => void;
+  isSlackError: boolean;
+  setIsSlackError: (error: boolean) => void;
+};
+
+export type NotificationsProps = {
+  isAlertEnabled: {[key: string]: boolean};
+  setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
+  savedURIs: {[key: string]: string};
+  setSavedURIs: (uris: {[key: string]: string}) => void;
+  isSlackError: boolean;
+  setIsSlackError: (error: boolean) => void;
 };

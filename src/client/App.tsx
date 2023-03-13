@@ -29,8 +29,9 @@ import Protected from './components/Protected';
 import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
-import {ThemeProvider, CssBaseline} from '@mui/material';
+import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
 import {GroupTopic, newPollType, storedClient, topics} from './types';
+import {not} from 'ip';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -41,12 +42,23 @@ function App() {
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false); // for client deletion
   const [isConnectionError, setIsConnectionError] = useState<string>(''); // for client connection
   const [theme, colorMode] = useMode();
-  const [timeSeriesData, setTimeSeriesData] = useState<object[]>([]);
+  const [timeSeriesData, setTimeSeriesData] = useState<newPollType[]>([]);
   const [currentPollInterval, setCurrentPollInterval] = useState<number | undefined>(
     undefined // useInterval return object
   );
   const [pollInterval, setPollInterval] = useState<number>(5); // poll interval in seconds
 
+  // State for alert notifications
+  const [isAlertEnabled, setIsAlertEnabled] = useState<{[key: string]: boolean}>({
+    consumerGroupStatus: false,
+  });
+  const [alerts, setAlerts] = useState<string[]>([]);
+  const [savedURIs, setSavedURIs] = useState<{[key: string]: string}>({slackURI: ''});
+  const [isSlackError, setIsSlackError] = useState<boolean>(false);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessages, setSnackbarMessages] = useState<string[]>([]);
+
+  // State for client data
   const defaultClusterData = {
     clusterData: {
       brokers: [],
@@ -63,7 +75,6 @@ function App() {
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
-  console.log(connectedClusterData);
 
   //resets session when user logs out
   const logout = (): void => {
@@ -111,6 +122,7 @@ function App() {
         .then(data => {
           setConnectedClusterData(data);
           setIsConnectionLoading(false);
+
           //set interval for polling
           const interval: number = window.setInterval(poll, pollInterval * 1000);
           setCurrentPollInterval(interval);
@@ -189,6 +201,10 @@ function App() {
           });
           newPoll.groupOffsets[groupName] = sum;
         }
+
+        // notify if alerts are on
+        if (isAlertEnabled.consumerGroupStatus) handleConsumerGroupStatusNotifications(newPoll);
+
         addTimeSeries(newPoll);
         // add timeseriesdata to state so we can drill it/use it for graphing
         // limit to 50 columns for performance, for now
@@ -201,11 +217,66 @@ function App() {
   };
 
   const addTimeSeries = (newPoll: newPollType) => {
-    const newTimeSeriesData = timeSeriesData;
+    // update time series data state
+    const newTimeSeriesData = timeSeriesData; // mutating to be also get state updates in the poll
     if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
     newTimeSeriesData.push(newPoll);
-    console.log('graphable data: ', newPoll);
+    console.log('polling...', newTimeSeriesData);
     setTimeSeriesData(newTimeSeriesData);
+  };
+
+  const handleConsumerGroupStatusNotifications = (newPoll: newPollType) => {
+    // check whether group status has changed since last poll
+    const newGroup = newPoll.groupStatus;
+    const previousPollData = timeSeriesData.at(-1); // time series data doesn't need to be passed as arg because its a ref
+    const previousGroup = previousPollData ? previousPollData.groupStatus : undefined;
+    let notifyChange = false;
+
+    for (const status in newGroup) {
+      if (previousGroup === undefined) break;
+      if (newGroup[status] !== previousGroup[status]) {
+        notifyChange = true;
+        break;
+      }
+    }
+
+    // notify if there has been a change
+    if (notifyChange) {
+      // enable snackbar alert
+      setSnackbarOpen(true);
+      setSnackbarMessages(snackbarMessages => {
+        return [...snackbarMessages, 'A change in consumer group statuses has occured'];
+      });
+
+      // update alert state for navbar
+      setAlerts(alerts => {
+        return [
+          ...alerts,
+          `${new Date().toLocaleString()} - A change in consumer group statuses has occured`,
+        ];
+      });
+
+      // send slack alert if slack URI has been set
+      if (savedURIs.slackURI) {
+        fetch(savedURIs.slackURI, {
+          method: 'POST',
+          body: JSON.stringify({
+            text: `${connectedClient}: A change in consumer group statuses has occured`,
+          }),
+        }).then(response => {
+          if (!response.ok) setIsSlackError(true);
+        });
+      }
+    }
+  };
+
+  // displays newer messages by shifting the message out of the list
+  const handleSnackbarClose = (event: any, reason: string) => {
+    console.log('snack bar closing handler invoked');
+    if (reason === 'clickaway') return; // overide default behavior to close on any click
+
+    setSnackbarMessages(snackbarMessages.slice(1));
+    setSnackbarOpen(false);
   };
 
   // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
@@ -220,8 +291,20 @@ function App() {
                 isAuthenticated={isAuthenticated}
                 isConnected={!!storedClients.length}
                 logout={logout}
+                alerts={alerts}
+                setAlerts={setAlerts}
               />
             </nav>
+
+            <Snackbar
+              key={Date.now()}
+              open={snackbarOpen}
+              autoHideDuration={4000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+            >
+              <Alert severity="info">{snackbarMessages[0]}</Alert>
+            </Snackbar>
 
             <Routes>
               <Route path="/" element={<Home />} />
@@ -257,7 +340,14 @@ function App() {
                     isAuthenticated={isAuthenticated}
                     setIsAuthenticated={setIsAuthenticated}
                   >
-                    <Settings />
+                    <Settings
+                      isAlertEnabled={isAlertEnabled}
+                      setIsAlertEnabled={setIsAlertEnabled}
+                      savedURIs={savedURIs}
+                      setSavedURIs={setSavedURIs}
+                      isSlackError={isSlackError}
+                      setIsSlackError={setIsSlackError}
+                    />
                   </Protected>
                 }
               ></Route>
