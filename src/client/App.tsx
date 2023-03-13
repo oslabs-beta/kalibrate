@@ -424,9 +424,7 @@ function App() {
                       <Overview
                         data={connectedClusterData}
                         connectedCluster={connectedClient}
-                        timeSeriesData={timeSeriesData.filter(
-                          (el: newPollType) => el.cluster === connectedClient
-                        )}
+                        timeSeriesData={timeSeriesData}
                       />
                     </div>
                   }

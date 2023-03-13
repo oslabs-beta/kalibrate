@@ -65,7 +65,7 @@ const TopicThroughput = props => {
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    console.log('TOPIC USEEFFECT 1: ', topicDatasets);
+    console.log('TOPIC USEEFFECT 1');
     // need at least two data point to calculate rate of messages
     if (timeSeriesData.length <= 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];

@@ -1,7 +1,8 @@
+import {useState} from 'react';
 import GroupThroughput from './GroupThroughput';
 import TopicThroughput from './TopicThroughput';
 import Replicas from './Replicas';
-import crow from '../assets/crow2.png';
+import Box from '@mui/material';
 
 const TrafficAndHealthGraphs = props => {
   const {
@@ -40,7 +41,7 @@ const TrafficAndHealthGraphs = props => {
       </div>
     </div>
   ) : (
-    <img className="rotocrow rotation bigger" src={crow}></img>
+    <div>Loading...</div>
   );
 };
 

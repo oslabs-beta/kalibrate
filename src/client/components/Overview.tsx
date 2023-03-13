@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import {useState, useEffect} from 'react';
 import {OverviewProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
@@ -16,31 +15,28 @@ const Overview = (props: OverviewProps) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const [donutVars, setDonutVars] = useState<number[]>([0, 0, 0]);
+  // console.log('time series data', timeSeriesData[0].groupStatus.empty);
 
-  // on connection to a new cluster
-  useEffect(() => {
-    if (timeSeriesData >= 1) {
-      // empty, stable, other are the dount chart data -- in that order
-      // get last element of array in case status has changed since connection to cluster
-      setDonutVars([
-        timeSeriesData.at(-1).groupStatus.empty,
-        timeSeriesData.at(-1).groupStatus.stable,
-        timeSeriesData.at(-1).groupStatus.other,
-      ]);
-    }
+  //initialize data for doughnut chart
+  let empty;
+  let stable;
+  let other;
 
-    // console.log('time series data', timeSeriesData[0].groupStatus.empty);
-    //initialize data for doughnut chart
-  }, [timeSeriesData.at(-1)]);
+  const checkData = () => {
+    timeSeriesData.length >= 1 ? (empty = timeSeriesData[0].groupStatus.empty) : (empty = 0);
+    timeSeriesData.length >= 1 ? (stable = timeSeriesData[0].groupStatus.stable) : (empty = 0);
+    timeSeriesData.length >= 1 ? (other = timeSeriesData[0].groupStatus.other) : (empty = 0);
+  };
+
+  checkData();
+
   //input data and styling for doughnut graph
-
   const chartData = {
     labels: ['Empty', 'Stable', 'Other'],
     datasets: [
       {
         label: '# of Groups',
-        data: donutVars,
+        data: [empty, stable, other],
         backgroundColor: [
           'rgba(10,157,252,0.53)',
           'rgba(37, 150, 190,0.2)',
