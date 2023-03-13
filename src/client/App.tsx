@@ -28,7 +28,7 @@ import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
-import {GroupTopic, newPollType, storedClient} from './types';
+import {GroupTopic, newPollType, storedClient, topicDatasetsObject} from './types';
 import {not} from 'ip';
 import TrafficAndHealthGraphs from './components/monitorPages/TrafficAndHealthGraphs';
 
@@ -75,7 +75,7 @@ function App() {
   // console.log('connected cluster data:', connectedClusterData);
 
   // state to persist line graphs while user isn't on that page
-  const [topicDatasets, setTopicDatasets] = useState<chartJSdataset[]>([]);
+  const [topicDatasets, setTopicDatasets] = useState<datasetsObject[]>([]);
   const [groupDatasets, setGroupDatasets] = useState<chartJSdataset[]>([]);
   const [xSeries, setXSeries] = useState<string[]>([]);
 

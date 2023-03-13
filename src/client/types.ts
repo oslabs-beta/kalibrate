@@ -290,3 +290,8 @@ export type chartJSradarDataset = {
   borderColor?: string;
   data: number[];
 };
+
+export type datasetsObject = {
+  timestamp: string[];
+  data: chartJSdataset;
+};
