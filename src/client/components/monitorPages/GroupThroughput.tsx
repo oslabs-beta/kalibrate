@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
-import React from 'react';
-import {chartJSdataset, datasetsObject} from '../../types';
+import {datasetsObject} from '../../types';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,13 +13,9 @@ import {
 } from 'chart.js';
 import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
-import makeDataSet from '../../util/makeDataSet';
-
-// filter for connected cluster? maybe even when passing props?
 
 const GroupThroughput = props => {
-  const {timeSeriesData, connectedCluster, groupDatasets, setGroupDatasets, xSeries, setXSeries} =
-    props;
+  const {timeSeriesData, groupDatasets, setGroupDatasets, setXSeries} = props;
   console.log('rendering group throughput w/groupdatsets: ', groupDatasets);
 
   // todo: allow modification of xscope?
@@ -29,13 +24,12 @@ const GroupThroughput = props => {
 
   // when new data is received, new data to group arrays in throughput data object
   useEffect(() => {
-    console.log('grp thrupt 1', groupDatasets);
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope, setXSeries);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
-    let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
+    let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
     while (timeArray.length < xScope) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
@@ -48,31 +42,22 @@ const GroupThroughput = props => {
         }
       }
     }
-    console.log('preinit timearray, ', timeArray);
-    console.log('newdatasets 2', newDatasets);
+
     setGroupDatasets(newDatasets);
   }, []);
 
   useEffect(() => {
-    console.log('grp thrupt 2', groupDatasets);
-
-    // need at least two data point to calculate rate of messages
+    // don't go forward without sufficient data for calculations
     if (timeSeriesData.length <= 1 || groupDatasets.length < 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {groupThroughputs} = current;
-    // // add time to x-axis data
-    // const newTime = [...xSeries];
-    // const time = new Date(current.time).toLocaleTimeString();
-    // newTime.push(time);
-    // if (newTime.length > xScope) newTime.shift();
-    // setXSeries(newTime);
+
     // copy throughput data object to change before updating state
     const newData: datasetsObject[] = JSON.parse(JSON.stringify(groupDatasets));
 
     newData.forEach(el => {
       console.log('from foreach: ', el.timestamp);
       el.timestamp.push(new Date(current.time).toLocaleTimeString());
-      //if (el.timestamp.length > xScope * 2) el.timestamp.shift();
     });
     for (const el in groupThroughputs) {
       // push y-axis data to the appropriate array
@@ -88,7 +73,7 @@ const GroupThroughput = props => {
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);
 
-  // global chart plugins - maybe move during refactoring
+  // chart plugins
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
   // sort empty strings to end of labels array so that timestamps scroll from left
@@ -109,10 +94,8 @@ const GroupThroughput = props => {
     xStart = firstBlank - xScope;
   }
 
-  console.log('L ', labels);
-
   const data = {
-    labels: labels.slice(xStart, xEnd), // x-axis labels are timestamps from state
+    labels: labels.slice(xStart, xEnd),
     datasets: groupDatasets.map((el: datasetsObject) => el.data),
     options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
