@@ -4,6 +4,7 @@ import ClientCache from './ClientCache';
 import ConsumerCache from './ConsumerCache';
 import {errorObject} from './types';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -32,6 +33,9 @@ const consumerCache = new ConsumerCache();
 
 // Instantiate server
 const app = express();
+
+// Serve client production bundle
+app.use('/client', express.static(path.resolve(__dirname, '..', 'client')));
 
 // Parse requests
 app.use(express.json());
@@ -179,9 +183,9 @@ app.get(
   }
 );
 
-// Catch all handler
-app.use('*', (req, res) => {
-  return res.status(404).send('Not Found');
+// Catch all to serve app
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'index.html'));
 });
 
 // Global error handler
