@@ -2,6 +2,7 @@ import {useState} from 'react';
 import GroupThroughput from './GroupThroughput';
 import TopicThroughput from './TopicThroughput';
 import Replicas from './Replicas';
+import Box from '@mui/material';
 
 const TrafficAndHealthGraphs = props => {
   const {
@@ -15,7 +16,7 @@ const TrafficAndHealthGraphs = props => {
     setXSeries,
   } = props;
 
-  return (
+  return timeSeriesData.length ? (
     <div className="lineGraphGrid">
       <div className="throughputContainer">
         <TopicThroughput
@@ -39,6 +40,8 @@ const TrafficAndHealthGraphs = props => {
         <Replicas timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
       </div>
     </div>
+  ) : (
+    <div>Loading...</div>
   );
 };
 
