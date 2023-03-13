@@ -35,7 +35,7 @@ const GroupThroughput = props => {
     const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope, setXSeries);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
-    let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
+    let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
     while (timeArray.length < xScope) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
@@ -72,7 +72,7 @@ const GroupThroughput = props => {
     newData.forEach(el => {
       console.log('from foreach: ', el.timestamp);
       el.timestamp.push(new Date(current.time).toLocaleTimeString());
-      if (el.timestamp.length > xScope) el.timestamp.shift();
+      //if (el.timestamp.length > xScope * 2) el.timestamp.shift();
     });
     for (const el in groupThroughputs) {
       // push y-axis data to the appropriate array
@@ -99,7 +99,7 @@ const GroupThroughput = props => {
   // move x axis window as time advances
   let xStart = 1,
     xEnd = xScope;
-  labels.sort((a: string, b: string) => {
+  labels.sort((a, b) => {
     return !a.length && b.length ? 1 : -1;
   });
   const firstBlank = labels.indexOf('');
@@ -109,7 +109,7 @@ const GroupThroughput = props => {
     xStart = firstBlank - xScope;
   }
 
-  //console.log('L ', labels);
+  console.log('L ', labels);
 
   const data = {
     labels: labels.slice(xStart, xEnd), // x-axis labels are timestamps from state

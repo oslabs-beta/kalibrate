@@ -38,11 +38,8 @@ const TopicThroughput = props => {
     // fill initialized dataset with up to xScope columns of data, if available
     //const timeArray = [...xSeries];
     const timeArray = [];
-    console.log('xSco');
-    let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
+    let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
     // NOTE: wrap in for loop for rerendering?
-    console.log('i: ', i);
-    console.log('timeseries: ', timeSeriesData);
     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
     while (timeArray.length < xScope - 1) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
