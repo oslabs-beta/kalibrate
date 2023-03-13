@@ -38,6 +38,7 @@ const TopicThroughput = props => {
   const [xScope, setxScope] = useState<number>(10);
   //const [dataSetIsInitialized, setDataSetIsInitialized] = useState<boolean>(false);
 
+  const localXSeries: string[] = [];
   // on arrival, initialize datasets if not initialized
   useEffect(() => {
     console.log('TOPIC USEEFFECT 1');
@@ -46,10 +47,10 @@ const TopicThroughput = props => {
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDataSets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope, setXSeries);
     // fill initialized dataset with up to xScope columns of data, if available
-    const timeArray = [...xSeries];
+    //const timeArray = [...xSeries];
     let i = timeSeriesData.length >= 10 ? timeSeriesData - 10 : 0;
     for (i; i < timeSeriesData.length; i++) {
-      timeArray[i] === timeSeriesData[i].time;
+      localXSeries.push(timeSeriesData[i].time);
       for (const el of newDataSets) {
         for (const t in timeSeriesData[i].topicThroughputs) {
           if (t === el.label) {
@@ -64,8 +65,9 @@ const TopicThroughput = props => {
     //   timeArray.shift();
     //   timeArray.push('');
     // }
-    console.log('init timearray, ', timeArray);
-    setXSeries(timeArray);
+    console.log('init timearray, ', localXSeries);
+    console.log('init tds: ', newDataSets);
+    //setXSeries(timeArray);
     setTopicDatasets(newDataSets);
     //   timeSeriesData[i].topicThroughputs) {
     //   const newDataSet = makeDataSet(el);
@@ -82,12 +84,14 @@ const TopicThroughput = props => {
     const {topicThroughputs} = current;
     //add time to x-axis data so that it "scrolls" as data arrives
     const newTime = [...xSeries];
-    console.log('newteim: ', newTime);
+    console.log('newteim glbal xseries: ', newTime);
     const time = new Date(current.time).toLocaleTimeString();
-    newTime.unshift(time);
-    if (newTime.length > 10) newTime.pop();
-    console.log('topic updates timeseries');
-    setXSeries(newTime);
+    localXSeries.push(time);
+    console.log(localXSeries);
+    // newTime.unshift(time);
+    // if (newTime.length > 10) newTime.pop();
+    // console.log('topic updates timeseries');
+    // setXSeries(newTime);
     const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDatasets));
     // copy throughput data object to change before updating state
     if (topicDatasets.length === 0) {
@@ -112,7 +116,7 @@ const TopicThroughput = props => {
   // add x-axis size to state??
 
   const data = {
-    labels: xSeries, // x-axis labels are timestamps from state
+    labels: localXSeries, // x-axis labels are timestamps from state
     datasets: topicDatasets,
     options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };

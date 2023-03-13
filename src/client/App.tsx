@@ -140,9 +140,9 @@ function App() {
       // empty current arrays of line graph data
       setTopicDatasets([]);
       setGroupDatasets([]);
-      const newTime = [...xSeries];
-      while (newTime.length < 10) newTime.push('');
-      setXSeries(newTime);
+      // const newTime = [...xSeries];
+      // while (newTime.length < 10) newTime.push('');
+      // setXSeries(newTime);
 
       // remove interval on unmount
       return () => {
