@@ -99,6 +99,18 @@ export type TopicThroughputProps = {
   timeSeriesData: object[];
 };
 
+export type TopicLineGraphComponentProps = {
+  timeSeriesData: timeSeriesData[];
+  topicDatasets: datasetsObject[];
+  setTopicDatasets: (topicDatasets: datasetsObject[]) => void;
+};
+
+export type GroupLineGraphComponentProps = {
+  timeSeriesData: timeSeriesData[];
+  groupDatasets: datasetsObject[];
+  setGroupDatasets: (groupDatasets: datasetsObject[]) => void;
+};
+
 export type brokers = {
   nodeId: number;
   host: string;
@@ -221,8 +233,8 @@ export type newPollType = {
   };
   topicOffsets?: OffsetCollection;
   groupOffsets?: OffsetCollection;
-  topicThroughputs?: OffsetCollection;
-  groupThroughputs?: OffsetCollection;
+  topicThroughputs?: ThroughputCollection;
+  groupThroughputs?: ThroughputCollection;
   topicReplicaStatus?: replicaStatus;
 };
 
@@ -251,6 +263,12 @@ export type timeSeriesData = {
   groupOffsets: {};
   groupStatus: {};
   topicOffsets: {};
+  groupThroughputs: {};
+  topicThroughputs: {};
+};
+
+export type ThroughputCollection = {
+  [k: string]: {};
 };
 
 export type chartJSdataset = {
@@ -294,4 +312,13 @@ export type chartJSradarDataset = {
 export type datasetsObject = {
   timestamp: string[];
   data: chartJSdataset;
+};
+
+export type TrafficAndHealthProps = {
+  timeSeriesData: timeSeriesData[];
+  connectedCluster: connectedClusterData;
+  topicDatasets: datasetsObject[];
+  setTopicDatasets: (topicDatasets: datasetsObject[]) => void;
+  groupDatasets: datasetsObject[];
+  setGroupDatasets: (groupDatasets: datasetsObject[]) => void;
 };

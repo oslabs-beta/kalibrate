@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
-import {datasetsObject} from '../../types';
+import {datasetsObject, GroupLineGraphComponentProps} from '../../types';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,9 +14,9 @@ import {
 import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
 
-const GroupThroughput = props => {
-  const {timeSeriesData, groupDatasets, setGroupDatasets, setXSeries} = props;
-  console.log('rendering group throughput w/groupdatsets: ', groupDatasets);
+const GroupThroughput = (props: GroupLineGraphComponentProps) => {
+  const {timeSeriesData, groupDatasets, setGroupDatasets} = props;
+  console.log('tsd ', timeSeriesData);
 
   // todo: allow modification of xscope?
 
@@ -26,7 +26,7 @@ const GroupThroughput = props => {
   useEffect(() => {
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
-    const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope, setXSeries);
+    const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
@@ -37,6 +37,7 @@ const GroupThroughput = props => {
         el.timestamp = timeArray;
         for (const t in timeSeriesData[i].groupThroughputs) {
           if (t === el.data.label) {
+            // @ts-ignore
             el.data.data.push(timeSeriesData[i].groupThroughputs[t]);
           }
         }
@@ -64,6 +65,7 @@ const GroupThroughput = props => {
       // shift oldest data point off to maintain current data on graph
       // update state
       for (const set of newData) {
+        // @ts-ignore
         if (el === set.data.label) set.data.data.push(groupThroughputs[el]);
         if (set.data.data.length > xScope) set.data.data.shift();
       }

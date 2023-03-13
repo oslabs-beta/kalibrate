@@ -6,15 +6,14 @@ import makeDataSet from './makeDataSet';
 const initializeDatasets = (
   timeSeriesData: newPollType[],
   subset: string,
-  xScope: number,
-  setXSeries
+  xScope: number
   // useStateFunction // setter function from whichever component calls initializeDatasets
 ) => {
   console.log('initializing');
   const newDatasets: datasetsObject[] = [];
   const blankArray = new Array(xScope);
   blankArray.fill('');
-  setXSeries(blankArray);
+  // @ts-ignore
   for (const el in timeSeriesData[0][subset]) {
     const newDataset = makeDataSet(el);
     newDatasets.push(newDataset);

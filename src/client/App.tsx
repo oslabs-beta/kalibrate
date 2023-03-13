@@ -28,7 +28,7 @@ import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
-import {GroupTopic, newPollType, storedClient, topicDatasetsObject} from './types';
+import {GroupTopic, newPollType, storedClient, datasetsObject} from './types';
 import {not} from 'ip';
 import TrafficAndHealthGraphs from './components/monitorPages/TrafficAndHealthGraphs';
 
@@ -76,8 +76,7 @@ function App() {
 
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<datasetsObject[]>([]);
-  const [groupDatasets, setGroupDatasets] = useState<chartJSdataset[]>([]);
-  const [xSeries, setXSeries] = useState<string[]>([]);
+  const [groupDatasets, setGroupDatasets] = useState<datasetsObject[]>([]);
 
   //resets session when user logs out
   const logout = (): void => {
@@ -140,9 +139,6 @@ function App() {
       // empty current arrays of line graph data
       setTopicDatasets([]);
       setGroupDatasets([]);
-      // const newTime = [...xSeries];
-      // while (newTime.length < 10) newTime.push('');
-      // setXSeries(newTime);
 
       // remove interval on unmount
       return () => {
@@ -245,24 +241,10 @@ function App() {
           }
         }
 
-        // // add time to x-axis data so that it "scrolls" as data arrives
-        // if (topicDatasets.length && groupDatasets.length) {
-        //   const newTime = [...xSeries];
-        //   console.log('newteim: ', newTime);
-        //   const time = new Date(newPoll.time).toLocaleTimeString();
-        //   newTime.unshift(time);
-        //   if (newTime.length > 10) newTime.pop();
-        //   console.log('poll updates timeseries');
-        //   setXSeries(newTime);
-        // }
         addTimeSeries(newPoll);
 
         // add timeseriesdata to state so we can drill it/use it for graphing
         // limit to 50 columns for performance, for now
-        //const newTimeSeriesData = timeSeriesData;
-        //newTimeSeriesData.push(newPoll);
-        //if (newTimeSeriesData.length > 50) newTimeSeriesData.shift();
-        // to help while figuring out graphs: this is the snapshot of graphable data, added to every <interval> seconds
       })
       .catch(err => console.log(`Error polling data: ${err}`));
   };
@@ -500,8 +482,6 @@ function App() {
                       setTopicDatasets={setTopicDatasets}
                       groupDatasets={groupDatasets}
                       setGroupDatasets={setGroupDatasets}
-                      xSeries={xSeries}
-                      setXSeries={setXSeries}
                     />
                   }
                 />

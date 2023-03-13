@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
-import React from 'react';
-import {chartJSdataset, datasetsObject} from '../../types';
+import {datasetsObject, TopicLineGraphComponentProps} from '../../types';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,27 +13,19 @@ import {
 } from 'chart.js';
 import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
-import makeDataSet from '../../util/makeDataSet';
 
-// filter for connected cluster? maybe even when passing props?
-
-const TopicThroughput = props => {
-  const {timeSeriesData, connectedCluster, topicDatasets, setTopicDatasets, xSeries, setXSeries} =
-    props;
+const TopicThroughput = (props: TopicLineGraphComponentProps) => {
+  const {timeSeriesData, topicDatasets, setTopicDatasets} = props;
 
   // todo: allow modification of xscope?
 
   const [xScope, setxScope] = useState<number>(10);
-  //const [dataSetIsInitialized, setDataSetIsInitialized] = useState<boolean>(false);
 
   // on arrival, initialize datasets if not initialized
   useEffect(() => {
-    console.log('TOPIC USEEFFECT 1');
-
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
-    const newDatasets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope, setXSeries);
-    console.log('new ds: ', newDatasets);
+    const newDatasets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope);
     const timeArray = [];
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
@@ -44,20 +35,18 @@ const TopicThroughput = props => {
         el.timestamp = timeArray;
         for (const t in timeSeriesData[i].topicThroughputs) {
           if (t === el.data.label) {
+            // @ts-ignore
             el.data.data.push(timeSeriesData[i].topicThroughputs[t]);
           }
         }
       }
     }
-    console.log('preinit timearray, ', timeArray);
 
-    console.log('init tds: ', newDatasets);
     setTopicDatasets(newDatasets);
   }, []);
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    console.log('TOPIC USEEFFECT 2');
     // don't go forward without sufficient data for calculations
     if (timeSeriesData.length <= 1 || topicDatasets.length < 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
@@ -76,11 +65,11 @@ const TopicThroughput = props => {
       // shift oldest data point off to maintain current data on graph
       // update state
       for (const set of newData) {
+        // @ts-ignore
         if (el === set.data.label) set.data.data.push(topicThroughputs[el]);
         if (set.data.data.length > xScope) set.data.data.shift();
       }
     }
-    console.log('nds from ue 2: ', newData);
     setTopicDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);
@@ -90,8 +79,6 @@ const TopicThroughput = props => {
 
   // sort empty strings to end of labels array so that timestamps scroll from left
   const labels = topicDatasets.length ? topicDatasets[0].timestamp : [];
-  console.log('L presort ', labels);
-  console.log('gds length: ', topicDatasets.length ? topicDatasets[0].timestamp : []);
 
   // move x axis window as time advances
   let xStart = 1,

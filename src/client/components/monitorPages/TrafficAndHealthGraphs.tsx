@@ -1,10 +1,10 @@
-import {useState} from 'react';
 import GroupThroughput from './GroupThroughput';
 import TopicThroughput from './TopicThroughput';
 import Replicas from './Replicas';
 import crow from '../assets/crow2.png';
+import {TrafficAndHealthProps} from '../../types';
 
-const TrafficAndHealthGraphs = props => {
+const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
   const {
     timeSeriesData,
     connectedCluster,
@@ -12,8 +12,6 @@ const TrafficAndHealthGraphs = props => {
     setTopicDatasets,
     groupDatasets,
     setGroupDatasets,
-    xSeries,
-    setXSeries,
   } = props;
 
   return timeSeriesData.length ? (
@@ -21,19 +19,13 @@ const TrafficAndHealthGraphs = props => {
       <div className="throughputContainer">
         <TopicThroughput
           timeSeriesData={timeSeriesData}
-          connectedCluster={connectedCluster}
           topicDatasets={topicDatasets}
           setTopicDatasets={setTopicDatasets}
-          xSeries={xSeries}
-          setXSeries={setXSeries}
         />
         <GroupThroughput
           timeSeriesData={timeSeriesData}
-          connectedCluster={connectedCluster}
           groupDatasets={groupDatasets}
           setGroupDatasets={setGroupDatasets}
-          xSeries={xSeries}
-          setXSeries={setXSeries}
         />
       </div>
       <div className="replicaContainer">
