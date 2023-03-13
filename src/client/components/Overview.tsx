@@ -15,6 +15,7 @@ const Overview = (props: OverviewProps) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  console.log('ccd: ', data);
   console.log('tsd: ', timeSeriesData);
   // console.log('time series data', timeSeriesData[0].groupStatus.empty);
 
@@ -150,7 +151,11 @@ const Overview = (props: OverviewProps) => {
           }}
         >
           Partitions: <br />
-          {data.topicData.topics ? data.topicData.topics[0].partitions.length : 0}
+          {data.topicData.topics
+            ? data.topicData.topics.reduce((acc, el) => {
+                return acc + el.partitions.length;
+              }, 0)
+            : 0}
         </Box>
       </Box>
     </Box>
