@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Link} from 'react-router-dom';
 import {
@@ -24,12 +24,14 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   // form state
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   // verify email and password meet length requirements
   const isValidLoginSubmission = (email: string, password: string) => {
     const isValidEmail = email.length > 0;
@@ -37,6 +39,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
 
     return isValidEmail && isValidPassword;
   };
+
   // login submission handler
   const handleLoginSubmit = async () => {
     setIsLoading(true);
@@ -90,6 +93,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
         <Typography variant="h5" sx={{marginBottom: '15px'}}>
           Log into Kalibrate
         </Typography>
+
         <TextField
           size="small"
           label="Email"
@@ -98,6 +102,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
           onChange={event => setEmail(event.target.value)}
           sx={{marginBottom: '10px', width: '100%'}}
         />
+
         <FormControl sx={{width: '100%'}}>
           <InputLabel sx={{top: '-7px', width: '100%'}}>Password</InputLabel>
           <OutlinedInput
@@ -119,6 +124,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
             }
           ></OutlinedInput>
         </FormControl>
+
         {isLoading ? (
           <CircularProgress sx={{marginTop: '15px'}} />
         ) : (
@@ -132,11 +138,13 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
             Log in
           </Button>
         )}
+
         {isError ? (
           <Alert severity="error" sx={{marginTop: '10px'}}>
             Email or password is incorrect
           </Alert>
         ) : null}
+
         <div
           style={{
             display: 'flex',
@@ -148,6 +156,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
           <Link to="/forgot">
             <Typography sx={{color: colors.accent[300]}}>Reset Password</Typography>
           </Link>
+
           <Typography>Don't have an account?</Typography>
           <Link to="/signup">
             <Typography sx={{color: colors.accent[300]}}>Sign up</Typography>

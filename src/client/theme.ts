@@ -1,39 +1,8 @@
 import {createContext, useState, useMemo} from 'react';
-import {createTheme, ThemeOptions} from '@mui/material/styles';
-import {PaletteMode} from '@mui/material';
-type modeType = string;
-
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#9db4c0',
-    },
-    secondary: {
-      main: '#c2dfe3',
-    },
-    background: {
-      default: '#f5f5f5',
-      paper: '#f5f5f5',
-    },
-    error: {
-      main: '#e17160',
-    },
-    warning: {
-      main: '#d32f2f',
-    },
-    info: {
-      main: '#253237',
-    },
-  },
-  typography: {
-    fontSize: 14,
-    fontFamily: 'Source Sans Pro',
-  },
-});
+import {createTheme} from '@mui/material/styles';
 
 // export default theme;
-export const tokens = (mode: modeType) => ({
+export const tokens = (mode: string) => ({
   ...(mode === 'light'
     ? {
         //--blue
@@ -234,8 +203,9 @@ export const tokens = (mode: modeType) => ({
       }),
 });
 
-export const themeSettings = (mode: modeType) => {
+export const themeSettings = (mode: any) => {
   const colors = tokens(mode);
+
   return {
     palette: {
       mode: mode,
@@ -312,6 +282,7 @@ export const useMode = () => {
     }),
     []
   );
+
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   return [theme, colorMode];
 };

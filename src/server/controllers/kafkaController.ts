@@ -8,7 +8,7 @@ kafkaController.initiateKafka = async (req, res, next) => {
   let {clientId, brokers, ssl, sasl} = req.body;
   let kafkaClient;
 
-  // two supported connection types: with ssl & sasl, or without ssl & sasl
+  // two supported connection types: with ssl & sasl, or without ssl & sasl plain mechanism
   if (!sasl) {
     kafkaClient = new Kafka({
       clientId,

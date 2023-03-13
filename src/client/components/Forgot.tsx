@@ -1,29 +1,11 @@
-import {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router';
-import {Link} from 'react-router-dom';
-import {
-  Container,
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Alert,
-  CircularProgress,
-  InputLabel,
-  IconButton,
-  FormControl,
-  InputAdornment,
-  OutlinedInput,
-} from '@mui/material';
-import {Visibility, VisibilityOff} from '@mui/icons-material';
-import {SignupProps} from '../types';
+import {Container, Box, Typography} from '@mui/material';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 
 const Forgot = () => {
-  const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
     <Container
       maxWidth="xs"

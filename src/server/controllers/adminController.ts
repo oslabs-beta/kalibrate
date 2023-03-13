@@ -1,4 +1,3 @@
-import kafkaController from './kafkaController';
 import {controller, OffsetCollection} from './../types';
 
 const adminController: controller = {};

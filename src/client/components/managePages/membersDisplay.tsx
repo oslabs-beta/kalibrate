@@ -1,11 +1,12 @@
 import {useState} from 'react';
 import {useParams, useOutletContext, useNavigate} from 'react-router-dom';
 import {Box, Paper, Button} from '@mui/material';
-import {DataGrid, GridRenderCellParams, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
+import {DataGrid, GridRenderCellParams, GridToolbar} from '@mui/x-data-grid';
+import {MembersDisplayContext} from '../../types';
 
 // Display group member data within consumers
 const MembersDisplay = () => {
-  const {groupData} = useOutletContext();
+  const {groupData}: MembersDisplayContext = useOutletContext();
   const {groupId} = useParams();
   const navigate = useNavigate();
 
@@ -37,13 +38,12 @@ const MembersDisplay = () => {
     },
   ];
 
-  const memberRows = memberData.map((member, index) => {
+  const memberRows = memberData.map((member: {[k: string]: any}, index: number) => {
     return {
       id: index,
       clientId: member.clientId,
       clientHost: member.clientHost,
       memberId: member.memberId,
-      //link to general topic page, with a specific topic filter?
       topic: member.memberAssignment,
     };
   });
