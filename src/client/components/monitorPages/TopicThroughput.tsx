@@ -41,7 +41,7 @@ const TopicThroughput = props => {
     let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
     // NOTE: wrap in for loop for rerendering?
     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
-    // while (timeArray.length < xScope - 1) timeArray.push('');
+    while (timeArray.length < xScope - 1) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
       for (const el of newDatasets) {
         el.timestamp = timeArray;
@@ -84,7 +84,7 @@ const TopicThroughput = props => {
     newData.forEach(el => {
       console.log('from foreach: ', el.timestamp);
       el.timestamp.push(new Date(current.time).toLocaleTimeString());
-      if (el.timestamp.length > xScope) el.timestamp.shift();
+      //  if (el.timestamp.length > xScope) el.timestamp.shift();
     });
     // set.timestamp.push(current.time);
     // newData.at(-1).timestamp = current.time;
@@ -106,31 +106,25 @@ const TopicThroughput = props => {
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
   // sort empty strings to end of labels array so that timestamps scroll from left
-  let labels = topicDatasets.length ? topicDatasets[0].timestamp : [];
-  if (labels.length < xScope) {
-    console.log('pad: ', xScope - labels.length);
-    const padding = xScope - labels.length;
-    labels = labels.concat(Array(padding).fill('')).slice(1);
-    console.log('L: ', labels);
-  }
-  // console.log('L presort ', labels);
-  // console.log('gds length: ', topicDatasets.length ? topicDatasets[0].timestamp : []);
+  const labels = topicDatasets.length ? topicDatasets[0].timestamp : [];
+  console.log('L presort ', labels);
+  console.log('gds length: ', topicDatasets.length ? topicDatasets[0].timestamp : []);
 
-  // // move x axis window as time advances
-  // let xStart = 1,
-  //   xEnd = xScope;
-  // labels.sort((a: string, b: string) => {
-  //   return !a.length && b.length ? 1 : -1;
-  // });
-  // const firstBlank = labels.indexOf('');
-  // console.log(firstBlank);
-  // if (firstBlank > xScope) {
-  //   xEnd = firstBlank - 1;
-  //   xStart = firstBlank - xScope;
-  // }
+  // move x axis window as time advances
+  let xStart = 1,
+    xEnd = xScope;
+  labels.sort((a: string, b: string) => {
+    return !a.length && b.length ? 1 : -1;
+  });
+  const firstBlank = labels.indexOf('');
+  console.log(firstBlank);
+  if (firstBlank > xScope) {
+    xEnd = firstBlank - 1;
+    xStart = firstBlank - xScope;
+  }
 
   const data = {
-    labels, // x-axis labels are timestamps from state
+    labels: labels.slice(xStart, xEnd), // x-axis labels are timestamps from state
     datasets: topicDatasets.map((el: datasetsObject) => el.data),
     options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
