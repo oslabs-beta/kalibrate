@@ -80,6 +80,7 @@ authController.createUser = async (req, res, next) => {
     });
   }
 };
+
 authController.verifyUser = async (req, res, next) => {
   const {email, password} = req.body;
 
@@ -147,17 +148,17 @@ authController.verifyUser = async (req, res, next) => {
 };
 
 authController.updateUser = async (req, res, next) => {
-  console.log('ATTEMPTING TO UPDATE');
   const {newEmail, oldPass, newPass} = req.body;
   const {email} = res.locals.user;
 
-  //AUTHENTICATE PASSWORD
+  // verify password
   try {
     const user = await prisma.user.findUnique({
       where: {
         email,
       },
     });
+
     if (user === null) {
       return next({
         log: 'ERROR - authController.verifyUser: user model does not contain record with matching email',
@@ -174,7 +175,9 @@ authController.updateUser = async (req, res, next) => {
         message: {err: 'Invalid email or password'},
       });
     }
+
     const isAuthenticated = await bcrypt.compare(oldPass, user.password);
+
     if (!isAuthenticated) {
       return next({
         log: 'ERROR - authController.updateUser: found user model password does not match submitted password',
@@ -190,10 +193,9 @@ authController.updateUser = async (req, res, next) => {
     });
   }
 
-  //UPDATE EMAIL
+  // update email
   if (newEmail) {
     try {
-      console.log('updating email');
       if (typeof newEmail !== 'string') {
         return next({
           og: 'ERROR - authController.updateUser: email request body contains invalid type',
@@ -201,6 +203,7 @@ authController.updateUser = async (req, res, next) => {
           message: {err: 'Invalid form submission'},
         });
       }
+
       const updatedEmail = await prisma.user.update({
         where: {
           email,
@@ -209,8 +212,8 @@ authController.updateUser = async (req, res, next) => {
           email: newEmail,
         },
       });
+
       if (!updatedEmail) throw 400;
-      console.log('USER EMAIL UPDATED', updatedEmail);
     } catch (err) {
       return next({
         log: 'ERROR - authController.updateUser: failed to update user email',
@@ -219,10 +222,12 @@ authController.updateUser = async (req, res, next) => {
       });
     }
   }
-  //UPDATE PASSWORD
+
+  // update password
   if (newPass) {
     try {
       const passwordRequirements = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
       if (typeof newPass !== 'string' || !newPass.match(passwordRequirements)) {
         return next({
           log: 'ERROR - authController.updateUser: request body contains invalid type',
@@ -232,6 +237,7 @@ authController.updateUser = async (req, res, next) => {
       }
 
       const hashedPassword = await bcrypt.hash(newPass, SALT_WORK_FACTOR);
+
       const updatedPass = await prisma.user.update({
         where: {
           email,
@@ -240,8 +246,8 @@ authController.updateUser = async (req, res, next) => {
           password: hashedPassword,
         },
       });
+
       if (!updatedPass) throw 400;
-      console.log('USER PASSWORD UPDATED', updatedPass);
     } catch (err) {
       return next({
         log: 'ERROR - authController.updateUser: failed to update user password',
@@ -250,6 +256,7 @@ authController.updateUser = async (req, res, next) => {
       });
     }
   }
+
   return next();
 };
 
@@ -272,6 +279,7 @@ authController.verifySessionCookie = (req, res, next) => {
       message: {err: 'User is not authenticated.'},
     });
   }
+
   // decrypt session token from session cookie
   const {kst} = req.cookies; // KST short for Kalibrate Session Token
   jwt.verify(kst, JWT_SECRET, (err: any, decoded: any) => {

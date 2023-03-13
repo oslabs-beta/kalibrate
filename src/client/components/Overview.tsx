@@ -15,8 +15,6 @@ const Overview = (props: OverviewProps) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  // console.log('time series data', timeSeriesData[0].groupStatus.empty);
-
   //initialize data for doughnut chart
   let empty;
   let stable;
@@ -106,6 +104,7 @@ const Overview = (props: OverviewProps) => {
             )
           }
         </Box>
+
         <Box
           sx={{
             gridArea: 'topic',
@@ -115,6 +114,7 @@ const Overview = (props: OverviewProps) => {
           Cluster Name: <br />
           {connectedCluster}
         </Box>
+
         <Box
           sx={{
             gridArea: 'partitions',
@@ -124,6 +124,7 @@ const Overview = (props: OverviewProps) => {
           Topics Count: <br />
           {data.topicData.topics ? data.topicData.topics.length : 0}
         </Box>
+
         <Box
           sx={{
             gridArea: 'offset',
@@ -133,6 +134,7 @@ const Overview = (props: OverviewProps) => {
           Offsets: <br />
           {data.topicData.topics ? data.topicData.topics[0].offsets.length : 0}
         </Box>
+
         <Box
           sx={{
             gridArea: 'brokers',
@@ -142,6 +144,7 @@ const Overview = (props: OverviewProps) => {
           Brokers Count: <br />
           {data.clusterData.brokers.length}
         </Box>
+
         <Box
           sx={{
             gridArea: 'consumer',

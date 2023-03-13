@@ -9,10 +9,11 @@ import {
 } from 'chart.js';
 import {useEffect, useState} from 'react';
 import {Bar} from 'react-chartjs-2';
+import {OffsetProps} from '../../types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Offsets = props => {
+const Offsets = (props: OffsetProps) => {
   //color palette for bar graph
   const colors: string[] = [
     '#e6194B',
@@ -42,24 +43,28 @@ const Offsets = props => {
     if (timeSeriesData.length <= 1) return;
 
     setXNameGroup(
+      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].groupOffsets).map(
         ([key, value]) => key
       )
     );
 
     setYNumGroup(
+      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].groupOffsets).map(
         ([key, value]) => value
       )
     );
 
     setXNameTopic(
+      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].topicOffsets).map(
         ([key, value]) => key
       )
     );
 
     setYNumTopic(
+      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].topicOffsets).map(
         ([key, value]) => value
       )
@@ -123,7 +128,11 @@ const Offsets = props => {
 
   return (
     <div>
+      {/*
+      //@ts-ignore*/}
       <Bar options={groupOptions} data={groupData} />
+      {/*
+      //@ts-ignore*/}
       <Bar options={topicOptions} data={topicData} />
     </div>
   );

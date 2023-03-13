@@ -1,20 +1,7 @@
 import React, {useState} from 'react';
 import type {} from '@mui/lab/themeAugmentation';
-import {useNavigate} from 'react-router-dom';
-import {
-  AppBar,
-  Container,
-  Paper,
-  Box,
-  Button,
-  Typography,
-  Tabs,
-  Tab,
-  TextField,
-  InputAdornment,
-} from '@mui/material';
-import {TabContext, TabList, TabPanel} from '@mui/lab';
-import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
+import {AppBar, Container, Paper, Box, Tabs, Tab} from '@mui/material';
+import {TabContext, TabPanel} from '@mui/lab';
 import AccountTab from './AccountTab';
 import NotificationsTab from './NotificationsTab';
 import {useTheme} from '@mui/material/styles';
@@ -33,14 +20,16 @@ const Account = (props: SettingsProps) => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   const [value, setValue] = useState<number>(1);
+
   const handleTab = (event: React.SyntheticEvent, newValue: number): void => {
     setValue(newValue);
   };
+
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
+
   return (
     <Container
       maxWidth="md"
@@ -67,10 +56,12 @@ const Account = (props: SettingsProps) => {
               <Tab disableRipple label="Notifications" value={2} />
             </Tabs>
           </AppBar>
+
           <Paper variant="outlined" sx={{height: '100%', color: 'inherit'}}>
             <TabPanel value="1">
               <AccountTab />
             </TabPanel>
+
             <TabPanel value="2">
               <NotificationsTab
                 isAlertEnabled={isAlertEnabled}

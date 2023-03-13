@@ -30,8 +30,7 @@ import Redirect from './components/Redirect';
 import './stylesheets/style.css';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
-import {GroupTopic, newPollType, storedClient, topics} from './types';
-import {not} from 'ip';
+import {GroupTopic, newPollType, storedClient} from './types';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -155,8 +154,9 @@ function App() {
       .then(data => {
         const newPoll: newPollType = {
           cluster: connectedClient,
+          time: Date.now(),
         };
-        newPoll.time = Date.now();
+
         setConnectedClusterData(data);
 
         // process data from connected cluster into more graph-ready form:
@@ -221,7 +221,7 @@ function App() {
     const newTimeSeriesData = timeSeriesData; // mutating to be also get state updates in the poll
     if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
     newTimeSeriesData.push(newPoll);
-    console.log('polling...', newTimeSeriesData);
+
     setTimeSeriesData(newTimeSeriesData);
   };
 
@@ -272,7 +272,6 @@ function App() {
 
   // displays newer messages by shifting the message out of the list
   const handleSnackbarClose = (event: any, reason: string) => {
-    console.log('snack bar closing handler invoked');
     if (reason === 'clickaway') return; // overide default behavior to close on any click
 
     setSnackbarMessages(snackbarMessages.slice(1));
@@ -281,7 +280,10 @@ function App() {
 
   // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
   return (
+    // @ts-ignore
     <ColorModeContext.Provider value={colorMode}>
+      {/*
+       // @ts-ignore  */}
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div>

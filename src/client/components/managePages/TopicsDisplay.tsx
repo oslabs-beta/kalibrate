@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {SyntheticEvent, useState} from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {Button, Box, Paper, TextField, Alert} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -26,14 +26,14 @@ const TopicsDisplay = ({
   const [pageSize, setPageSize] = useState<number>(10);
 
   const [newTopicName, setNewTopicName] = useState<string>('');
-  const [numPartitions, setNumPartitions] = useState<number>(1);
+  const [numPartitions, setNumPartitions] = useState<number | string>(1);
 
-  const [deleteTopic, setDeleteTopic] = useState<string[]>([]);
-  const [selectionModel, setSelectionModel] = useState([]);
+  const [deleteTopic, setDeleteTopic] = useState<{[k: string]: any}[]>([]);
+  const [selectionModel, setSelectionModel] = useState<any>([]);
 
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleDeleteSubmit = async event => {
+  const handleDeleteSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
     const deleteTopicArray = [];
@@ -72,7 +72,7 @@ const TopicsDisplay = ({
     }
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
     //check if newtopicname contain any spaces
@@ -224,7 +224,7 @@ const TopicsDisplay = ({
           onChange={event => setNumPartitions(event.target.value)}
         />
 
-        <Button variant="outlined" size="medium " type="submit">
+        <Button variant="outlined" size="medium" type="submit">
           Create
         </Button>
 
@@ -236,6 +236,7 @@ const TopicsDisplay = ({
           <DataGrid
             autoHeight // sets table height based on number of rows
             rows={topicRows}
+            //@ts-ignore
             columns={topicColumns}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}

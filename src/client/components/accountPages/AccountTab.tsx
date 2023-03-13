@@ -1,4 +1,4 @@
-import React, {ReactEventHandler, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Container,
   Box,
@@ -9,28 +9,12 @@ import {
   TextField,
   InputAdornment,
   OutlinedInput,
-  Snackbar,
-  Stack,
 } from '@mui/material';
-import MuiAlert, {AlertProps} from '@mui/material/Alert';
 import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
-// import Schnax from './Snackbar';
 import {PasswordStateTypes} from '../../types';
-/* Enter Functionality to ...
--- Enter/Change Profile Name
--- Change password:  enter old and confirm new twice
---  Form Submit
 
--- Delete stored clusters 
--- Delete Account  
--- Add avatar
-.*/
-
-type FormStateTypes = {
-  [k: string]: string;
-};
 const defaultForm = {
   newEmail: '',
   oldPass: '',
@@ -44,7 +28,7 @@ const AccountTab = () => {
     old: false,
     confirm: false,
   });
-  const [formChanges, setFormChanges] = useState<FormStateTypes>({...defaultForm});
+  const [formChanges, setFormChanges] = useState<{[k: string]: string}>({...defaultForm});
   const [inputOldPass, setInputOldPass] = useState<boolean>(false);
   const [inputMatching, setInputMatching] = useState<boolean>(false);
 
@@ -53,31 +37,33 @@ const AccountTab = () => {
     pass: string
   ) => {
     setFormChanges({...formChanges, [pass]: e.target.value});
-    console.log(formChanges);
   };
+
   const handleFormClear = () => {
     setFormChanges({...defaultForm});
     setInputMatching(false);
     setInputOldPass(false);
   };
 
-  //WHERE TO CHECK EMAIL INPUT AND VALID PASSWORD
   const handleFormSave = async () => {
     const {newEmail, oldPass, newPass, confirmPass} = formChanges;
     if (!oldPass) {
       setInputOldPass(true);
       return;
     }
+
     if (newPass !== confirmPass) {
       setInputMatching(true);
       return;
     }
+
     const updateInfo = {
       newEmail,
       oldPass,
       newPass,
     };
-    //start loading button
+
+    // start loading button
     setLoadingSave(true);
     const response = await fetch('/api/settings/account', {
       method: 'PATCH',
@@ -86,13 +72,9 @@ const AccountTab = () => {
       },
       body: JSON.stringify(updateInfo),
     });
+
     setLoadingSave(false);
-    if (!response.ok) {
-      console.log('couldnt update ');
-    } else {
-      console.log('update ok');
-      handleFormClear();
-    }
+    if (response.ok) handleFormClear();
   };
 
   //logic to create visible password forms
@@ -103,19 +85,23 @@ const AccountTab = () => {
       [pass]: !oldVal,
     });
   };
+
   const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
   };
+
   const titleCase = (string: string): string => {
     return string.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
     });
   };
+
   //password text field components
   const FormPassword = (pass: string) => {
     const passKey =
       pass === 'old' || pass === 'new' || pass === 'confirm' ? pass + 'Pass' : 'newEmail';
     const show = pass === 'new' || pass === 'confirm' ? 'confirm' : pass;
+
     return (
       <FormControl sx={{m: 1, width: '25ch'}}>
         <InputLabel sx={{top: '-7px', width: '100%'}}>{titleCase(pass)} Password</InputLabel>
@@ -149,6 +135,7 @@ const AccountTab = () => {
         {FormPassword('old')}
         {inputOldPass ? <div>MUST ENTER PASSWORD</div> : <div></div>}
       </Box>
+
       <Box>
         <h6>Change Account Email</h6>
         <TextField
@@ -158,16 +145,19 @@ const AccountTab = () => {
           onChange={e => handleFormChange(e, 'newEmail')}
         />
       </Box>
+
       <Box className="settings">
         <h6>Change Password</h6>
         {FormPassword('new')}
         {FormPassword('confirm')}
         {inputMatching ? <div>MUST BE MATCHING</div> : <div></div>}
       </Box>
+
       <Box>
         <Button variant="outlined" size="small" onClick={handleFormClear}>
           Cancel
         </Button>
+
         <LoadingButton
           onClick={handleFormSave}
           loading={loadingSave}
@@ -178,7 +168,9 @@ const AccountTab = () => {
           SAVE
         </LoadingButton>
       </Box>
+
       <hr />
+
       <Box className="settings">
         <h2>DELETE DATA</h2>
         <Button className="delete">DELETE CLUSTERS</Button>

@@ -16,9 +16,10 @@ const Breadcrumb = ({topicName, topicComp}: BreadcrumbProps) => {
       .slice(0, 2)
       .join('/') +
     '/topics';
-  console.log(history.location.pathname.split('/').filter(x => x));
+
   // removes the extra crumbs after going back to topics grid
   const subCrumb = history.location.pathname === homePath ? [] : [topicName, topicComp];
+
   return (
     <Breadcrumbs>
       <Typography sx={{cursor: 'pointer'}} onClick={() => navigate(homePath)}>

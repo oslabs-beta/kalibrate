@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "start": "cross-env NODE_ENV=production nodemon server/index.js",
     "dev": "concurrently \"vite\" \"ts-node-dev -P tsconfig.server.json src/server/server.ts\"",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -54,6 +55,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/crypto-js": "^4.1.1",
     "@types/ip": "^1.1.0",
     "@types/jest": "^29.4.0",
     "@types/react": "^18.0.27",
