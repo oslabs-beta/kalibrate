@@ -21,7 +21,7 @@ import makeDataSet from '../../util/makeDataSet';
 const GroupThroughput = props => {
   const {timeSeriesData, connectedCluster, groupDatasets, setGroupDatasets, xSeries, setXSeries} =
     props;
-  console.log('rendering group throughput: ', timeSeriesData);
+  console.log('rendering group throughput w/groupdatsets: ', groupDatasets);
 
   const [xScope, setxScope] = useState<number>(10);
 
@@ -32,11 +32,11 @@ const GroupThroughput = props => {
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope, setXSeries);
     // fill initialized dataset with up to xScope columns of data, if available
-    //const timeArray = [...xSeries];
-    // console.log(timeArray);
+    const timeArray = [...xSeries];
+    console.log(timeArray);
     let i = timeSeriesData.length >= xScope ? timeSeriesData - xScope : 0;
     for (i; i < timeSeriesData.length; i++) {
-      //timeArray.push(timeSeriesData[i].time);
+      timeArray.push(timeSeriesData[i].time);
       for (const el of newDatasets) {
         for (const t in timeSeriesData[i].groupThroughputs) {
           if (t === el.label) {
@@ -53,7 +53,7 @@ const GroupThroughput = props => {
     console.log('grp thrupt 2', groupDatasets);
 
     // need at least two data point to calculate rate of messages
-    if (timeSeriesData.length <= 1) return;
+    if (timeSeriesData.length <= 1 || groupDatasets.length < 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {groupThroughputs} = current;
     // add time to x-axis data
@@ -74,7 +74,7 @@ const GroupThroughput = props => {
         if (set.data.length > xScope) set.data.shift();
       }
     }
-
+    console.log('setting gds in grup useefect 2', groupDatasets);
     setGroupDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);

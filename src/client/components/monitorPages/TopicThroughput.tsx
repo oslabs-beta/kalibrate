@@ -77,10 +77,10 @@ const TopicThroughput = props => {
   useEffect(() => {
     console.log('TOPIC USEEFFECT 2');
     // need at least two data point to calculate rate of messages
-    if (timeSeriesData.length <= 1) return;
+    if (timeSeriesData.length <= 1 || topicDatasets.length < 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
     const {topicThroughputs} = current;
-    // add time to x-axis data so that it "scrolls" as data arrives
+    //add time to x-axis data so that it "scrolls" as data arrives
     const newTime = [...xSeries];
     console.log('newteim: ', newTime);
     const time = new Date(current.time).toLocaleTimeString();

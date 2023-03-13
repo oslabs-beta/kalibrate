@@ -244,7 +244,19 @@ function App() {
               ((newPoll.time - previous.time) / 1000);
           }
         }
+
+        // // add time to x-axis data so that it "scrolls" as data arrives
+        // if (topicDatasets.length && groupDatasets.length) {
+        //   const newTime = [...xSeries];
+        //   console.log('newteim: ', newTime);
+        //   const time = new Date(newPoll.time).toLocaleTimeString();
+        //   newTime.unshift(time);
+        //   if (newTime.length > 10) newTime.pop();
+        //   console.log('poll updates timeseries');
+        //   setXSeries(newTime);
+        // }
         addTimeSeries(newPoll);
+
         // add timeseriesdata to state so we can drill it/use it for graphing
         // limit to 50 columns for performance, for now
         //const newTimeSeriesData = timeSeriesData;
