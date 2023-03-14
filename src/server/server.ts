@@ -147,6 +147,20 @@ app.delete(
   }
 );
 
+app.post(
+  '/api/:clientId/partitions',
+  authController.verifySessionCookie,
+  kafkaController.getCachedClient,
+  clusterController.getClientConnection,
+  kafkaController.cacheClient,
+  kafkaController.getCachedClient,
+  topicController.addPartitions,
+  adminController.getTopicData,
+  (req, res) => {
+    return res.status(200).json(res.locals.topicData);
+  }
+);
+
 app.get(
   '/api/messages/:clientId/:topic',
   authController.verifySessionCookie,

@@ -3,7 +3,6 @@ import {controller} from './../types';
 const topicController: controller = {};
 
 topicController.createTopic = async (req, res, next) => {
-
   // declare admin
   const {kafka} = res.locals;
 
@@ -26,19 +25,6 @@ topicController.createTopic = async (req, res, next) => {
       ],
     });
 
-    // invoke create partitions
-    // await admin.createPartitions({
-    //   topicPartitions: [
-    //     {
-    //       topics: {
-    //         topic: newTopicName,
-    //         count: numPartitions,
-    //       },
-    //       count: 1,
-    //     },
-    //   ],
-    // });
-
     //disconnect admin
     await admin.disconnect();
     // return next
@@ -55,7 +41,6 @@ topicController.createTopic = async (req, res, next) => {
 };
 
 topicController.deleteTopic = async (req, res, next) => {
-  
   // declare admin
   const {kafka} = res.locals;
 
@@ -79,6 +64,39 @@ topicController.deleteTopic = async (req, res, next) => {
       log: `ERROR - topicController.deleteTopic: ${err}`,
       status: 400,
       message: {err: 'Failed to delete topic'},
+    });
+  }
+};
+
+topicController.addPartitions = async (req, res, next) => {
+  // declare admin
+  const {kafka} = res.locals;
+
+  //grab info needed to add partitions
+  const {selectedTopicName, totalPartitions} = req.body;
+
+  try {
+    //connect to admin
+    const admin = kafka.admin();
+    await admin.connect();
+
+    //create partitions
+    await admin.createPartitions({
+      topicPartitions: [
+        {
+          topic: selectedTopicName,
+          count: totalPartitions,
+        },
+      ],
+    });
+
+    await admin.disconnect();
+    return next();
+  } catch (err) {
+    next({
+      log: `ERROR - topicController.addPartitions: ${err}`,
+      status: 400,
+      message: {err: 'Failed to add partitions'},
     });
   }
 };

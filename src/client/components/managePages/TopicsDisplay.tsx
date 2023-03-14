@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {Button, Box, Paper, TextField, Alert} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -10,6 +11,8 @@ import {
   GridToolbarDensitySelector,
   GridToolbarExport,
   GridValueGetterParams,
+  GridRowId,
+  GridColumns,
 } from '@mui/x-data-grid';
 import {TopicsDisplayProps, TopicsContext} from '../../types';
 
@@ -26,20 +29,21 @@ const TopicsDisplay = ({
   const [pageSize, setPageSize] = useState<number>(10);
 
   const [newTopicName, setNewTopicName] = useState<string>('');
-  const [numPartitions, setNumPartitions] = useState<number>(1);
+  const [numPartitions, setNumPartitions] = useState<any>(1);
+  const [addPartitions, setAddPartitions] = useState<any>(1);
 
-  const [deleteTopic, setDeleteTopic] = useState<string[]>([]);
-  const [selectionModel, setSelectionModel] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState<any[]>([]);
+  const [selectionModel, setSelectionModel] = useState<GridRowId[]>([]);
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleDeleteSubmit = async event => {
+  const handleDeleteSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const deleteTopicArray = [];
 
-    for (let i = 0; i < deleteTopic.length; i++) {
-      deleteTopicArray.push(deleteTopic[i].topicName);
+    for (let i = 0; i < selectedTopic.length; i++) {
+      deleteTopicArray.push(selectedTopic[i].topicName);
     }
 
     try {
@@ -63,7 +67,7 @@ const TopicsDisplay = ({
       };
 
       setConnectedClusterData(updatedTopicData);
-      setDeleteTopic([]);
+      setSelectedTopic([]);
       setSelectionModel([]);
 
       if (!response.ok) throw new Error();
@@ -72,7 +76,8 @@ const TopicsDisplay = ({
     }
   };
 
-  const handleSubmit = async event => {
+  //handler for creating topic
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     //check if newtopicname contain any spaces
@@ -109,6 +114,56 @@ const TopicsDisplay = ({
       setConnectedClusterData(updatedTopicData);
       setNewTopicName('');
       setNumPartitions(1);
+
+      if (!response.ok) throw new Error();
+      if (response.ok) setErrorMessage('');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //handler for creating partitions
+  const handleSubmitPartitions = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (selectedTopic.length > 1)
+      return setErrorMessage('Only select one topic while adding partitions');
+
+    const totalPartitions = parseInt(addPartitions) + parseInt(selectedTopic[0].numPartitions);
+    const selectedTopicName = selectedTopic[0].topicName;
+
+    const updatePartitions = {
+      selectedTopicName,
+      totalPartitions,
+    };
+
+    console.log(updatePartitions, 'update partitions');
+
+    //send post request to create new topic
+    try {
+      const response = await fetch(`/api/${connectedCluster}/partitions`, {
+        body: JSON.stringify(updatePartitions),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      });
+
+      //updateclusterdata with the new data sent back
+      //assign response of fetch request to updateddata which is the updated list of topics
+      const updatedData = await response.json();
+
+      //retain old information while passing in new topics array
+      const updatedTopicData = {
+        ...connectedClusterData,
+        topicData: {
+          topics: updatedData.topics,
+        },
+      };
+
+      setConnectedClusterData(updatedTopicData);
+      setNumPartitions(1);
+      setSelectionModel([]);
 
       if (!response.ok) throw new Error();
       if (response.ok) setErrorMessage('');
@@ -195,9 +250,37 @@ const TopicsDisplay = ({
             Delete
           </Button>
         </Box>
+        <Box
+          component="form"
+          onSubmit={handleSubmitPartitions}
+          autoComplete="off"
+          sx={{
+            '& .MuiTextField-root': {m: 1},
+            '& button': {m: 1},
+          }}
+        >
+          <Button variant="text" size="small" type="submit">
+            <AddIcon color="inherit" sx={{fontSize: 18}} />
+            Add Partitions
+          </Button>
+          <TextField
+            variant="outlined"
+            size="small"
+            value={addPartitions}
+            onChange={event => setAddPartitions(event.target.value)}
+            inputProps={{
+              style: {
+                height: 10,
+                width: 10,
+              },
+            }}
+          />
+        </Box>
       </GridToolbarContainer>
     );
   };
+
+  // console.log('selectedtopic', selectedTopic.numPartitions);
 
   return (
     <div>
@@ -211,6 +294,7 @@ const TopicsDisplay = ({
         }}
       >
         <TextField
+          variant="standard"
           size="small"
           label="Topic name"
           value={newTopicName}
@@ -218,6 +302,7 @@ const TopicsDisplay = ({
         />
 
         <TextField
+          variant="standard"
           size="small"
           label="Number of Partitions"
           value={numPartitions}
@@ -245,7 +330,7 @@ const TopicsDisplay = ({
               setSelectionModel(ids);
               const selectedIds = new Set(ids);
               const SelectedRowData = topicRows.filter(row => selectedIds.has(row.id));
-              setDeleteTopic(SelectedRowData);
+              setSelectedTopic(SelectedRowData);
             }}
             selectionModel={selectionModel}
             disableSelectionOnClick
