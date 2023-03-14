@@ -1,7 +1,6 @@
-FROM node:18.13
-WORKDIR /app
-COPY . /app
+FROM node:16.13
+WORKDIR /usr/src/app
+COPY . /usr/src/app/
 RUN npm install
-RUN npm run build
 EXPOSE 5173
-CMD npm start
+ENTRYPOINT ["npm", "start"]

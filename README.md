@@ -47,9 +47,9 @@ Before you begin, be sure to have Docker and Docker Compose installed.
 
 ### For Production
 
-todo: env vars + db initialization
+todo: set env vars + db initialization w/ script and prisma cmds? May need to update docker file?
 
-Build the image for the production environemnt with:` npm run docker-build-prod`. YOu can verify
+Build the image for the production environemnt with: `npm run docker-build-prod`. YOu can verify
 that the `kalibrate-prod` image has been created by running `docker images`
 
 Create the production container with `npm run docker-prod:run`. You can verify that the container
