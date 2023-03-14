@@ -231,8 +231,8 @@ export type newPollType = {
   groupStatus?: {
     [k: string]: number;
   };
-  topicOffsets?: OffsetCollection;
-  groupOffsets?: OffsetCollection;
+  topicOffsets: OffsetCollection;
+  groupOffsets: OffsetCollection;
   topicThroughputs?: ThroughputCollection;
   groupThroughputs?: ThroughputCollection;
   topicReplicaStatus?: replicaStatus;
@@ -353,8 +353,8 @@ export type datasetsObject = {
 };
 
 export type TrafficAndHealthProps = {
-  timeSeriesData: timeSeriesData[];
-  connectedCluster: connectedClusterData;
+  timeSeriesData: newPollType[];
+  connectedCluster: string;
   topicDatasets: datasetsObject[];
   setTopicDatasets: (topicDatasets: datasetsObject[]) => void;
   groupDatasets: datasetsObject[];
