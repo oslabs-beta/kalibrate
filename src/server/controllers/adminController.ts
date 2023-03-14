@@ -159,4 +159,45 @@ adminController.getGroupData = async (req, res, next) => {
   }
 };
 
+adminController.sendAlertEmail = async (req, res, next) => {
+  const sgMail = require('@sendgrid/mail');
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+  const {text} = req.body;
+  const {email} = res.locals;
+  const defaultText = 'There is recent activity in your consumer groups status.';
+
+  const msg = {
+    to: [email],
+    from: {name: 'Kalibrate', email: process.env.SENDGRID_EMAIL},
+    subject: `Consumer Group Alert`,
+    content: [
+      {
+        type: 'text/html',
+        value: `<p><strong>NEW ALERT</strong></p><p>${email ? email : defaultText}</p>`,
+      },
+    ],
+    template_id: 'd-1bca58ed436142328e242c231ca3a59e',
+    dynamic_template_data: {
+      greeting: () => {
+        email ? email : defaultText;
+      },
+      text,
+    },
+  };
+  try {
+    await sgMail.send(msg);
+    console.log('sent!');
+  } catch (error) {
+    console.error(error);
+    return next({
+      log: `ERROR - adminController.sendResetPassowrd failed to send rest email`,
+      status: 400,
+      message: {err: 'Failed to fetch cluster group data'},
+    });
+  }
+
+  return next();
+};
+
 export default adminController;

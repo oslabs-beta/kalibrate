@@ -200,15 +200,30 @@ app.get(
     return res.sendStatus(200);
   }
 );
-//send reset password email
+
 app.post('/api/password/forgot', authController.sendResetPassword, (req, res) => {
   return res.sendStatus(200);
 });
-//submit update password form
+
 app.patch('/api/password/reset', authController.resetPassword, (req, res) => {
   return res.sendStatus(200);
 });
 
+app.post(
+  'api/alert',
+  authController.verifySessionCookie,
+  adminController.sendAlertEmail,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
+
+app.post('/api/settings/delete/cluster', authController.verifySessionCookie, (req, res) => {
+  return res.sendStatus(200);
+});
+app.post('/api/settings/delete/account', authController.verifySessionCookie, (req, res) => {
+  return res.sendStatus(200);
+});
 // Catch all handler
 app.use('*', (req, res) => {
   return res.status(404).send('Not Found');

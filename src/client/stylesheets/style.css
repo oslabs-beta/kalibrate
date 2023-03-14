@@ -65,6 +65,15 @@ h1 {
   margin-left: auto;
   justify-content: space-between;
 }
+.modal {
+  position: 'absolute';
+  top: 50%;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+  width: 400px;
+  border: 2px solid #000;
+  box-shadow: 24;
+}
 /* styling for doughnut chart */
 
 .groupDoughnutChart {

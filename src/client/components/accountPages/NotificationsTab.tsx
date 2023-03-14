@@ -104,9 +104,6 @@ const NotificationsTab = (props: NotificationsProps) => {
         )}
 
         {/* Email integration */}
-        <h5>Email</h5>
-        <p>Specify where you would like your email to be sent.</p>
-        <TextField label="Default Email" sx={{width: '50%'}} variant="standard" />
       </Box>
     </Container>
   );

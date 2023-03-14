@@ -255,18 +255,30 @@ function App() {
           `${new Date().toLocaleString()} - A change in consumer group statuses has occured`,
         ];
       });
-
+      const alertText = {
+        text: `${connectedClient}: A change in consumer group statuses has occured`,
+      };
       // send slack alert if slack URI has been set
       if (savedURIs.slackURI) {
         fetch(savedURIs.slackURI, {
           method: 'POST',
-          body: JSON.stringify({
-            text: `${connectedClient}: A change in consumer group statuses has occured`,
-          }),
+          body: JSON.stringify(alertText),
         }).then(response => {
           if (!response.ok) setIsSlackError(true);
         });
       }
+      //send an alert email
+      fetch('/api/alert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(alertText),
+      })
+        .then(response => response.json())
+        .catch(err => {
+          console.log('error when sending alert email', err);
+        });
     }
   };
 
@@ -349,6 +361,7 @@ function App() {
                       setSavedURIs={setSavedURIs}
                       isSlackError={isSlackError}
                       setIsSlackError={setIsSlackError}
+                      logout={logout}
                     />
                   </Protected>
                 }

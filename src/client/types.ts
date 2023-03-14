@@ -271,8 +271,11 @@ export type SettingsProps = {
   setSavedURIs: (uris: {[key: string]: string}) => void;
   isSlackError: boolean;
   setIsSlackError: (error: boolean) => void;
+  logout: AccountProps;
 };
-
+export type AccountProps = {
+  logout: () => void;
+};
 export type NotificationsProps = {
   isAlertEnabled: {[key: string]: boolean};
   setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
