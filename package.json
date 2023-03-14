@@ -72,6 +72,7 @@
     "nodemon": "^2.0.20",
     "prettier": "^2.8.4",
     "prisma": "^4.11.0",
+    "sass": "^1.59.2",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
