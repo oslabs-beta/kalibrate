@@ -1,0 +1,27 @@
+version: '3'
+services:
+  dev:
+    image: 'kalibrate-dev'
+    container_name: 'kalibrate-dev'
+    environment:
+      - DB_URI=postgresql://admin:admin@postgres-db:5432/kdb
+    ports:
+      - '5712:5712'
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: sh -c "npx prisma migrate dev --name init && node scripts/init-db.js && npm run dev"
+    depends_on:
+      - postgres-db
+  postgres-db:
+    image: kalibrate-postgres
+    container_name: 'kalibrate-database'
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=kdb
+    volumes:
+      - dev-db-volume:/var/lib/postgresql/data
+volumes:
+  node_modules: null
+  dev-db-volume: null
