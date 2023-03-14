@@ -25,7 +25,7 @@ import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
 import Protected from './components/Protected';
 import Redirect from './components/Redirect';
-import './stylesheets/style.css';
+import './stylesheets/style.scss';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
 import {GroupTopic, newPollType, storedClient, datasetsObject} from './types';
@@ -288,14 +288,14 @@ function App() {
       // enable snackbar alert
       setSnackbarOpen(true);
       setSnackbarMessages(snackbarMessages => {
-        return [...snackbarMessages, 'A change in consumer group statuses has occured'];
+        return [...snackbarMessages, 'A change in consumer group statuses has occurred'];
       });
 
       // update alert state for navbar
       setAlerts(alerts => {
         return [
           ...alerts,
-          `${new Date().toLocaleString()} - A change in consumer group statuses has occured`,
+          `${new Date().toLocaleString()} - A change in consumer group statuses has occurred`,
         ];
       });
 
@@ -304,7 +304,7 @@ function App() {
         fetch(savedURIs.slackURI, {
           method: 'POST',
           body: JSON.stringify({
-            text: `${connectedClient}: A change in consumer group statuses has occured`,
+            text: `${connectedClient}: A change in consumer group statuses has occurred`,
           }),
         }).then(response => {
           if (!response.ok) setIsSlackError(true);
@@ -315,7 +315,7 @@ function App() {
 
   // displays newer messages by shifting the message out of the list
   const handleSnackbarClose = (event: any, reason: string) => {
-    if (reason === 'clickaway') return; // overide default behavior to close on any click
+    if (reason === 'clickaway') return; // override default behavior to close on any click
 
     setSnackbarMessages(snackbarMessages.slice(1));
     setSnackbarOpen(false);
