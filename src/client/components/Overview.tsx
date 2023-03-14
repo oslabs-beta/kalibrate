@@ -18,33 +18,49 @@ const Overview = (props: OverviewProps) => {
   //initialize data for doughnut chart
   let empty;
   let stable;
+  let preparingRebalance;
   let other;
 
   const checkData = () => {
-    timeSeriesData.length >= 1 ? (empty = timeSeriesData[0].groupStatus.empty) : (empty = 0);
-    timeSeriesData.length >= 1 ? (stable = timeSeriesData[0].groupStatus.stable) : (empty = 0);
-    timeSeriesData.length >= 1 ? (other = timeSeriesData[0].groupStatus.other) : (empty = 0);
+    timeSeriesData.length >= 1 ? (empty = timeSeriesData.at(-1).groupStatus.empty) : (empty = 0);
+    timeSeriesData.length >= 1 ? (stable = timeSeriesData.at(-1).groupStatus.stable) : (stable = 0);
+    timeSeriesData.length >= 1
+      ? (preparingRebalance = timeSeriesData.at(-1).groupStatus.preparingRebalance)
+      : (stable = 0);
+
+    timeSeriesData.length >= 1 ? (other = timeSeriesData.at(-1).groupStatus.other) : (other = 0);
   };
 
   checkData();
 
   //input data and styling for doughnut graph
   const chartData = {
-    labels: ['Empty', 'Stable', 'Other'],
+    labels: ['Empty', 'Stable', 'PreparingRebalance', 'Other'],
     datasets: [
       {
         label: '# of Groups',
-        data: [empty, stable, other],
+        data: [empty, stable, preparingRebalance, other],
         backgroundColor: [
-          'rgba(10,157,252,0.53)',
-          'rgba(37, 150, 190,0.2)',
-          'rgba(56,89,252,0.75)',
+          'rgba(255,221,210,0.5)',
+          'rgba(0, 109, 119,0.5)',
+          'rgba(131,197,190,0.5)',
+          'rgba(237,246,249,0.5)',
         ],
         borderColor: ['rgba(10,157,252,1)', 'rgba(37, 150, 190,1)', 'rgba(57,57,252,0.75)'],
         borderWidth: 1,
       },
     ],
   };
+
+  let offsetTotal = 0;
+  if (timeSeriesData[0]) {
+    for (const key in timeSeriesData[0].topicOffsets) {
+      offsetTotal += timeSeriesData[0].topicOffsets[key];
+    }
+    for (const key in timeSeriesData[0].groupOffsets) {
+      offsetTotal += timeSeriesData[0].groupOffsets[key];
+    }
+  }
 
   return (
     <Box
@@ -121,7 +137,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[500],
           }}
         >
-          Topics Count: <br />
+          Topics: <br />
           {data.topicData.topics ? data.topicData.topics.length : 0}
         </Box>
 
@@ -131,8 +147,8 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[300],
           }}
         >
-          Offsets: <br />
-          {data.topicData.topics ? data.topicData.topics[0].offsets.length : 0}
+          Offsets at connection: <br />
+          {offsetTotal}
         </Box>
 
         <Box
@@ -141,7 +157,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[500],
           }}
         >
-          Brokers Count: <br />
+          Brokers: <br />
           {data.clusterData.brokers.length}
         </Box>
 
@@ -152,7 +168,11 @@ const Overview = (props: OverviewProps) => {
           }}
         >
           Partitions: <br />
-          {data.topicData.topics ? data.topicData.topics[0].partitions.length : 0}
+          {data.topicData.topics
+            ? data.topicData.topics.reduce((acc, el) => {
+                return acc + el.partitions.length;
+              }, 0)
+            : 0}
         </Box>
       </Box>
     </Box>
