@@ -117,11 +117,7 @@ const Manage = (props: ManageProps) => {
                   <ListItemText primary="Traffic and Health" />
                 </ListItemButton>
               </ListItem>
-              {/* <ListItem key="offsets" disablePadding>
-                <ListItemButton onClick={() => navigate('offsets')}>
-                  <ListItemText primary="offsets" />
-                </ListItemButton>
-              </ListItem> */}
+
               <ListItem key="offsets" disablePadding>
                 <ListItemButton onClick={() => navigate('offsets')}>
                   <ListItemText primary="Offsets" />

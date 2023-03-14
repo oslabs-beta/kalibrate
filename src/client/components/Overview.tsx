@@ -35,15 +35,16 @@ const Overview = (props: OverviewProps) => {
 
   //input data and styling for doughnut graph
   const chartData = {
-    labels: ['Empty', 'Stable', 'Other'],
+    labels: ['Empty', 'Stable', 'PreparingRebalance', 'Other'],
     datasets: [
       {
         label: '# of Groups',
         data: [empty, stable, preparingRebalance, other],
         backgroundColor: [
-          'rgba(10,157,252,0.53)',
-          'rgba(37, 150, 190,0.2)',
-          'rgba(56,89,252,0.75)',
+          'rgba(255,221,210,0.5)',
+          'rgba(0, 109, 119,0.5)',
+          'rgba(131,197,190,0.5)',
+          'rgba(237,246,249,0.5)',
         ],
         borderColor: ['rgba(10,157,252,1)', 'rgba(37, 150, 190,1)', 'rgba(57,57,252,0.75)'],
         borderWidth: 1,
