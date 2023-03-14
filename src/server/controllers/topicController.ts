@@ -27,10 +27,8 @@ topicController.createTopic = async (req, res, next) => {
 
     //disconnect admin
     await admin.disconnect();
-    // return next
-    return next();
 
-    // error catching
+    return next();
   } catch (err) {
     next({
       log: `ERROR - topicController.createTopic: ${err}`,
@@ -57,7 +55,6 @@ topicController.deleteTopic = async (req, res, next) => {
     //disconnect from admin
     await admin.disconnect();
 
-    //return next
     return next();
   } catch (err) {
     next({

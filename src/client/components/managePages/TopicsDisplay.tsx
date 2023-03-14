@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {SyntheticEvent, useState} from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {Button, Box, Paper, TextField, Alert} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,7 +12,6 @@ import {
   GridToolbarExport,
   GridValueGetterParams,
   GridRowId,
-  GridColumns,
 } from '@mui/x-data-grid';
 import {TopicsDisplayProps, TopicsContext} from '../../types';
 
@@ -29,15 +28,15 @@ const TopicsDisplay = ({
   const [pageSize, setPageSize] = useState<number>(10);
 
   const [newTopicName, setNewTopicName] = useState<string>('');
-  const [numPartitions, setNumPartitions] = useState<any>(1);
+  const [numPartitions, setNumPartitions] = useState<number | string>(1);
   const [addPartitions, setAddPartitions] = useState<any>(1);
 
-  const [selectedTopic, setSelectedTopic] = useState<any[]>([]);
+  const [selectedTopic, setSelectedTopic]  = useState<{[k: string]: any}[]>([]);
   const [selectionModel, setSelectionModel] = useState<GridRowId[]>([]);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleDeleteSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleDeleteSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
     const deleteTopicArray = [];
@@ -76,8 +75,7 @@ const TopicsDisplay = ({
     }
   };
 
-  //handler for creating topic
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
     //check if newtopicname contain any spaces
@@ -309,7 +307,7 @@ const TopicsDisplay = ({
           onChange={event => setNumPartitions(event.target.value)}
         />
 
-        <Button variant="outlined" size="medium " type="submit">
+        <Button variant="outlined" size="medium" type="submit">
           Create
         </Button>
 
@@ -321,6 +319,7 @@ const TopicsDisplay = ({
           <DataGrid
             autoHeight // sets table height based on number of rows
             rows={topicRows}
+            //@ts-ignore
             columns={topicColumns}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}

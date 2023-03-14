@@ -10,17 +10,12 @@ import {
   Badge,
   Menu,
   MenuItem,
-  Switch,
-  FormGroup,
-  FormControlLabel,
-  MenuList,
   ListItemIcon,
   ListItemText,
   Divider,
 } from '@mui/material';
 import {useTheme} from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import ClearIcon from '@mui/icons-material/Clear';
 import IconButton from '@mui/material/IconButton';
@@ -29,14 +24,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import crow from './assets/crow2.png';
 import UserMenu from './accountPages/UserMenu';
 import {ColorModeContext, tokens} from '../theme';
-
-interface NavbarProps {
-  isAuthenticated: boolean;
-  isConnected?: boolean;
-  logout: () => void;
-  alerts: string[];
-  setAlerts: (alerts: string[]) => void;
-}
+import {NavbarProps} from '../types';
 
 // Render navbar at top of page
 const Navbar = (props: NavbarProps) => {
@@ -45,7 +33,8 @@ const Navbar = (props: NavbarProps) => {
   const navigate = useNavigate();
   const {isAuthenticated, isConnected, logout, alerts, setAlerts} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
-  //manges light/dark mode
+
+  // manages light/dark mode
   const [checked, setChecked] = useState<boolean>(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -64,10 +53,11 @@ const Navbar = (props: NavbarProps) => {
   };
 
   const handleDarkMode = (): void => {
-    //set them to dark
+    // set to dark
     setChecked(true);
     colorMode.toggleColorMode();
   };
+
   return (
     <AppBar position="static">
       <Container
@@ -103,6 +93,7 @@ const Navbar = (props: NavbarProps) => {
           >
             KALIBRATE
           </Typography>
+
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
             {pages.map(page => (
               <Button
@@ -120,12 +111,14 @@ const Navbar = (props: NavbarProps) => {
               </Button>
             ))}
           </Box>
+
           <MenuItem>
             {' '}
             <IconButton color="inherit" onClick={handleDarkMode}>
               {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </MenuItem>
+
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
             size="large"
@@ -137,6 +130,7 @@ const Navbar = (props: NavbarProps) => {
               <NotificationsIcon aria-label="notification" />
             </Badge>
           </IconButton>
+
           <Menu
             sx={{mt: '30px'}}
             id="alerts-menu"
@@ -159,7 +153,9 @@ const Navbar = (props: NavbarProps) => {
               </ListItemIcon>
               <ListItemText>Clear all alerts</ListItemText>
             </MenuItem>
+
             <Divider />
+
             {alerts.length ? (
               alerts.map(alert => (
                 <MenuItem key={alert}>
@@ -175,6 +171,7 @@ const Navbar = (props: NavbarProps) => {
               </MenuItem>
             )}
           </Menu>
+
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
           <UserMenu isAuthenticated={isAuthenticated} logout={logout} />
         </Toolbar>

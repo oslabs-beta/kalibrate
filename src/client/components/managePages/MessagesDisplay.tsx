@@ -5,6 +5,7 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {message, TopicsContext} from '../../types';
 import crow from '../assets/crow2.png';
 import acorn from '../assets/acorn.png';
+
 const MessagesDisplay = () => {
   const {selectedTopic, connectedCluster}: TopicsContext = useOutletContext();
   const [pageSize, setPageSize] = useState<number>(25);
@@ -23,7 +24,6 @@ const MessagesDisplay = () => {
       setMessages(messages);
       setIsLoading(false);
     } catch (err) {
-      console.log(err);
       setIsLoading(false);
       setIsError(true);
     }
@@ -136,7 +136,6 @@ const MessagesDisplay = () => {
       <div className="message-table">
         {isLoading ? loadingAni() : isError ? errorAlert : messageTable}
       </div>
-      {/* {loadingAni()} */}
     </div>
   );
 };

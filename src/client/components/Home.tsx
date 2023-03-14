@@ -1,21 +1,28 @@
-import {Link} from 'react-router-dom';
+
+import Hero from './splashPages/Hero';
+import Features from './splashPages/Features';
+import Team from './splashPages/Team';
+import Footer from './splashPages/Footer';
 
 const Home = () => {
   return (
+    <>
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
         justifyContent: 'center',
         alignItems: 'center',
+        gap: '5rem',
+        textAlign: 'center'
       }}
     >
-      <h1>Under construction... Home Splash Page</h1>
-      <h2>
-        <Link to="dashboard">Use the app</Link>
-      </h2>
+      {<Hero />}
+      {<Features />}
+      {<Team />}
+      {<Footer />}
     </div>
+    </>
   );
 };
 

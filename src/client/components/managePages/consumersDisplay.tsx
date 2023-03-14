@@ -55,6 +55,7 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
           <DataGrid
             autoHeight // sets table height based on number of rows
             rows={consumerRows}
+            // @ts-ignore
             columns={consumerColumns}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}

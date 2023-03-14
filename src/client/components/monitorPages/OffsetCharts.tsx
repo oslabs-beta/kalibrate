@@ -12,7 +12,7 @@ import {Bar} from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Offsets = props => {
+const OffsetCharts = props => {
   //color palette for bar graph
   const colors: string[] = [
     '#e6194B',
@@ -103,7 +103,7 @@ const Offsets = props => {
       },
       title: {
         display: true,
-        text: 'Consumer Group Offsets',
+        text: 'Offsets by Consumer Group',
       },
     },
   };
@@ -116,17 +116,21 @@ const Offsets = props => {
       },
       title: {
         display: true,
-        text: 'Topic offsets',
+        text: 'Offsets by Topic',
       },
     },
   };
 
   return (
-    <div>
-      <Bar options={groupOptions} data={groupData} />
-      <Bar options={topicOptions} data={topicData} />
+    <div className="barChartGrid">
+      <div>
+        <Bar options={groupOptions} data={groupData} />,
+      </div>
+      <div>
+        <Bar options={topicOptions} data={topicData} />,
+      </div>
     </div>
   );
 };
 
-export default Offsets;
+export default OffsetCharts;

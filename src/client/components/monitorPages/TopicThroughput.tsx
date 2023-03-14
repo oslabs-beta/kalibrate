@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
-import React from 'react';
-import {chartJSdataset} from '../../types';
+import {datasetsObject, TopicLineGraphComponentProps} from '../../types';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,115 +11,98 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import options from './line-graph-options';
-import palette from './palette';
+import lineGraphOptions from '../../util/line-graph-options';
+import initializeDatasets from '../../util/initializeDatasets';
 
-// filter for connected cluster? maybe even when passing props?
+const TopicThroughput = (props: TopicLineGraphComponentProps) => {
+  const {timeSeriesData, topicDatasets, setTopicDatasets} = props;
 
-const TopicThroughput = props => {
-  const {timeSeriesData, connectedCluster} = props;
-  console.log(connectedCluster);
+  // todo: allow modification of xscope?
 
-  // todo:
-  // initialize on load
-  // include in initializaton render of unrendered data
-  // catch early-load issue
-  // modify xscope?
-  // MAKE GROUPS ONE
-  // situation in site
-  // ISR?
-
-  const [topicDataSets, setTopicDatasets] = useState<chartJSdataset[]>([]);
-  const [xSeries, setXSeries] = useState<string[]>([]);
   const [xScope, setxScope] = useState<number>(10);
 
-  // on mount, create labels array and one chartJS dataset object per topic
-  const initializeDatasets = () => {
-    console.log('initializing');
-    const blankArray = new Array(xScope);
-    blankArray.fill('');
-    setXSeries(blankArray);
-    const newDataSets: chartJSdataset[] = [];
-    for (const el in timeSeriesData[0].topicOffsets) {
-      const newDataSet = makeTopicDataSet(el);
-      newDataSet.data.length = xScope;
-      newDataSet.data.fill(null);
-      newDataSets.push(newDataSet);
+  // on arrival, initialize datasets if not initialized
+  useEffect(() => {
+    // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
+    // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
+    const newDatasets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope);
+    const timeArray = [];
+    let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
+    timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+    while (timeArray.length < xScope - 1) timeArray.push('');
+    for (i; i < timeSeriesData.length; i++) {
+      for (const el of newDatasets) {
+        el.timestamp = timeArray;
+        for (const t in timeSeriesData[i].topicThroughputs) {
+          if (t === el.data.label) {
+            // @ts-ignore
+            el.data.data.push(timeSeriesData[i].topicThroughputs[t]);
+          }
+        }
+      }
     }
-    setTopicDatasets(newDataSets);
-  };
 
-  let colorIndex: number = 0;
-  const makeTopicDataSet = (topic: string) => {
-    console.log('making topic');
-    const colorString: string = palette[colorIndex];
-    colorIndex++;
-    if (colorIndex == palette.length) colorIndex = 0;
-    const newTopicObj: chartJSdataset = {
-      label: topic,
-      data: [],
-      // return once converted to rbga to add .5 a to background color
-      borderColor: colorString,
-      backgroundColor: colorString,
-      hidden: false,
-    };
-    return newTopicObj;
-  };
+    setTopicDatasets(newDatasets);
+  }, []);
 
   // when new data is received, new data to topic arrays in throughput data object
   useEffect(() => {
-    // need at least two data point to calculate rate of messages
-    if (timeSeriesData.length <= 1) return;
+    // don't go forward without sufficient data for calculations
+    if (timeSeriesData.length <= 1 || topicDatasets.length < 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
-    const previous = timeSeriesData[timeSeriesData.length - 2];
-    // add time to x-axis data
-    const newTime = [...xSeries];
-    const time = new Date(current.time).toLocaleTimeString();
-    newTime.push(time);
-    if (newTime.length > xScope) newTime.shift();
-    setXSeries(newTime);
+    const {topicThroughputs} = current;
+
     // copy throughput data object to change before updating state
-    const newData: chartJSdataset[] = JSON.parse(JSON.stringify(topicDataSets));
-    if (topicDataSets.length === 0) {
-      initializeDatasets();
-      return;
-    }
-    for (const el in current.topicOffsets) {
+    const newData: datasetsObject[] = JSON.parse(JSON.stringify(topicDatasets));
+
+    newData.forEach(el => {
+      console.log('from foreach: ', el.timestamp);
+      el.timestamp.push(new Date(current.time).toLocaleTimeString());
+    });
+
+    for (const el in topicThroughputs) {
       // push y-axis data to the appropriate array
       // shift oldest data point off to maintain current data on graph
       // update state
       for (const set of newData) {
-        const msgPerSec: number =
-          (current.topicOffsets[el] - previous.topicOffsets[el]) /
-          ((current.time - previous.time) / 1000);
-        if (el === set.label) set.data.push(msgPerSec);
-        if (set.data.length > xScope) set.data.shift();
+        // @ts-ignore
+        if (el === set.data.label) set.data.data.push(topicThroughputs[el]);
+        if (set.data.data.length > xScope) set.data.data.shift();
       }
-      // if (newData.hasOwnProperty(el)) {
-      //   newData[el].push(current.topicOffsets[el] - previous.topicOffsets[el]);
-      //   // adjust data to fit desired amount of most recent data pts on graph
-      //   if (newData[el].length > xScope) newData[el].shift();
-      // } else {
-      //   newData[el] = [];
-      // }
     }
-    console.log('setting tds');
     setTopicDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);
 
-  // global chart plugins - maybe move during refactoring
+  // chart plugins
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-  // add x-axis size to state??
+  // sort empty strings to end of labels array so that timestamps scroll from left
+  const labels = topicDatasets.length ? topicDatasets[0].timestamp : [];
+
+  // move x axis window as time advances
+  let xStart = 1,
+    xEnd = xScope;
+  labels.sort((a: string, b: string) => {
+    return !a.length && b.length ? 1 : -1;
+  });
+  const firstBlank = labels.indexOf('');
+  console.log(firstBlank);
+  if (firstBlank > xScope) {
+    xEnd = firstBlank - 1;
+    xStart = firstBlank - xScope;
+  }
 
   const data = {
-    labels: xSeries, // x-axis labels are timestamps from state
-    datasets: topicDataSets,
-    options,
+    labels: labels.slice(xStart, xEnd),
+    datasets: topicDatasets.map((el: datasetsObject) => el.data),
+    options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
 
-  return <Line options={options} data={data} />;
+  data.options.plugins.title.text = 'Throughput by Topic Group';
+  data.options.scales.y.title.text = 'Messages/sec';
+
+  return <Line options={data.options} data={data} />;
 };
 
 export default TopicThroughput;
