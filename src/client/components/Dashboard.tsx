@@ -1,4 +1,4 @@
-import {useNavigate, Outlet} from 'react-router-dom';
+import {Outlet} from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -21,7 +21,6 @@ import {tokens} from '../theme';
 // Display sidebar for connected client list
 const Dashboard = (props: DashboardProps) => {
   const {connectedClient, selectedClient, setSelectedClient, storedClients, isLoading} = props;
-  const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 

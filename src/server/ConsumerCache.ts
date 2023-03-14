@@ -1,5 +1,6 @@
 import {topicMessage} from './types';
 
+// Caching object for consumer messages and metadata
 interface ConsumerCache {
   cache: {
     [userId: string]: {

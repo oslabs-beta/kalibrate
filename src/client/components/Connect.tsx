@@ -1,5 +1,5 @@
 import {useState, SyntheticEvent} from 'react';
-import {Grid, Button, TextField, Box, Checkbox, Alert, Typography} from '@mui/material';
+import {Grid, Button, TextField, Box, Checkbox, Alert} from '@mui/material';
 import {ConnectProps, connectionConfig} from '../types';
 import '../stylesheets/style.scss';
 import crow from './assets/crow2.png';

@@ -4,6 +4,7 @@ import ClientCache from './ClientCache';
 import ConsumerCache from './ConsumerCache';
 import {errorObject} from './types';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -33,11 +34,14 @@ const consumerCache = new ConsumerCache();
 // Instantiate server
 const app = express();
 
+// Serve client production bundle
+app.use('/client', express.static(path.resolve(__dirname, '..', 'client')));
+
 // Parse requests
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
+// User account routes
 app.post('/api/signup', authController.createUser, authController.setSessionCookie, (req, res) => {
   const {user} = res.locals;
   return res.status(201).json(user);
@@ -48,10 +52,29 @@ app.post('/api/login', authController.verifyUser, authController.setSessionCooki
   return res.status(201).json(user);
 });
 
+app.get(
+  '/api/reset',
+  authController.verifySessionCookie,
+  authController.clearSessionCookie,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
+
 app.get('/api/session', authController.verifySessionCookie, (req, res) => {
   return res.sendStatus(200);
 });
 
+app.patch(
+  '/api/settings/account',
+  authController.verifySessionCookie,
+  authController.updateUser,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
+
+// Kafka server instance routes
 app.get(
   '/api/connection',
   authController.verifySessionCookie,
@@ -64,11 +87,9 @@ app.get(
   }
 );
 
-// create and save a new sever connection for a given user
 app.post(
   '/api/connection',
-  // rate-limit connection attempts
-  connectionLimiter,
+  connectionLimiter, // rate-limit connection attempts
   authController.verifySessionCookie,
   kafkaController.initiateKafka,
   kafkaController.cacheClient,
@@ -101,6 +122,7 @@ app.delete(
   }
 );
 
+// Kafka server data routes
 app.get(
   '/api/data/:clientId',
   authController.verifySessionCookie,
@@ -161,26 +183,9 @@ app.get(
   }
 );
 
-app.patch(
-  '/api/settings/account',
-  authController.verifySessionCookie,
-  authController.updateUser,
-  (req, res) => {
-    return res.sendStatus(200);
-  }
-);
-//Logout
-app.get(
-  '/api/reset',
-  authController.verifySessionCookie,
-  authController.clearSessionCookie,
-  (req, res) => {
-    return res.sendStatus(200);
-  }
-);
-// Catch all handler
-app.use('*', (req, res) => {
-  return res.status(404).send('Not Found');
+// Catch all to serve app
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'index.html'));
 });
 
 // Global error handler
