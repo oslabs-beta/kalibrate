@@ -170,15 +170,18 @@ function App() {
 
         // percent of groups by status
         let stable = 0,
-          empty = 0;
+          empty = 0,
+          preparingRebalance = 0;
         for (const el of data.groupData) {
           if (el.state === 'Stable') stable++;
           if (el.state === 'Empty') empty++;
+          if (el.state === 'PreparingRebalance') preparingRebalance++;
         }
         newPoll.groupStatus = {
           total: data.groupData.length,
           stable,
           empty,
+          preparingRebalance,
           other: data.groupData.length - stable - empty,
         };
 

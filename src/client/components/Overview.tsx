@@ -22,12 +22,17 @@ const Overview = (props: OverviewProps) => {
   //initialize data for doughnut chart
   let empty;
   let stable;
+  let preparingRebalance;
   let other;
 
   const checkData = () => {
-    timeSeriesData.length >= 1 ? (empty = timeSeriesData[0].groupStatus.empty) : (empty = 0);
-    timeSeriesData.length >= 1 ? (stable = timeSeriesData[0].groupStatus.stable) : (empty = 0);
-    timeSeriesData.length >= 1 ? (other = timeSeriesData[0].groupStatus.other) : (empty = 0);
+    timeSeriesData.length >= 1 ? (empty = timeSeriesData.at(-1).groupStatus.empty) : (empty = 0);
+    timeSeriesData.length >= 1 ? (stable = timeSeriesData.at(-1).groupStatus.stable) : (stable = 0);
+    timeSeriesData.length >= 1
+      ? (preparingRebalance = timeSeriesData.at(-1).groupStatus.preparingRebalance)
+      : (stable = 0);
+
+    timeSeriesData.length >= 1 ? (other = timeSeriesData.at(-1).groupStatus.other) : (other = 0);
   };
 
   checkData();
@@ -38,7 +43,7 @@ const Overview = (props: OverviewProps) => {
     datasets: [
       {
         label: '# of Groups',
-        data: [empty, stable, other],
+        data: [empty, stable, preparingRebalance, other],
         backgroundColor: [
           'rgba(10,157,252,0.53)',
           'rgba(37, 150, 190,0.2)',
@@ -49,6 +54,16 @@ const Overview = (props: OverviewProps) => {
       },
     ],
   };
+
+  let offsetTotal = 0;
+  if (timeSeriesData[0]) {
+    for (const key in timeSeriesData[0].topicOffsets) {
+      offsetTotal += timeSeriesData[0].topicOffsets[key];
+    }
+    for (const key in timeSeriesData[0].groupOffsets) {
+      offsetTotal += timeSeriesData[0].groupOffsets[key];
+    }
+  }
 
   return (
     <Box
@@ -123,7 +138,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[500],
           }}
         >
-          Topics Count: <br />
+          Topics: <br />
           {data.topicData.topics ? data.topicData.topics.length : 0}
         </Box>
         <Box
@@ -132,8 +147,8 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[300],
           }}
         >
-          Offsets: <br />
-          {data.topicData.topics ? data.topicData.topics[0].offsets.length : 0}
+          Offsets at connection: <br />
+          {offsetTotal}
         </Box>
         <Box
           sx={{
@@ -141,7 +156,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[500],
           }}
         >
-          Brokers Count: <br />
+          Brokers: <br />
           {data.clusterData.brokers.length}
         </Box>
         <Box
