@@ -98,6 +98,18 @@ export type TopicThroughputProps = {
   timeSeriesData: newPollType[];
 };
 
+export type TopicLineGraphComponentProps = {
+  timeSeriesData: timeSeriesData[];
+  topicDatasets: datasetsObject[];
+  setTopicDatasets: (topicDatasets: datasetsObject[]) => void;
+};
+
+export type GroupLineGraphComponentProps = {
+  timeSeriesData: timeSeriesData[];
+  groupDatasets: datasetsObject[];
+  setGroupDatasets: (groupDatasets: datasetsObject[]) => void;
+};
+
 export type brokers = {
   nodeId: number;
   host: string;
@@ -221,6 +233,9 @@ export type newPollType = {
   };
   topicOffsets?: OffsetCollection;
   groupOffsets?: OffsetCollection;
+  topicThroughputs?: ThroughputCollection;
+  groupThroughputs?: ThroughputCollection;
+  topicReplicaStatus?: replicaStatus;
 };
 
 export type OffsetCollection = {
@@ -248,6 +263,12 @@ export type timeSeriesData = {
   groupOffsets: {};
   groupStatus: {};
   topicOffsets: {};
+  groupThroughputs: {};
+  topicThroughputs: {};
+};
+
+export type ThroughputCollection = {
+  [k: string]: {};
 };
 
 export type chartJSdataset = {
@@ -261,7 +282,6 @@ export type chartJSdataset = {
 export type PasswordStateTypes = {
   [k: string]: boolean;
 };
-
 export type SettingsProps = {
   isAlertEnabled: {[key: string]: boolean};
   setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
@@ -308,4 +328,35 @@ export interface UserMenuProps {
 
 export type MembersDisplayContext = {
   groupData: groupData;
+};
+
+export type replicaStatus = {
+  [k: string]: number;
+};
+
+export type chartJSradarProps = {
+  labels: string[];
+  datasets: chartJSradarDataset[];
+  options?: {};
+};
+
+export type chartJSradarDataset = {
+  label?: string;
+  backgroundColor?: string;
+  borderColor?: string;
+  data: number[];
+};
+
+export type datasetsObject = {
+  timestamp: string[];
+  data: chartJSdataset;
+};
+
+export type TrafficAndHealthProps = {
+  timeSeriesData: timeSeriesData[];
+  connectedCluster: connectedClusterData;
+  topicDatasets: datasetsObject[];
+  setTopicDatasets: (topicDatasets: datasetsObject[]) => void;
+  groupDatasets: datasetsObject[];
+  setGroupDatasets: (groupDatasets: datasetsObject[]) => void;
 };

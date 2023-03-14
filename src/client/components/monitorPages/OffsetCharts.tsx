@@ -9,11 +9,10 @@ import {
 } from 'chart.js';
 import {useEffect, useState} from 'react';
 import {Bar} from 'react-chartjs-2';
-import {OffsetProps} from '../../types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Offsets = (props: OffsetProps) => {
+const OffsetCharts = props => {
   //color palette for bar graph
   const colors: string[] = [
     '#e6194B',
@@ -43,28 +42,24 @@ const Offsets = (props: OffsetProps) => {
     if (timeSeriesData.length <= 1) return;
 
     setXNameGroup(
-      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].groupOffsets).map(
         ([key, value]) => key
       )
     );
 
     setYNumGroup(
-      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].groupOffsets).map(
         ([key, value]) => value
       )
     );
 
     setXNameTopic(
-      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].topicOffsets).map(
         ([key, value]) => key
       )
     );
 
     setYNumTopic(
-      //@ts-ignore
       Object.entries(timeSeriesData[timeSeriesData.length - 1].topicOffsets).map(
         ([key, value]) => value
       )
@@ -108,7 +103,7 @@ const Offsets = (props: OffsetProps) => {
       },
       title: {
         display: true,
-        text: 'Consumer Group Offsets',
+        text: 'Offsets by Consumer Group',
       },
     },
   };
@@ -121,21 +116,21 @@ const Offsets = (props: OffsetProps) => {
       },
       title: {
         display: true,
-        text: 'Topic offsets',
+        text: 'Offsets by Topic',
       },
     },
   };
 
   return (
-    <div>
-      {/*
-      //@ts-ignore*/}
-      <Bar options={groupOptions} data={groupData} />
-      {/*
-      //@ts-ignore*/}
-      <Bar options={topicOptions} data={topicData} />
+    <div className="barChartGrid">
+      <div>
+        <Bar options={groupOptions} data={groupData} />,
+      </div>
+      <div>
+        <Bar options={topicOptions} data={topicData} />,
+      </div>
     </div>
   );
 };
 
-export default Offsets;
+export default OffsetCharts;

@@ -271,6 +271,7 @@ authController.setSessionCookie = (req, res, next) => {
 };
 
 authController.verifySessionCookie = (req, res, next) => {
+  console.log(res.locals);
   // check for KST session cookie
   if (!Object.hasOwn(req.cookies, 'kst')) {
     return next({
@@ -291,7 +292,7 @@ authController.verifySessionCookie = (req, res, next) => {
       });
     }
     res.locals.user = decoded;
-
+    console.log('decoded: ', decoded);
     return next();
   });
 };
