@@ -1,8 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "outDir": "./dist/server",
     "module": "commonjs",
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "noEmit": false
+  },
+  "include": ["./src/server"],
+  "exclude": ["./src/client"]
 }

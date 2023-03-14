@@ -13,11 +13,12 @@ import {
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
+import {ManageProps} from '../types';
 
 const drawerWidth = 200;
 
 // Display, in sidebar, management options for a selected cluster
-const Manage = props => {
+const Manage = (props: ManageProps) => {
   const {connectedCluster} = props;
   const navigate = useNavigate();
   const theme = useTheme();
@@ -26,8 +27,6 @@ const Manage = props => {
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
   const [openTest, setOpenTest] = useState(false);
-
-  // const lightBlue = 'c8d6de';
 
   // Drawer = wrapper for sidebar
   return (
@@ -77,6 +76,7 @@ const Manage = props => {
                 {openManage ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
+
             <Collapse in={openManage} timeout="auto" unmountOnExit>
               <ListItem key="Brokers" disablePadding>
                 <ListItemButton onClick={() => navigate('brokers')}>
@@ -110,6 +110,7 @@ const Manage = props => {
                 {openMonitor ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
+
             <Collapse in={openMonitor} timeout="auto" unmountOnExit>
               <ListItem key="traffic" disablePadding>
                 <ListItemButton onClick={() => navigate('traffic')}>
@@ -141,12 +142,14 @@ const Manage = props => {
                 {openTest ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
+
             <Collapse in={openTest} timeout="auto" unmountOnExit>
               <ListItem key="Produce" disablePadding>
                 <ListItemButton onClick={() => navigate('produce')}>
                   <ListItemText primary="Produce" />
                 </ListItemButton>
               </ListItem>
+
               <ListItem key="Consume" disablePadding>
                 <ListItemButton onClick={() => navigate('consume')}>
                   <ListItemText primary="Consume" />

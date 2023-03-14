@@ -3,7 +3,6 @@ import {controller} from './../types';
 const topicController: controller = {};
 
 topicController.createTopic = async (req, res, next) => {
-
   // declare admin
   const {kafka} = res.locals;
 
@@ -26,25 +25,10 @@ topicController.createTopic = async (req, res, next) => {
       ],
     });
 
-    // invoke create partitions
-    // await admin.createPartitions({
-    //   topicPartitions: [
-    //     {
-    //       topics: {
-    //         topic: newTopicName,
-    //         count: numPartitions,
-    //       },
-    //       count: 1,
-    //     },
-    //   ],
-    // });
-
     //disconnect admin
     await admin.disconnect();
-    // return next
-    return next();
 
-    // error catching
+    return next();
   } catch (err) {
     next({
       log: `ERROR - topicController.createTopic: ${err}`,
@@ -55,7 +39,6 @@ topicController.createTopic = async (req, res, next) => {
 };
 
 topicController.deleteTopic = async (req, res, next) => {
-  
   // declare admin
   const {kafka} = res.locals;
 
@@ -72,7 +55,6 @@ topicController.deleteTopic = async (req, res, next) => {
     //disconnect from admin
     await admin.disconnect();
 
-    //return next
     return next();
   } catch (err) {
     next({

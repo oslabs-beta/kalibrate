@@ -48,12 +48,14 @@ function App() {
   const [pollInterval, setPollInterval] = useState<number>(3); // poll interval in seconds
 
   // State for alert notifications
-  const [alerts, setAlerts] = useState<string[]>([]);
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
-  const [snackbarMessages, setSnackbarMessages] = useState<string[]>([]);
   const [isAlertEnabled, setIsAlertEnabled] = useState<{[key: string]: boolean}>({
     consumerGroupStatus: false,
   });
+  const [alerts, setAlerts] = useState<string[]>([]);
+  const [savedURIs, setSavedURIs] = useState<{[key: string]: string}>({slackURI: ''});
+  const [isSlackError, setIsSlackError] = useState<boolean>(false);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessages, setSnackbarMessages] = useState<string[]>([]);
 
   // State for client data
   const defaultClusterData = {
@@ -161,8 +163,9 @@ function App() {
       .then(data => {
         const newPoll: newPollType = {
           cluster: connectedClient,
+          time: Date.now(),
         };
-        newPoll.time = Date.now();
+
         setConnectedClusterData(data);
 
         // process data from connected cluster into more graph-ready form:
@@ -244,6 +247,9 @@ function App() {
           }
         }
 
+        // notify if alerts are on
+        if (isAlertEnabled.consumerGroupStatus) handleConsumerGroupStatusNotifications(newPoll);
+
         addTimeSeries(newPoll);
 
         // add timeseriesdata to state so we can drill it/use it for graphing
@@ -253,40 +259,6 @@ function App() {
   };
 
   const addTimeSeries = (newPoll: newPollType) => {
-    // if consumer group status alerts are enabled, check notification and notify if applicable
-    if (isAlertEnabled.consumerGroupStatus) {
-      // check whether group status has changed since last poll
-      const newGroup = newPoll.groupStatus;
-      const previousPollData = timeSeriesData.at(-1); // time series data doesn't need to be passed as arg because its a ref
-      const previousGroup = previousPollData ? previousPollData.groupStatus : undefined;
-      let notifyChange = false;
-
-      for (const status in newGroup) {
-        if (previousGroup === undefined) break;
-        if (newGroup[status] !== previousGroup[status]) {
-          notifyChange = true;
-          break;
-        }
-      }
-
-      // notify if there has been a change
-      if (notifyChange) {
-        // enable snackbar alert
-        setSnackbarOpen(true);
-        setSnackbarMessages(snackbarMessages => {
-          return [...snackbarMessages, 'A change in consumer group statuses has occured'];
-        });
-
-        // update alert state for navbar
-        setAlerts(alerts => {
-          return [
-            ...alerts,
-            `${new Date().toLocaleString()} - A change in consumer group statuses has occured`,
-          ];
-        });
-      }
-    }
-
     // update time series data state
     const newTimeSeriesData = timeSeriesData; // mutating to be also get state updates in the poll
     if (newTimeSeriesData.length >= 50) newTimeSeriesData.shift();
@@ -295,9 +267,53 @@ function App() {
     setTimeSeriesData(newTimeSeriesData);
   };
 
+  const handleConsumerGroupStatusNotifications = (newPoll: newPollType) => {
+    // check whether group status has changed since last poll
+    const newGroup = newPoll.groupStatus;
+    const previousPollData = timeSeriesData.at(-1); // time series data doesn't need to be passed as arg because its a ref
+    const previousGroup = previousPollData ? previousPollData.groupStatus : undefined;
+    let notifyChange = false;
+
+    for (const status in newGroup) {
+      if (previousGroup === undefined) break;
+      if (newGroup[status] !== previousGroup[status]) {
+        notifyChange = true;
+        break;
+      }
+    }
+
+    // notify if there has been a change
+    if (notifyChange) {
+      // enable snackbar alert
+      setSnackbarOpen(true);
+      setSnackbarMessages(snackbarMessages => {
+        return [...snackbarMessages, 'A change in consumer group statuses has occured'];
+      });
+
+      // update alert state for navbar
+      setAlerts(alerts => {
+        return [
+          ...alerts,
+          `${new Date().toLocaleString()} - A change in consumer group statuses has occured`,
+        ];
+      });
+
+      // send slack alert if slack URI has been set
+      if (savedURIs.slackURI) {
+        fetch(savedURIs.slackURI, {
+          method: 'POST',
+          body: JSON.stringify({
+            text: `${connectedClient}: A change in consumer group statuses has occured`,
+          }),
+        }).then(response => {
+          if (!response.ok) setIsSlackError(true);
+        });
+      }
+    }
+  };
+
   // displays newer messages by shifting the message out of the list
   const handleSnackbarClose = (event: any, reason: string) => {
-    console.log('snack bar closing handler invoked');
     if (reason === 'clickaway') return; // overide default behavior to close on any click
 
     setSnackbarMessages(snackbarMessages.slice(1));
@@ -306,7 +322,10 @@ function App() {
 
   // dashboard + client are protected routes, login + signup redirect to dashboard if authenticated
   return (
+    // @ts-ignore
     <ColorModeContext.Provider value={colorMode}>
+      {/*
+       // @ts-ignore  */}
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div>
@@ -368,6 +387,10 @@ function App() {
                     <Settings
                       isAlertEnabled={isAlertEnabled}
                       setIsAlertEnabled={setIsAlertEnabled}
+                      savedURIs={savedURIs}
+                      setSavedURIs={setSavedURIs}
+                      isSlackError={isSlackError}
+                      setIsSlackError={setIsSlackError}
                     />
                   </Protected>
                 }

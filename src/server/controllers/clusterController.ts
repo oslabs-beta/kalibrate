@@ -1,6 +1,6 @@
 import {controller} from './../types';
 import {PrismaClient} from '@prisma/client';
-const CryptoJS = require('crypto-js');
+import CryptoJS from 'crypto-js';
 import {Kafka} from 'kafkajs';
 
 const prisma = new PrismaClient();
@@ -49,7 +49,7 @@ clusterController.getClientConnections = async (req, res, next) => {
 
       let kafka;
       if (brokers.length) {
-        if (saslPassword && saslUsername && saslPassword) {
+        if (decryptedPassword && saslUsername) {
           kafka = new Kafka({
             clientId,
             brokers: brokersMap,
@@ -180,7 +180,6 @@ clusterController.getClientConnection = async (req, res, next) => {
 };
 
 clusterController.storeClientConnection = async (req, res, next) => {
-  console.log(res.locals);
   const {id} = res.locals.user;
   const {clientId, brokers, sasl} = res.locals.client;
 
@@ -215,7 +214,7 @@ clusterController.storeClientConnection = async (req, res, next) => {
 
         await prisma.seedBroker.create({
           data: {
-            broker: brokers[0], // need to update logic for multiple brokers
+            broker: brokers[0], // logic would need to be updated if we want to support multiple brokers
             cluster: {
               connect: {id: cluster.id},
             },
@@ -240,7 +239,7 @@ clusterController.storeClientConnection = async (req, res, next) => {
         });
         await prisma.seedBroker.create({
           data: {
-            broker: brokers[0], // need to update logic for multiple brokers
+            broker: brokers[0], // logic would need to be updated if we want to support multiple brokers
             cluster: {
               connect: {id: cluster.id},
             },
@@ -273,11 +272,11 @@ clusterController.deleteClientConnection = async (req, res, next) => {
       });
 
       if (!clusterId.length) throw new Error('Did not find requested cluster');
-      console.log('cluster id', clusterId);
-      const test = await prisma.seedBroker.deleteMany({
+
+      await prisma.seedBroker.deleteMany({
         where: {clusterId: clusterId[0].id},
       });
-      console.log('delete broker', test);
+
       await prisma.cluster.deleteMany({
         where: {clientId, userId: id},
       });
