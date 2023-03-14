@@ -164,6 +164,8 @@ function App() {
         const newPoll: newPollType = {
           cluster: connectedClient,
           time: Date.now(),
+          topicOffsets: {},
+          groupOffsets: {},
         };
 
         setConnectedClusterData(data);
@@ -176,6 +178,7 @@ function App() {
           empty = 0,
           preparingRebalance = 0;
         for (const el of data.groupData) {
+          console.log('status watch: ', el.state);
           if (el.state === 'Stable') stable++;
           if (el.state === 'Empty') empty++;
           if (el.state === 'PreparingRebalance') preparingRebalance++;
@@ -202,7 +205,6 @@ function App() {
         }
 
         // count of offsets by topic
-        newPoll.topicOffsets = {};
         newPoll.topicThroughputs = {};
         if (data.topicData.topics.length) {
           for (const t of data.topicData.topics) {
@@ -216,7 +218,7 @@ function App() {
             // rate of throughtput by topic since last poll
 
             if (timeSeriesData.at(-1)) {
-              const previous: newPollType = timeSeriesData.at(-1);
+              const previous: newPollType = timeSeriesData.at(-1)!;
               newPoll.topicThroughputs[t.name] =
                 (newPoll.topicOffsets[t.name] - previous.topicOffsets[t.name]) /
                 ((newPoll.time - previous.time) / 1000);
@@ -225,7 +227,6 @@ function App() {
         }
 
         // count of offsets by group
-        newPoll.groupOffsets = {};
         newPoll.groupThroughputs = {};
         for (const g in data.groupOffsets) {
           //const groupName = g;
@@ -240,7 +241,7 @@ function App() {
           // rate of throughtput by group since last poll
 
           if (timeSeriesData.at(-1)) {
-            const previous: newPollType = timeSeriesData.at(-1);
+            const previous: newPollType = timeSeriesData.at(-1)!;
             newPoll.groupThroughputs[g] =
               (newPoll.groupOffsets[g] - previous.groupOffsets[g]) /
               ((newPoll.time - previous.time) / 1000);
