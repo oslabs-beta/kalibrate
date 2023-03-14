@@ -316,6 +316,7 @@ export type OffsetProps = {
   timeSeriesData: newPollType[];
 };
 
+// for Toast notifications
 export type SchnaxProps = {
   message: string;
 };
