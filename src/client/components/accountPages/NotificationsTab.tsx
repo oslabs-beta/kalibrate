@@ -1,31 +1,17 @@
-import React, {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useState} from 'react';
 import {
-  AppBar,
   Container,
-  Paper,
   Box,
   Button,
   Typography,
-  Tab,
-  useTheme,
   TextField,
-  InputAdornment,
   FormGroup,
   FormControlLabel,
   Switch,
   Alert,
 } from '@mui/material';
-import {TabContext, TabList, TabPanel} from '@mui/lab';
-import {Swipe, Visibility, VisibilityOff} from '@mui/icons-material';
 import {NotificationsProps} from '../../types';
 
-/* Enter functionality to:
--- update user email
--- turn on/off notifications
--- select which info to get get : " brokers vs paritions " : via toggle button
-  -- cluster toggle will on/off ALL information  (fast on)
-*/
 const NotificationsTab = (props: NotificationsProps) => {
   const {
     isAlertEnabled,
@@ -56,7 +42,7 @@ const NotificationsTab = (props: NotificationsProps) => {
     setLocalSlackURI('');
     setIsSlackError(false);
   };
-  console.log(savedURIs);
+
   // toggle alerts for consumer group status
   const handleConsumerGroupStatusToggle = () => {
     const newSwitchValue = !isConsumerGroupStatusToggled;

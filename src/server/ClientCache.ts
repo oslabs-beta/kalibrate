@@ -1,3 +1,4 @@
+// caching object for Kafka server instances
 interface ClientCache {
   cache: {
     [userId: string]: {

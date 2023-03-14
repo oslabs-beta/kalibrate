@@ -12,10 +12,12 @@ const NotFound = () => {
       }}
     >
       <img src={crow} alt="kalibrate crow" width="200px" height="200px" />
+
       <div style={{marginLeft: '30px'}}>
         <Typography variant="h2" sx={{marginBottom: '15px'}}>
           Oops...
         </Typography>
+
         <Typography variant="h4">Looks like you've gone off-kourse</Typography>
       </div>
     </div>

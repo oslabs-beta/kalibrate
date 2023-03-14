@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useNavigate, Outlet} from 'react-router';
+import {useNavigate, Outlet, Navigate} from 'react-router';
 import {Link} from 'react-router-dom';
 import {
   Container,
@@ -97,6 +97,7 @@ const defaultForm = {
 export const Reset = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formChanges, setFormChanges] = useState<FormStateTypes>({...defaultForm});
   const [inputEmail, setInputEmail] = useState<boolean>(false);
@@ -157,6 +158,7 @@ export const Reset = () => {
     }
     console.log('update ok');
     handleFormClear();
+    navigate('login');
   };
   const handleShowPassword = () => {
     let oldVal = showPassword;

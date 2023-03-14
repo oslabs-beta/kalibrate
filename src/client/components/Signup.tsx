@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {useNavigate} from 'react-router';
 import {Link} from 'react-router-dom';
 import {
@@ -24,6 +24,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   // form state
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -34,6 +35,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   // verify names have been entered
   const isValidName = (firstName: string, lastName: string) => {
     return firstName.length > 0 && lastName.length > 0;
@@ -139,7 +141,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
       }
 
       setIsAuthenticated(true);
-      navigate('/dashboard'); // todo: may need to set global with response body state before navigating?
+      navigate('/dashboard');
     } catch (err: any) {
       // end loading, display error, and reset password fields on unsuccessful login
       setIsLoading(false);
@@ -199,6 +201,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           onChange={event => setEmail(event.target.value)}
           sx={{marginBottom: '10px', width: '100%'}}
         />
+
         <FormControl sx={{width: '100%'}}>
           <InputLabel sx={{top: '-7px', width: '100%'}}>Password</InputLabel>
           <OutlinedInput
@@ -220,6 +223,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
             }
           ></OutlinedInput>
         </FormControl>
+
         <FormControl sx={{m: 1, width: '100%'}}>
           <InputLabel sx={{top: '-7px', width: '100%'}}>Confirm Password</InputLabel>
           <OutlinedInput
