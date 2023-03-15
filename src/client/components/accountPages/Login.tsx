@@ -16,9 +16,9 @@ import {
   OutlinedInput,
 } from '@mui/material';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
-import {LoginProps} from '../types';
+import {LoginProps} from '../../types';
 import {useTheme} from '@mui/material/styles';
-import {tokens} from '../theme';
+import {tokens} from '../../theme';
 
 const Login = ({setIsAuthenticated}: LoginProps) => {
   const navigate = useNavigate();

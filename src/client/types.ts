@@ -282,6 +282,9 @@ export type chartJSdataset = {
 export type PasswordStateTypes = {
   [k: string]: boolean;
 };
+export type FormStateTypes = {
+  [k: string]: string;
+};
 export type SettingsProps = {
   isAlertEnabled: {[key: string]: boolean};
   setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
@@ -289,8 +292,10 @@ export type SettingsProps = {
   setSavedURIs: (uris: {[key: string]: string}) => void;
   isSlackError: boolean;
   setIsSlackError: (error: boolean) => void;
+  logout: () => void;
+  setSnackbarOpen: (status: boolean) => void;
+  setSnackbarMessages: (messages: string[]) => void;
 };
-
 export type NotificationsProps = {
   isAlertEnabled: {[key: string]: boolean};
   setIsAlertEnabled: (isAlertEnabled: {[key: string]: boolean}) => void;
@@ -322,7 +327,7 @@ export type SchnaxProps = {
 };
 
 export interface UserMenuProps {
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
   isConnected?: boolean;
   logout: () => void;
 }

@@ -16,9 +16,9 @@ import {
   OutlinedInput,
 } from '@mui/material';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
-import {SignupProps} from '../types';
+import {SignupProps} from '../../types';
 import {useTheme} from '@mui/material/styles';
-import {tokens} from '../theme';
+import {tokens} from '../../theme';
 
 const Signup = ({setIsAuthenticated}: SignupProps) => {
   const navigate = useNavigate();

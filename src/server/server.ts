@@ -197,6 +197,51 @@ app.get(
   }
 );
 
+app.patch(
+  '/api/settings/account',
+  authController.verifySessionCookie,
+  authController.updateUser,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
+
+app.get(
+  '/api/reset',
+  authController.verifySessionCookie,
+  authController.clearSessionCookie,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
+
+app.post('/api/password/forgot', authController.sendResetPassword, (req, res) => {
+  return res.sendStatus(200);
+});
+
+app.patch('/api/password/reset', authController.resetPassword, (req, res) => {
+  return res.sendStatus(200);
+});
+
+app.post(
+  'api/alert',
+  authController.verifySessionCookie,
+  adminController.sendAlertEmail,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
+
+app.post('/api/settings/delete/cluster', authController.verifySessionCookie, (req, res) => {
+  return res.sendStatus(200);
+});
+app.post('/api/settings/delete/account', authController.verifySessionCookie, (req, res) => {
+  return res.sendStatus(200);
+});
+// Catch all handler
+app.use('*', (req, res) => {
+  return res.status(404).send('Not Found');
+});
 // Catch all to serve app
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'index.html'));
