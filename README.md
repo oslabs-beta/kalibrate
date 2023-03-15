@@ -26,7 +26,7 @@
   - [Running Demo Services](###running-demo-services)
   - [Reset the Cluster](###reset-the-cluster)
 - [Contributing](##contributing)
-- [Contrinutors](##contributors)
+- [Contributors](##contributors)
 - [License](##license)
 
 ---
@@ -62,7 +62,7 @@ the application will be accessible on `localhost:5173` in your browser.
 
 Run `npm run dev`. An HMR enabled dev server will listen on port 5712 and the application will be
 accessible on `localhost:5712` in your browser. Requests to the API will be proxied to the Express
-server listenening on port 5173 by default.
+server listening on port 5173 by default.
 
 ### Testing
 
@@ -154,7 +154,7 @@ These client instances create the following topics:
 - Payments
 - FulFilled orders
 
-They interract with the cluster in the following way:
+They interact with the cluster in the following way:
 
 - User service: produces to unfulfilled orders, subscribed to fulfilled orders
 - Inventory Service: subscribed to unfulfilled orders, produces to inventory
