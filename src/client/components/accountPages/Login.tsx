@@ -90,7 +90,7 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
           backgroundColor: colors.background[500],
         }}
       >
-        <Typography variant="h5" sx={{marginBottom: '15px'}}>
+        <Typography variant="h5" sx={{marginBottom: '25px'}}>
           Log into Kalibrate
         </Typography>
 
@@ -104,7 +104,9 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
         />
 
         <FormControl sx={{width: '100%'}}>
-          <InputLabel sx={{top: '-7px', width: '100%'}}>Password</InputLabel>
+          <InputLabel size="small" sx={{width: '100%'}}>
+            Password
+          </InputLabel>
           <OutlinedInput
             size="small"
             type={showPassword ? 'text' : 'password'}
@@ -152,12 +154,12 @@ const Login = ({setIsAuthenticated}: LoginProps) => {
             alignItems: 'center',
           }}
         >
-          <Typography>Forgot password?</Typography>
+          <Typography sx={{marginTop: '10px'}}>Forgot password?</Typography>
           <Link to="/forgot">
             <Typography sx={{color: colors.accent[300]}}>Reset Password</Typography>
           </Link>
 
-          <Typography>Don't have an account?</Typography>
+          <Typography sx={{marginTop: '10px'}}>Don't have an account?</Typography>
           <Link to="/signup">
             <Typography sx={{color: colors.accent[300]}}>Sign up</Typography>
           </Link>

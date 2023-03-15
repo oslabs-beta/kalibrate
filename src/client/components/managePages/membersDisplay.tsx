@@ -14,7 +14,7 @@ const MembersDisplay = () => {
     return group.groupId === groupId;
   })[0].members;
 
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(25);
 
   const memberColumns = [
     {field: 'clientId', headername: 'Client ID', flex: 1},
@@ -51,9 +51,8 @@ const MembersDisplay = () => {
   return (
     <div className="display-table" data-testid="consumerDisplay-1">
       <Box sx={{height: 400, width: '1000'}}>
-        <Paper elevation={6}>
+        <Paper elevation={6} sx={{height: 'calc(100vh - 225px)'}}>
           <DataGrid
-            autoHeight // sets table height based on number of rows
             rows={memberRows}
             columns={memberColumns}
             pageSize={pageSize}
