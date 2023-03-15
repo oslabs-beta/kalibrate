@@ -360,7 +360,7 @@ function App() {
             <Snackbar
               key={Date.now()}
               open={snackbarOpen}
-              autoHideDuration={4000}
+              autoHideDuration={2900}
               onClose={handleSnackbarClose}
               anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
             >
