@@ -33,14 +33,45 @@
 
 ## About
 
-[Insert description pulled from medium article]: What does your product do? What problem does it
-solve? What are its most important features (i.e. what makes it stand out)? Include images.
+Kalibrate is a all-in-one, free and open source tool to make managing and monitoring your Apache
+Kafka clusters a breeze. It's easy to set up and provides a friendly user experience. Simply login
+or create an account, then connect to your Kafka instances to get started.
 
-Get started with Kalibrate by visiting our website [INSERT WEBSITE HYPERLINK], or check out our
-launch article [INSERT MEDIUM ARTICLE HYPERLINK] to learn more about our intentions and design
-philosophy. You can also follow Kalibrate on [INSERT SOCIALS].
+<p align="center">
+  <img src="./readme-assets/connect.gif?raw=true" width='50%'>
+</p>
 
-[+ remember to update github about section with website link]
+With Kalibrate, you can save a Kafka cluster to your account by giving it a unique name, and
+entering a valid URI along with SASL credentials, if applicable. Add new clients to your account at
+any time, or remove one by selecting one of your saved clients and clicking delete.
+
+Once connected to a Kafka cluster, you'll be greeted with an high level overview of its metadata and
+health. Head on over to the options within the manage tab to view and configure brokers, topics,
+partitions, messages, and consumer groups and members. Navigate to the monitor options to get a live
+and dynamically graphed view of throughput and offsets.
+
+<p align="center">
+  <img src="./readme-assets/manage.gif?raw=true" width='50%'>
+</p>
+
+Kalibrate was developed with ease of use configurability in mind. The application features a light
+and dark mode, user account configurations, and an alert system that provides in-app notifications,
+with optional Slack integrations through webhooks.
+
+Rest easy that security was a top priority in Kalibrate's developement. User account information and
+Kafka cluster credentials are securely stored through a combination of hashing, symmetric
+encryption, and careful session management.
+
+<p align="center">
+  <img src="./readme-assets/configure.gif?raw=true" width='50%'>
+</p>
+
+Get started with Kalibrate by visiting our [website](http://kalibratelabs.io/), or read on to learn
+how to run Kafka in your local environemnt. If you're interested in learning more about our
+intentions and design philosophy, you can check out our launch article [INSERT MEDIUM ARTICLE
+HYPERLINK], and be sure to get the latest on Kalibrate by following us on
+[LinkedIn](https://www.linkedin.com/company/kalibratelabs) and
+[Twitter](https://twitter.com/KalibrateLabs).
 
 ---
 
@@ -131,6 +162,10 @@ The following environment variables should be set in a root `.env` file:
 - `SALT_WORK_FACTOR`: Salt work factor for bcrypt hashing
 - `JWT_SECRET`: JSON Web Token secret
 - `ENCRYPT_KEY`: Symmetric encryption key
+- `SENDGRID_API_KEY`: tk
+- `SENDGRID_EMAIL`: tk
+- `SG_TEMPLATE_PASSWORD`: tk
+- `SG_TEMPLATE_ALERT`: tk
 
 ---
 
@@ -176,12 +211,11 @@ Planned features for future versions of Kalibrate include:
 
 - Producing messages
 - Adding more cluster metrics and visualization
-- Adding more alerts
-- Persisting more user preferences and enabled alerts
+- Expanding available alerts and user preferences
+- Persisting selected alerts and preferences
 - Adding OAuth authentication
 - Improving the UI
-- Improving state management with Redux
-- Improving caching with Redis
+- Optimizing application performance with improved state management and caching
 - Expanding development testing suite
 
 ---
