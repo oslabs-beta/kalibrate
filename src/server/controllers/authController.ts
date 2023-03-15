@@ -270,11 +270,11 @@ authController.sendResetPassword = async (req, res, next) => {
     to: [email],
     from: {name: 'Kalibrate', email: process.env.SENDGRID_EMAIL},
     subject: 'Reset Password',
-    template_id: 'd-f274c453eb934a73bd3018bc4aa20493',
+    template_id: process.env.SG_TEMPLATE_PASSWORD,
   };
   try {
     await sgMail.send(msg);
-    console.log('sent!');
+    return next();
   } catch (error) {
     console.error(error);
     return next({

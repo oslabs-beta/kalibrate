@@ -17,17 +17,9 @@ import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 // import Schnax from './Snackbar';
-import {AccountProps, PasswordStateTypes} from '../../types';
+import {UserMenuProps, PasswordStateTypes} from '../../types';
 import cluster from 'cluster';
-/* Enter Functionality to ...
--- Enter/Change Profile Name
--- Change password:  enter old and confirm new twice
---  Form Submit
 
--- Delete stored clusters 
--- Delete Account  
--- Add avatar
-.*/
 const defaultForm = {
   newEmail: '',
   oldPass: '',
@@ -35,7 +27,7 @@ const defaultForm = {
   confirmPass: '',
 };
 
-const AccountTab = (props: AccountProps) => {
+const AccountTab = (props: UserMenuProps) => {
   const {logout} = props;
   const [loadingSave, setLoadingSave] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<PasswordStateTypes>({

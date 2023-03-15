@@ -292,9 +292,6 @@ export type SettingsProps = {
   setSavedURIs: (uris: {[key: string]: string}) => void;
   isSlackError: boolean;
   setIsSlackError: (error: boolean) => void;
-  logout: AccountProps;
-};
-export type AccountProps = {
   logout: () => void;
 };
 export type NotificationsProps = {
@@ -327,7 +324,7 @@ export type SchnaxProps = {
 };
 
 export interface UserMenuProps {
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
   isConnected?: boolean;
   logout: () => void;
 }

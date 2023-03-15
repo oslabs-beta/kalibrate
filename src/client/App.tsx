@@ -311,7 +311,6 @@ function App() {
         });
       }
       //send an alert email
-      console.log('sending alert email');
       fetch('/api/alert', {
         method: 'POST',
         headers: {

@@ -161,35 +161,26 @@ adminController.getGroupData = async (req, res, next) => {
 
 //sends consumer group email
 adminController.sendAlertEmail = async (req, res, next) => {
-  console.log('TRYING TO SENT ALERT EMAIL');
   const sgMail = require('@sendgrid/mail');
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
   const {text} = req.body;
   const {email} = res.locals;
   const defaultText = 'There is recent activity in your consumer groups status.';
-
+  const bodyText = text ? text : defaultText;
   const msg = {
     to: [email],
     from: {name: 'Kalibrate', email: process.env.SENDGRID_EMAIL},
     subject: `Consumer Group Alert`,
-    content: [
-      {
-        type: 'text/html',
-        value: `<p><strong>NEW ALERT</strong></p><p>${email ? email : defaultText}</p>`,
-      },
-    ],
-    template_id: 'd-1bca58ed436142328e242c231ca3a59e',
+    template_id: process.env.SG_TEMPLATE_ALERT,
     dynamic_template_data: {
-      greeting: () => {
-        email ? email : defaultText;
-      },
-      text,
+      greeting: 'hio',
+      bodyText,
     },
   };
   try {
     await sgMail.send(msg);
-    console.log('sent!');
+    return next();
   } catch (error) {
     console.error(error);
     return next({
@@ -198,8 +189,6 @@ adminController.sendAlertEmail = async (req, res, next) => {
       message: {err: 'Failed to fetch cluster group data'},
     });
   }
-
-  return next();
 };
 
 export default adminController;
