@@ -182,7 +182,7 @@ Planned features for future versions of Kalibrate include:
 - Improving the UI
 - Improving state management with Redux
 - Improving caching with Redis
-- Expanding testing
+- Expanding development testing suite
 
 ---
 
