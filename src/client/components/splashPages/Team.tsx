@@ -11,8 +11,13 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import {Typography} from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../../theme';
 
 const Team = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   const Item = styled(Paper)(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -62,8 +67,8 @@ const Team = () => {
   return (
     <>
       <Box sx={{flexGrow: 1, width: '56rem'}}>
-        <h3 style={{fontSize: '1.5rem'}}>Meet the Team</h3>
-        <Grid container spacing={2}>
+        <h3 style={{fontSize: '1.5rem', color: colors.primary[900]}}>Meet the Team</h3>
+        <Grid container spacing={2} sx={{justifyContent: 'center', justifyItems: 'center', alignContent: 'space-evenly', alignItems: 'center'}}>
           {team}
         </Grid>
       </Box>
