@@ -99,13 +99,13 @@ export type TopicThroughputProps = {
 };
 
 export type TopicLineGraphComponentProps = {
-  timeSeriesData: timeSeriesData[];
+  timeSeriesData: newPollType[];
   topicDatasets: datasetsObject[];
   setTopicDatasets: (topicDatasets: datasetsObject[]) => void;
 };
 
 export type GroupLineGraphComponentProps = {
-  timeSeriesData: timeSeriesData[];
+  timeSeriesData: newPollType[];
   groupDatasets: datasetsObject[];
   setGroupDatasets: (groupDatasets: datasetsObject[]) => void;
 };
@@ -319,6 +319,7 @@ export type OffsetProps = {
   timeSeriesData: newPollType[];
 };
 
+// for Toast notifications
 export type SchnaxProps = {
   message: string;
 };
