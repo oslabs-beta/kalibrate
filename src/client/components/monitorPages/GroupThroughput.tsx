@@ -44,8 +44,6 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
       }
     }
 
-    console.log('timearray: ', timeArray);
-
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
     for (i; i < timeSeriesData.length; i++) {
       for (const el of newDatasets) {
@@ -107,8 +105,20 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
 
   data.options.plugins.title.text = 'Throughput by Consumer Group';
   data.options.scales.y.title.text = 'Messages/sec';
+  data.options.maintainAspectRatio = false;
 
-  return <Line options={data.options} data={data} />;
+  return (
+    <div
+      style={{
+        height: 'calc(100vh - 150px)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Line options={data.options} data={data} />
+    </div>
+  );
 };
 
 export default GroupThroughput;

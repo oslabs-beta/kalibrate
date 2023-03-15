@@ -130,7 +130,6 @@ export const Reset = () => {
   ) => {
     resetState();
     setFormChanges({...formChanges, [pass]: e.target.value});
-    console.log('cleared', formChanges);
   };
 
   const handleFormClear = () => {
@@ -163,12 +162,12 @@ export const Reset = () => {
       },
       body: JSON.stringify({email, newPass}),
     });
+    
     if (!response.ok) {
-      console.log('couldnt update');
       const error = await response.json();
       throw new Error(error.err);
     }
-    console.log('update ok');
+
     handleFormClear();
     navigate('login');
   };

@@ -1,10 +1,14 @@
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 import {OverviewProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 import {Chart as ChartJS, ArcElement, Tooltip, Legend, Title} from 'chart.js';
 import {Doughnut} from 'react-chartjs-2';
-import crow from './assets/crow2.png';
+import Replicas from './monitorPages/Replicas';
 
 //register chartjs components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
@@ -84,24 +88,27 @@ const Overview = (props: OverviewProps) => {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(10, 1fr)',
           gap: 1,
-          gridTemplateRows: 'repeat(3, 140px)',
-          gridTemplateAreas: `"cluster cluster topic partitions"
-            "cluster cluster offset offset"
-            "brokers brokers consumer consumer"`,
+          gridTemplateRows: 'repeat(2, 140px)',
+          gridTemplateAreas: `"cluster cluster brokers brokers topics topics partitions partitions offsets offsets"
+            "graph1 graph1 graph1 graph1 graph1 graph2 graph2 graph2 graph2 graph2"`,
         }}
       >
-        <Box
+        <Card
           sx={{
-            gridArea: 'cluster',
+            gridArea: 'graph1',
+            height: '350px',
             backgroundColor: '#f9fdfe',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           {
             // conditional rendering based on whether login attempt is in progress
             timeSeriesData.length >= 1 ? (
-              <div className="groupDoughnutChart">
+              <div className="groupDoughnutChart" style={{height: '350px'}}>
                 <Doughnut
                   data={chartData}
                   options={{
@@ -116,65 +123,97 @@ const Overview = (props: OverviewProps) => {
                 />
               </div>
             ) : (
-              <img className="rotocrow rotation bigger" src={crow}></img>
+              <CircularProgress size="75px" />
             )
           }
-        </Box>
+        </Card>
 
-        <Box
+        <Card
           sx={{
-            gridArea: 'topic',
+            gridArea: 'graph2',
+            backgroundColor: '#f9fdfe',
+            height: '350px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Replicas timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
+        </Card>
+
+        <Card
+          sx={{
+            gridArea: 'cluster',
             backgroundColor: '#f9fdfe',
           }}
         >
-          Cluster Name <br />
-          {connectedCluster}
-        </Box>
+          <CardContent>
+            <Typography variant="h5">Cluster Name</Typography>
+            <Typography variant="h6" align="center" sx={{marginTop: '15px'}}>
+              {connectedCluster}
+            </Typography>
+          </CardContent>
+        </Card>
 
-        <Box
-          sx={{
-            gridArea: 'partitions',
-            backgroundColor: '#f9fdfe',
-          }}
-        >
-          Topics
-          <br />
-          {data.topicData.topics ? data.topicData.topics.length : 0}
-        </Box>
-
-        <Box
-          sx={{
-            gridArea: 'offset',
-            backgroundColor: '#f9fdfe',
-          }}
-        >
-          Offsets at Connection <br />
-          {offsetTotal}
-        </Box>
-
-        <Box
+        <Card
           sx={{
             gridArea: 'brokers',
             backgroundColor: '#f9fdfe',
           }}
         >
-          Brokers <br />
-          {data.clusterData.brokers.length}
-        </Box>
+          <CardContent>
+            <Typography variant="h5">Brokers</Typography>
+            <Typography variant="h6" align="center" sx={{marginTop: '15px'}}>
+              {data.clusterData.brokers.length}
+            </Typography>
+          </CardContent>
+        </Card>
 
-        <Box
+        <Card
           sx={{
-            gridArea: 'consumer',
+            gridArea: 'topics',
             backgroundColor: '#f9fdfe',
           }}
         >
-          Partitions <br />
-          {data.topicData.topics
-            ? data.topicData.topics.reduce((acc, el) => {
-                return acc + el.partitions.length;
-              }, 0)
-            : 0}
-        </Box>
+          <CardContent>
+            <Typography variant="h5">Topics</Typography>
+            <Typography variant="h6" align="center" sx={{marginTop: '15px'}}>
+              {data.topicData.topics ? data.topicData.topics.length : 0}
+            </Typography>
+          </CardContent>
+        </Card>
+
+        <Card
+          sx={{
+            gridArea: 'offsets',
+            backgroundColor: '#f9fdfe',
+          }}
+        >
+          <CardContent>
+            <Typography variant="h5">Offsets</Typography>
+            <Typography variant="h6" align="center" sx={{marginTop: '15px'}}>
+              {offsetTotal}
+            </Typography>
+          </CardContent>
+        </Card>
+
+        <Card
+          sx={{
+            gridArea: 'partitions',
+            backgroundColor: '#f9fdfe',
+          }}
+        >
+          <CardContent>
+            <Typography variant="h5">Partitions</Typography>
+            <Typography variant="h6" align="center" sx={{marginTop: '15px'}}>
+              {data.topicData.topics
+                ? data.topicData.topics.reduce((acc, el) => {
+                    return acc + el.partitions.length;
+                  }, 0)
+                : 0}
+            </Typography>
+          </CardContent>
+        </Card>
       </Box>
     </Box>
   );

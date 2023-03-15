@@ -1,10 +1,8 @@
 import {useState, useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
-import {Box, Paper, Button, Alert} from '@mui/material';
+import {Box, Paper, Button, Alert, CircularProgress} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {message, TopicsContext} from '../../types';
-import crow from '../assets/crow2.png';
-import acorn from '../assets/acorn.png';
 
 const MessagesDisplay = () => {
   const {selectedTopic, connectedCluster}: TopicsContext = useOutletContext();
@@ -92,26 +90,15 @@ const MessagesDisplay = () => {
     </Box>
   );
 
-  //crow alternative
-  const loadingKrow = (
-    <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <img className="loadKrow rotation jump" src={crow} alt="loading"></img>
-    </Box>
-  );
-  const loadingAcorn = (
-    <Box className="move" sx={{display: 'flex', justifyContent: 'center'}}>
-      <img className="acorn rotation" src={acorn} alt="loading"></img>
-    </Box>
-  );
-
-  const loadingAni = () => {
+  // loading wheel
+  const loadingWheel = () => {
     return (
-      <div style={{display: 'flex', flexDirection: 'column'}}>
-        <div className="mirror">{loadingKrow}</div>
-        <div>{loadingAcorn}</div>
+      <div style={{display: 'flex', justifyContent: 'center', marginTop: '100px'}}>
+        <CircularProgress size="70px" />
       </div>
     );
   };
+
   // Button to reload messages
   const refreshButton = (
     <Button variant="contained" onClick={handleMessagesRefresh}>
@@ -134,7 +121,7 @@ const MessagesDisplay = () => {
     <div className="wrapper">
       <div className="refresh">{isLoading ? disabledRefreshutton : refreshButton}</div>
       <div className="message-table">
-        {isLoading ? loadingAni() : isError ? errorAlert : messageTable}
+        {isLoading ? loadingWheel() : isError ? errorAlert : messageTable}
       </div>
     </div>
   );

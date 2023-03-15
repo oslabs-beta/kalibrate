@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {connectedClusterData, OffsetCollection, timeSeriesData} from './types';
-import ConnectionContainer from './components/ConnectionContainer';
+import {connectedClusterData, OffsetCollection} from './types';
+import ConnectionContainer from './components/containers/ConnectionContainer';
 import Manage from './components/Manage';
 import Consumers from './components/managePages/consumers';
 import ConsumersDisplay from './components/managePages/consumersDisplay';
@@ -9,7 +9,7 @@ import MembersDisplay from './components/managePages/membersDisplay';
 import Navbar from './components/Navbar';
 import Brokers from './components/managePages/Brokers';
 import Overview from './components/Overview';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/connectPages/Dashboard';
 import Topics from './components/managePages/Topics';
 import OffsetCharts from './components/monitorPages/OffsetCharts';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
@@ -18,16 +18,16 @@ import TopicsDisplay from './components/managePages/TopicsDisplay';
 import Login from './components/accountPages/Login';
 import Signup from './components/accountPages/Signup';
 import {Forgot, Reset} from './components/accountPages/Forgot';
-import Home from './components/Home';
+import Home from './components/splashPages/Home';
 import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
-import Protected from './components/Protected';
-import Redirect from './components/Redirect';
+import Protected from './components/containers/Protected';
+import Redirect from './components/containers/Redirect';
+import Connected from './components/containers/Connected';
 import './stylesheets/style.scss';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
 import {GroupTopic, newPollType, storedClient, datasetsObject} from './types';
-import {not} from 'ip';
 import TrafficAndHealthGraphs from './components/monitorPages/TrafficAndHealthGraphs';
 
 function App() {
@@ -71,8 +71,10 @@ function App() {
   });
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
-  const {clusterData, topicData, groupData} = connectedClusterData;
-  // console.log('connected cluster data:', connectedClusterData);
+  let {clusterData, topicData, groupData} = connectedClusterData;
+
+  // filter out consumer offsets
+  topicData = {topics: topicData.topics.filter((el: any) => el.name !== '__consumer_offsets')};
 
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<datasetsObject[]>([]);
@@ -176,7 +178,6 @@ function App() {
           empty = 0,
           preparingRebalance = 0;
         for (const el of data.groupData) {
-          console.log('status watch: ', el.state);
           if (el.state === 'Stable') stable++;
           if (el.state === 'Empty') empty++;
           if (el.state === 'PreparingRebalance') preparingRebalance++;
@@ -192,6 +193,8 @@ function App() {
         // topic replica status (percentage in sync)
         newPoll.topicReplicaStatus = {};
         for (const el of data.topicData.topics) {
+          if (el.name === '__consumer_offsets') continue; // don't include consumer offsets
+
           let replicas = 0;
           let isr = 0;
           for (const p of el.partitions) {
@@ -206,6 +209,8 @@ function App() {
         newPoll.topicThroughputs = {};
         if (data.topicData.topics.length) {
           for (const t of data.topicData.topics) {
+            if (t.name === '__consumer_offsets') continue; // don't include consumer offsets
+
             newPoll.topicOffsets[t.name] = t.offsets.reduce(
               (acc: number, curr: OffsetCollection) => {
                 return acc + Number(curr.offset);
@@ -227,7 +232,8 @@ function App() {
         // count of offsets by group
         newPoll.groupThroughputs = {};
         for (const g in data.groupOffsets) {
-          //const groupName = g;
+          if (g.includes('__consumer_offsets')) continue; // don't include consumer offsets
+
           let sum = 0;
           data.groupOffsets[g].forEach((el: GroupTopic) => {
             el.partitions.forEach(p => {
@@ -457,7 +463,9 @@ function App() {
                     isAuthenticated={isAuthenticated}
                     setIsAuthenticated={setIsAuthenticated}
                   >
-                    <Manage connectedCluster={connectedClient} />
+                    <Connected connectedClient={connectedClient}>
+                      <Manage connectedCluster={connectedClient} />
+                    </Connected>
                   </Protected>
                 }
               >

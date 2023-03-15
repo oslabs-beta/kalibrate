@@ -9,6 +9,7 @@ import {
   TextField,
   InputAdornment,
   OutlinedInput,
+  Typography,
 } from '@mui/material';
 import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
@@ -108,7 +109,9 @@ const AccountTab = (props: UserMenuProps) => {
 
     return (
       <FormControl sx={{m: 1, width: '25ch'}}>
-        <InputLabel sx={{top: '-7px', width: '100%'}}>{titleCase(pass)} Password</InputLabel>
+        <InputLabel size="small" sx={{width: '100%'}}>
+          {titleCase(pass)} Password
+        </InputLabel>
         <OutlinedInput
           size="small"
           type={showPassword[show] ? 'text' : 'password'}
@@ -134,14 +137,14 @@ const AccountTab = (props: UserMenuProps) => {
 
   return (
     <Container>
-      <Box>
-        <h6>Enter Password to make changes</h6>
+      <Box sx={{marginBottom: '30px'}}>
+        <Typography variant="h6">Enter your password to make changes</Typography>
         {FormPassword('old')}
         {inputOldPass ? <div>MUST ENTER PASSWORD</div> : <div></div>}
       </Box>
 
-      <Box>
-        <h6>Change Account Email</h6>
+      <Box sx={{marginBottom: '30px'}}>
+        <Typography variant="h6">Change Account Email</Typography>
         <TextField
           size="small"
           label="Update Email"
@@ -150,26 +153,25 @@ const AccountTab = (props: UserMenuProps) => {
         />
       </Box>
 
-      <Box className="settings">
-        <h6>Change Password</h6>
+      <Box className="settings" sx={{marginBottom: '30px'}}>
+        <Typography variant="h6">Change Password</Typography>
         {FormPassword('new')}
         {FormPassword('confirm')}
         {inputMatching ? <div>MUST BE MATCHING</div> : <div></div>}
       </Box>
       <Box className="submit-buttons">
-        <Button variant="outlined" size="small" onClick={handleFormClear}>
-          Cancel
-        </Button>
-
         <LoadingButton
           onClick={handleFormSave}
           loading={loadingSave}
           loadingPosition="start"
           startIcon={<SaveIcon />}
-          variant="contained"
+          sx={{width: '50%'}}
         >
           SAVE
         </LoadingButton>
+        <Button size="small" onClick={handleFormClear} sx={{width: '50%'}}>
+          Cancel
+        </Button>
       </Box>
     </Container>
   );
