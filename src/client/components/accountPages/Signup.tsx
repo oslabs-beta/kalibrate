@@ -171,7 +171,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           backgroundColor: colors.background[500],
         }}
       >
-        <Typography variant="h5" sx={{marginBottom: '15px'}}>
+        <Typography variant="h5" sx={{marginBottom: '25px'}}>
           Sign up for Kalibrate
         </Typography>
 
@@ -202,8 +202,10 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           sx={{marginBottom: '10px', width: '100%'}}
         />
 
-        <FormControl sx={{width: '100%'}}>
-          <InputLabel sx={{top: '-7px', width: '100%'}}>Password</InputLabel>
+        <FormControl sx={{width: '100%', marginBottom: '2px'}}>
+          <InputLabel size="small" sx={{width: '100%'}}>
+            Password
+          </InputLabel>
           <OutlinedInput
             size="small"
             type={showPassword ? 'text' : 'password'}
@@ -225,11 +227,13 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
         </FormControl>
 
         <FormControl sx={{m: 1, width: '100%'}}>
-          <InputLabel sx={{top: '-7px', width: '100%'}}>Confirm Password</InputLabel>
+          <InputLabel size="small" sx={{width: '100%'}}>
+            Confirm Password
+          </InputLabel>
           <OutlinedInput
             size="small"
             type={showPassword ? 'text' : 'password'}
-            label="Password"
+            label="Confirm Password"
             value={confirmedPassword}
             onChange={event => setConfirmedPassword(event.target.value)}
             endAdornment={
@@ -256,7 +260,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
               !isCompleteSignupSubmission(firstName, lastName, email, password, confirmedPassword)
             }
             onClick={handleSignupSubmit}
-            sx={{fontWeight: 'bold', marginTop: '15px', width: 'auto'}}
+            sx={{fontWeight: 'bold', marginTop: '10px', width: 'auto'}}
           >
             Sign up
           </Button>
@@ -268,7 +272,7 @@ const Signup = ({setIsAuthenticated}: SignupProps) => {
           </Alert>
         ) : null}
 
-        <Typography>Already have an account?</Typography>
+        <Typography sx={{marginTop: '20px'}}>Already have an account?</Typography>
         <Link to="/login">
           <Typography sx={{color: colors.accent[300]}}>Log in</Typography>
         </Link>

@@ -15,7 +15,7 @@ import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 import {ManageProps} from '../types';
 
-const drawerWidth = 200;
+const drawerWidth = 250;
 
 // Display, in sidebar, management options for a selected cluster
 const Manage = (props: ManageProps) => {
