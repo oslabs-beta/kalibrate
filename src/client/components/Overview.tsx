@@ -127,7 +127,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[300],
           }}
         >
-          Cluster Name: <br />
+          Cluster Name <br />
           {connectedCluster}
         </Box>
 
@@ -137,7 +137,8 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[500],
           }}
         >
-          Topics: <br />
+          Topics
+          <br />
           {data.topicData.topics ? data.topicData.topics.length : 0}
         </Box>
 
@@ -147,7 +148,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[300],
           }}
         >
-          Offsets at connection: <br />
+          Offsets at Connection <br />
           {offsetTotal}
         </Box>
 
@@ -167,7 +168,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[300],
           }}
         >
-          Partitions: <br />
+          Partitions <br />
           {data.topicData.topics
             ? data.topicData.topics.reduce((acc, el) => {
                 return acc + el.partitions.length;
