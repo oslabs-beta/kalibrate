@@ -16,6 +16,9 @@ import authController from './controllers/authController';
 import clusterController from './controllers/clusterController';
 import topicController from './controllers/topicController';
 
+// Constants
+const PORT = process.env.PORT || '5173';
+
 // Create rate limiter for connection requests: max 5 per IP address within one minute
 const connectionLimiter = rateLimit({
   windowMs: 60000,
@@ -254,8 +257,8 @@ app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Start server
-app.listen(process.env.PORT, () => {
-  console.log(`Server listening on port: ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
 });
 
 export {app, clientCache, consumerCache};

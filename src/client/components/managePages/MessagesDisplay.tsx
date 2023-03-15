@@ -8,7 +8,7 @@ import acorn from '../assets/acorn.png';
 
 const MessagesDisplay = () => {
   const {selectedTopic, connectedCluster}: TopicsContext = useOutletContext();
-  const [pageSize, setPageSize] = useState<number>(25);
+  const [pageSize, setPageSize] = useState<number>(100);
   const [messages, setMessages] = useState<message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -67,7 +67,7 @@ const MessagesDisplay = () => {
   // Generate messages data grid with generates columns and rows
   const messageTable = (
     <Box sx={{height: '70vh'}}>
-      <Paper elevation={6} sx={{height: '100%'}}>
+      <Paper elevation={6} sx={{height: 'calc(100vh - 261px)'}}>
         <DataGrid
           getRowHeight={() => 'auto'}
           rows={messageRows}

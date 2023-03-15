@@ -10,6 +10,8 @@ import create from '../assets/create.svg';
 import views from '../assets/views.svg';
 import testing from '../assets/testing.svg';
 import preferences from '../assets/preferences.svg';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../../theme';
 
 const Features = () => {
   const Item = styled(Paper)(({theme}) => ({
@@ -19,9 +21,12 @@ const Features = () => {
     color: theme.palette.text.secondary,
   }));
 
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   return (
     <section>
-      <h3 style={{fontSize: '1.5rem'}}>What features are included in Kalibrate?</h3>
+      <h3 style={{fontSize: '1.5rem', color: colors.primary[900]}}>What features are included in Kalibrate?</h3>
       <Box sx={{flexGrow: 1, width: '60rem'}}>
         <Grid container spacing={2}>
           <Grid xs={3}>

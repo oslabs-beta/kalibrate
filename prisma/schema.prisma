@@ -1,7 +1,7 @@
 datasource db {
   provider          = "postgresql"
-  url               = env("POSTGRES_URL")
-  shadowDatabaseUrl = env("POSTGRES_SHADOW_URL")
+  url               = env("DB_URI")
+  shadowDatabaseUrl = env("SHADOW_DB_URI")
 }
 
 generator client {

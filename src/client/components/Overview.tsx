@@ -57,11 +57,9 @@ const Overview = (props: OverviewProps) => {
     for (const key in timeSeriesData[0].topicOffsets) {
       offsetTotal += timeSeriesData[0].topicOffsets[key];
     }
-    console.log('topic offsets only: ', offsetTotal);
     for (const key in timeSeriesData[0].groupOffsets) {
       offsetTotal += timeSeriesData[0].groupOffsets[key];
     }
-    console.log('total offsets', offsetTotal);
   }
 
   return (
@@ -139,7 +137,8 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: '#f9fdfe',
           }}
         >
-          Topics <br />
+          Topics
+          <br />
           {data.topicData.topics ? data.topicData.topics.length : 0}
         </Box>
 

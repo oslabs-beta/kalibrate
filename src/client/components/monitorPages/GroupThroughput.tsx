@@ -16,7 +16,6 @@ import initializeDatasets from '../../util/initializeDatasets';
 
 const GroupThroughput = (props: GroupLineGraphComponentProps) => {
   const {timeSeriesData, groupDatasets, setGroupDatasets} = props;
-  console.log('tsd ', timeSeriesData);
 
   // todo: allow modification of xscope?
 
@@ -29,9 +28,25 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
     const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
+    // if less than xScope elements in timeseriesdata, push their times to timearray and fill to xScope with ""
+    if (timeSeriesData.length < xScope) {
+      let i = 1;
+      while (i < timeSeriesData.length) {
+        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+        i++;
+      }
+      while (timeArray.length < xScope) {
+        timeArray.push('');
+      }
+    } else {
+      for (let i = timeSeriesData.length - xScope; i < timeSeriesData.length; i++) {
+        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+      }
+    }
+
+    console.log('timearray: ', timeArray);
+
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
-    timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
-    while (timeArray.length < xScope) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
       for (const el of newDatasets) {
         el.timestamp = timeArray;
@@ -56,9 +71,16 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
     // copy throughput data object to change before updating state
     const newData: datasetsObject[] = JSON.parse(JSON.stringify(groupDatasets));
 
+    // if there are empty strings in the x axis labels, replace the first one with the curernt time
+    // otherwise, push the new time to the array and shift the oldest time off
     newData.forEach(el => {
-      console.log('from foreach: ', el.timestamp);
-      el.timestamp.push(new Date(current.time).toLocaleTimeString());
+      const i = el.timestamp.indexOf('');
+      if (i !== -1) {
+        el.timestamp[i] = new Date(current.time).toLocaleTimeString();
+      } else {
+        el.timestamp.push(new Date(current.time).toLocaleTimeString());
+        el.timestamp.shift();
+      }
     });
     for (const el in groupThroughputs) {
       // push y-axis data to the appropriate array
@@ -70,7 +92,6 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
         if (set.data.data.length > xScope) set.data.data.shift();
       }
     }
-    console.log('setting gds in grup useefect 2', groupDatasets);
     setGroupDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);
@@ -78,26 +99,8 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
   // chart plugins
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-  // sort empty strings to end of labels array so that timestamps scroll from left
-  const labels = groupDatasets.length ? groupDatasets[0].timestamp : [];
-  console.log('L presort ', labels);
-  console.log('gds length: ', groupDatasets.length ? groupDatasets[0].timestamp : []);
-
-  // move x axis window as time advances
-  let xStart = 1,
-    xEnd = xScope;
-  labels.sort((a, b) => {
-    return !a.length && b.length ? 1 : -1;
-  });
-  const firstBlank = labels.indexOf('');
-  console.log(firstBlank);
-  if (firstBlank > xScope) {
-    xEnd = firstBlank - 1;
-    xStart = firstBlank - xScope;
-  }
-
   const data = {
-    labels: labels.slice(xStart, xEnd),
+    labels: groupDatasets.length ? groupDatasets[0].timestamp : [],
     datasets: groupDatasets.map((el: datasetsObject) => el.data),
     options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
