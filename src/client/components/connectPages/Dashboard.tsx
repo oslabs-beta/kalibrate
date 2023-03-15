@@ -15,8 +15,8 @@ import {
   useTheme,
 } from '@mui/material';
 import {CloudDone, AddBox, Cloud} from '@mui/icons-material';
-import {DashboardProps} from '../types';
-import {tokens} from '../theme';
+import {DashboardProps} from '../../types';
+import {tokens} from '../../theme';
 
 // Display sidebar for connected client list
 const Dashboard = (props: DashboardProps) => {

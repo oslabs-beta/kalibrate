@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
-import Loading from './Loading';
-import {ProtectedProps} from '../types';
+import Loading from '../Loading';
+import {ProtectedProps} from '../../types';
 
 const Protected = ({isAuthenticated, setIsAuthenticated, children}: ProtectedProps) => {
   const navigate = useNavigate();
