@@ -3,9 +3,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import crow from '../assets/crow2.png';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../../theme';
 
 const Hero = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   return (
     <>
       <CssBaseline />
@@ -25,7 +29,7 @@ const Hero = () => {
           <h1 style={{fontSize: '3rem', margin: '0', lineHeight: 'normal'}}>
             Interact with your Kafka clusters for free using Kalibrate's web-based GUI
           </h1>
-          <h3 style={{color: 'rgba(33, 37, 41, 0.75)', margin: '0', }}>
+          <h3 style={{color: colors.info[100], margin: '0', }}>
             Kalibrate is an open-source developer tool for seamlessly managing and monitoring Kafka cluster health. Powered by KafkaJS in a Node.js environment.
           </h3>
 

@@ -12,8 +12,6 @@ import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
 import OffsetCharts from './components/monitorPages/OffsetCharts';
-import Produce from './components/testPages/Produce';
-import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
 import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
@@ -512,9 +510,6 @@ function App() {
                     />
                   }
                 />
-
-                <Route path="consume" element={<Consume />} />
-                <Route path="produce" element={<Produce />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
