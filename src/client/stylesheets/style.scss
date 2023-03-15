@@ -3,12 +3,13 @@
   --lighterBlue: #c2dfe3;
   --blue: #9db4c0; /*navbar*/
   --darkerBlue: #5c6b73;
-  --darkestBlue: #253237;
+  --darkestBlue: #63828e;
   --white: #fcfcfc;
   --black: #393e41;
   --error: #e17160;
   --accent: #663399;
 }
+
 body,
 main {
   max-height: 100%;
@@ -59,6 +60,21 @@ h1 {
   border: solid 1px;
 }
 
+.submit-buttons {
+  display: flex;
+  width: 60%;
+  margin-left: auto;
+  justify-content: space-between;
+}
+.modal {
+  position: 'absolute';
+  top: 50%;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+  width: 400px;
+  border: 2px solid #000;
+  box-shadow: 24;
+}
 /* styling for doughnut chart */
 
 .groupDoughnutChart {
@@ -66,7 +82,21 @@ h1 {
   position: relative;
   margin-bottom: 1%;
   margin-top: 1%;
-  padding: 1%
+  padding: 1%;
+}
+
+.barChartGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.lineGraphGrid {
+  display: grid;
+  grid-template-columns: 13fr 7fr;
+}
+
+.replicaContainer {
+  margin-top: 80px;
 }
 
 /* animation styling for crow */

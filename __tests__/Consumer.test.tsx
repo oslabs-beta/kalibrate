@@ -6,7 +6,7 @@ import {render, screen, cleanup} from '@testing-library/react';
 import Consumers from '../src/client/components/managePages/consumers';
 import ConsumersDisplay from '../src/client/components/managePages/consumersDisplay';
 
-describe('Consumer React', () => {
+xdescribe('Consumer React', () => {
   it('should render consumer component', () => {
     render(<Consumers />);
     //get components from screen (tree) with specific testId

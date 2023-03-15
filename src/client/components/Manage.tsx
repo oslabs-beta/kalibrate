@@ -26,7 +26,6 @@ const Manage = (props: ManageProps) => {
 
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
-  const [openTest, setOpenTest] = useState(false);
 
   // Drawer = wrapper for sidebar
   return (
@@ -39,7 +38,7 @@ const Manage = (props: ManageProps) => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            border: '2px outset' + colors.secondary[300],
+            borderRight: '1px outset' + colors.secondary[900],
             background: colors.manage[500],
           },
         }}
@@ -53,8 +52,8 @@ const Manage = (props: ManageProps) => {
                 onClick={() => navigate('/client/' + connectedCluster)}
                 sx={{
                   borderRadius: '5px',
-                  border: '1px outset' + colors.secondary[300],
-                  backgroundColor: colors.secondary[300],
+                  border: '1px outset' + colors.secondary[200],
+                  backgroundColor: colors.secondary[100],
                 }}
               >
                 <ListItemText primary="Overview" />
@@ -68,8 +67,8 @@ const Manage = (props: ManageProps) => {
                 onClick={() => setOpenManage(prev => !prev)}
                 sx={{
                   borderRadius: '5px',
-                  border: '1px outset' + colors.secondary[300],
-                  backgroundColor: colors.secondary[300],
+                  border: '1px outset' + colors.secondary[200],
+                  backgroundColor: colors.secondary[100],
                 }}
               >
                 <ListItemText primary="Manage" />
@@ -102,8 +101,8 @@ const Manage = (props: ManageProps) => {
                 onClick={() => setOpenMonitor(prev => !prev)}
                 sx={{
                   borderRadius: '5px',
-                  border: '1px outset' + colors.secondary[300],
-                  backgroundColor: colors.secondary[300],
+                  border: '1px outset' + colors.secondary[200],
+                  backgroundColor: colors.secondary[100],
                 }}
               >
                 <ListItemText primary="Monitor" />
@@ -112,49 +111,15 @@ const Manage = (props: ManageProps) => {
             </ListItem>
 
             <Collapse in={openMonitor} timeout="auto" unmountOnExit>
-              <ListItem key="Throughput" disablePadding>
-                <ListItemButton onClick={() => navigate('throughput')}>
-                  <ListItemText primary="Throughput" />
+              <ListItem key="traffic" disablePadding>
+                <ListItemButton onClick={() => navigate('traffic')}>
+                  <ListItemText primary="Traffic and Health" />
                 </ListItemButton>
               </ListItem>
 
-              <ListItem key="Lag" disablePadding>
-                <ListItemButton onClick={() => navigate('lag')}>
-                  <ListItemText primary="Lag" />
-                </ListItemButton>
-              </ListItem>
-
-              <ListItem key="Offsets" disablePadding>
+              <ListItem key="offsets" disablePadding>
                 <ListItemButton onClick={() => navigate('offsets')}>
                   <ListItemText primary="Offsets" />
-                </ListItemButton>
-              </ListItem>
-            </Collapse>
-
-            <ListItem key="Test" disablePadding>
-              <ListItemButton
-                onClick={() => setOpenTest(prev => !prev)}
-                sx={{
-                  borderRadius: '5px',
-                  border: '1px outset' + colors.secondary[300],
-                  backgroundColor: colors.secondary[300],
-                }}
-              >
-                <ListItemText primary="Test" />
-                {openTest ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-            </ListItem>
-
-            <Collapse in={openTest} timeout="auto" unmountOnExit>
-              <ListItem key="Produce" disablePadding>
-                <ListItemButton onClick={() => navigate('produce')}>
-                  <ListItemText primary="Produce" />
-                </ListItemButton>
-              </ListItem>
-
-              <ListItem key="Consume" disablePadding>
-                <ListItemButton onClick={() => navigate('consume')}>
-                  <ListItemText primary="Consume" />
                 </ListItemButton>
               </ListItem>
             </Collapse>
