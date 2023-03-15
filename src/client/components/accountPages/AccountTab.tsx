@@ -169,6 +169,9 @@ const AccountTab = (props: UserMenuProps) => {
         >
           SAVE
         </LoadingButton>
+        <Button size="small" onClick={handleFormClear} sx={{width: '50%'}}>
+          Cancel
+        </Button>
       </Box>
     </Container>
   );
