@@ -23,7 +23,6 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
 
   // when new data is received, new data to group arrays in throughput data object
   useEffect(() => {
-    console.log('group useeffect 1');
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope);
@@ -31,37 +30,20 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
     const timeArray = [];
     // if less than xScope elements in timeseriesdata, push their times to timearray and fill to xScope with ""
     if (timeSeriesData.length < xScope) {
-      console.log('GROUP short time array: ', timeSeriesData.length);
       let i = 1;
       while (i < timeSeriesData.length) {
-        console.log('i=', i);
         timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
         i++;
       }
-      console.log('GROUP short adding spaces');
       while (timeArray.length < xScope) {
         timeArray.push('');
       }
     } else {
-      console.log('GROUP long time array');
-
       for (let i = timeSeriesData.length - xScope; i < timeSeriesData.length; i++) {
         timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
       }
     }
 
-    // let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
-    // console.log('i: ', i);
-    // if (i < xScope) {
-    //   for (let j = 0; j < i; j++) {
-    //     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
-    //   }
-    //   while (timeArray.length < xScope) timeArray.push('');
-    // } else {
-    //   for (let j = i; j < timeSeriesData.length; j++) {
-    //     timeArray.push(new Date(timeSeriesData[j].time).toLocaleTimeString());
-    //   }
-    // }
     console.log('timearray: ', timeArray);
 
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
@@ -89,8 +71,9 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
     // copy throughput data object to change before updating state
     const newData: datasetsObject[] = JSON.parse(JSON.stringify(groupDatasets));
 
+    // if there are empty strings in the x axis labels, replace the first one with the curernt time
+    // otherwise, push the new time to the array and shift the oldest time off
     newData.forEach(el => {
-      console.log('from foreach: ', el.timestamp);
       const i = el.timestamp.indexOf('');
       if (i !== -1) {
         el.timestamp[i] = new Date(current.time).toLocaleTimeString();
@@ -109,31 +92,12 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
         if (set.data.data.length > xScope) set.data.data.shift();
       }
     }
-    console.log('setting gds in grup useefect 2', groupDatasets);
     setGroupDatasets(newData);
     // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
   }, [timeSeriesData[timeSeriesData.length - 1]]);
 
   // chart plugins
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-  // sort empty strings to end of labels array so that timestamps scroll from left
-  // const labels = groupDatasets.length ? groupDatasets[0].timestamp : [];
-  // console.log('L presort ', labels);
-  // console.log('gds length: ', groupDatasets.length ? groupDatasets[0].timestamp : []);
-
-  // // move x axis window as time advances
-  // let xStart = 1,
-  //   xEnd = xScope;
-  // labels.sort((a, b) => {
-  //   return !a.length && b.length ? 1 : -1;
-  // });
-  // const firstBlank = labels.indexOf('');
-  // console.log(firstBlank);
-  // if (firstBlank > xScope) {
-  //   xEnd = firstBlank - 1;
-  //   xStart = firstBlank - xScope;
-  // }
 
   const data = {
     labels: groupDatasets.length ? groupDatasets[0].timestamp : [],
