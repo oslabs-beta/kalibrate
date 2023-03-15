@@ -65,4 +65,37 @@ topicController.deleteTopic = async (req, res, next) => {
   }
 };
 
+topicController.addPartitions = async (req, res, next) => {
+  // declare admin
+  const {kafka} = res.locals;
+
+  //grab info needed to add partitions
+  const {selectedTopicName, totalPartitions} = req.body;
+
+  try {
+    //connect to admin
+    const admin = kafka.admin();
+    await admin.connect();
+
+    //create partitions
+    await admin.createPartitions({
+      topicPartitions: [
+        {
+          topic: selectedTopicName,
+          count: totalPartitions,
+        },
+      ],
+    });
+
+    await admin.disconnect();
+    return next();
+  } catch (err) {
+    next({
+      log: `ERROR - topicController.addPartitions: ${err}`,
+      status: 400,
+      message: {err: 'Failed to add partitions'},
+    });
+  }
+};
+
 export default topicController;

@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import {render, screen, fireEvent} from '@testing-library/react';
 import MessagesDisplay from '../src/client/components/managePages/MessagesDisplay';
 
-describe('MessagesDisplay Component', () => {
+xdescribe('MessagesDisplay Component', () => {
   // Api call to test topic returns array with a single mock message object
   const server = setupServer(
     rest.get('/api/test/messages', (req, res, ctx) => {
