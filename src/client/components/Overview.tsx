@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import {OverviewProps} from '../types';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 import {Chart as ChartJS, ArcElement, Tooltip, Legend, Title} from 'chart.js';
 import {Doughnut} from 'react-chartjs-2';
-import crow from './assets/crow2.png';
 
 //register chartjs components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
@@ -116,7 +116,7 @@ const Overview = (props: OverviewProps) => {
                 />
               </div>
             ) : (
-              <img className="rotocrow rotation bigger" src={crow}></img>
+              <CircularProgress size="75px" />
             )
           }
         </Box>

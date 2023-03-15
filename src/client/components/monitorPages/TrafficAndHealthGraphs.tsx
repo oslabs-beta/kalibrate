@@ -1,7 +1,7 @@
 import GroupThroughput from './GroupThroughput';
 import TopicThroughput from './TopicThroughput';
 import Replicas from './Replicas';
-import crow from '../assets/crow2.png';
+import CircularProgress from '@mui/material/CircularProgress';
 import {TrafficAndHealthProps} from '../../types';
 
 const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
@@ -33,7 +33,9 @@ const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
       </div>
     </div>
   ) : (
-    <img className="rotocrow rotation bigger" src={crow}></img>
+    <div style={{display: 'flex', justifyContent: 'center', marginTop: '250px'}}>
+      <CircularProgress size="75px" />
+    </div>
   );
 };
 
