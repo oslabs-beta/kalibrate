@@ -86,7 +86,7 @@ const Navbar = (props: NavbarProps) => {
               fontFamily: 'sans-serif',
               fontWeight: 700,
               letterSpacing: '.1rem',
-              color: '#9cdfd8',
+              color: '#8bc6c0',
               textDecoration: 'none',
               cursor: 'pointer',
             }}
@@ -101,7 +101,7 @@ const Navbar = (props: NavbarProps) => {
                 onClick={() => navigate('/dashboard')}
                 sx={{
                   my: 2,
-                  color: '#9cdfd8',
+                  color: '#8bc6c0',
                   fontWeight: 'bold',
                   display: 'block',
                   m: 0,
@@ -113,9 +113,7 @@ const Navbar = (props: NavbarProps) => {
             ))}
           </Box>
 
-          <IconButton size="medium" color="inherit" onClick={handleDarkMode}>
-            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
+          
 
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
@@ -172,6 +170,10 @@ const Navbar = (props: NavbarProps) => {
 
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
           <UserMenu isAuthenticated={isAuthenticated} logout={logout} />
+
+          <IconButton size="medium" color="inherit" onClick={handleDarkMode}>
+            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>
