@@ -24,6 +24,7 @@ const Hero = () => {
             justifyContent: 'center',
             alignItems: 'center',
             gap: '2rem',
+            color: colors.primary[900]
           }}
         >
           <h1 style={{fontSize: '3rem', margin: '0', lineHeight: 'normal'}}>
