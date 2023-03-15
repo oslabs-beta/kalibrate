@@ -107,8 +107,20 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
 
   data.options.plugins.title.text = 'Throughput by Topic Group';
   data.options.scales.y.title.text = 'Messages/sec';
+  data.options.maintainAspectRatio = false;
 
-  return <Line options={data.options} data={data} />;
+  return (
+    <div
+      style={{
+        height: 'calc(100vh - 150px)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Line options={data.options} data={data} />
+    </div>
+  );
 };
 
 export default TopicThroughput;

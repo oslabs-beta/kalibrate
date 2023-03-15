@@ -1,7 +1,7 @@
 import GroupThroughput from './GroupThroughput';
 import TopicThroughput from './TopicThroughput';
-import Replicas from './Replicas';
 import CircularProgress from '@mui/material/CircularProgress';
+import Card from '@mui/material/Card';
 import {TrafficAndHealthProps} from '../../types';
 
 const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
@@ -15,22 +15,32 @@ const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
   } = props;
 
   return timeSeriesData.length ? (
-    <div className="lineGraphGrid">
-      <div className="throughputContainer">
+    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+      <Card
+        sx={{
+          backgroundColor: '#f9fdfe',
+          marginRight: '25px',
+          marginTop: '25px',
+        }}
+      >
         <TopicThroughput
           timeSeriesData={timeSeriesData}
           topicDatasets={topicDatasets}
           setTopicDatasets={setTopicDatasets}
         />
+      </Card>
+      <Card
+        sx={{
+          backgroundColor: '#f9fdfe',
+          marginTop: '25px',
+        }}
+      >
         <GroupThroughput
           timeSeriesData={timeSeriesData}
           groupDatasets={groupDatasets}
           setGroupDatasets={setGroupDatasets}
         />
-      </div>
-      <div className="replicaContainer">
-        <Replicas timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
-      </div>
+      </Card>
     </div>
   ) : (
     <div style={{display: 'flex', justifyContent: 'center', marginTop: '250px'}}>

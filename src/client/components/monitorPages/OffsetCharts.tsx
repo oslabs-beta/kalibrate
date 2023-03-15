@@ -9,9 +9,11 @@ import {
 } from 'chart.js';
 import {useEffect, useState} from 'react';
 import {Bar} from 'react-chartjs-2';
+import Card from '@mui/material/Card';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
+// @ts-ignore
 const OffsetCharts = props => {
   //color palette for bar graph
   const colors: string[] = [
@@ -106,6 +108,7 @@ const OffsetCharts = props => {
         text: 'Offsets by Consumer Group',
       },
     },
+    maintainAspectRatio: false,
   };
 
   const topicOptions = {
@@ -119,16 +122,51 @@ const OffsetCharts = props => {
         text: 'Offsets by Topic',
       },
     },
+    maintainAspectRatio: false,
   };
 
   return (
     <div className="barChartGrid">
-      <div>
-        <Bar options={groupOptions} data={groupData} />,
-      </div>
-      <div>
-        <Bar options={topicOptions} data={topicData} />,
-      </div>
+      <Card
+        sx={{
+          backgroundColor: '#f9fdfe',
+          marginRight: '25px',
+          marginTop: '25px',
+        }}
+      >
+        <div
+          style={{
+            height: 'calc(100vh - 150px)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {/* 
+        @ts-ignore */}
+          <Bar options={groupOptions} data={groupData} />
+        </div>
+      </Card>
+      <Card
+        sx={{
+          backgroundColor: '#f9fdfe',
+          marginRight: '25px',
+          marginTop: '25px',
+        }}
+      >
+        <div
+          style={{
+            height: 'calc(100vh - 150px)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {/* 
+        @ts-ignore */}
+          <Bar options={topicOptions} data={topicData} />
+        </div>
+      </Card>
     </div>
   );
 };
