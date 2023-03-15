@@ -95,7 +95,7 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'cluster',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
           {
@@ -124,7 +124,7 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'topic',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
           Cluster Name <br />
@@ -134,7 +134,7 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'partitions',
-            backgroundColor: colors.secondary[500],
+            backgroundColor: '#f9fdfe',
           }}
         >
           Topics
@@ -145,7 +145,7 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'offset',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
           Offsets at Connection <br />
@@ -155,7 +155,7 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'brokers',
-            backgroundColor: colors.secondary[500],
+            backgroundColor: '#f9fdfe',
           }}
         >
           Brokers <br />
@@ -165,7 +165,7 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'consumer',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
           Partitions <br />

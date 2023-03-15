@@ -3,7 +3,7 @@
   --lighterBlue: #c2dfe3;
   --blue: #9db4c0; /*navbar*/
   --darkerBlue: #5c6b73;
-  --darkestBlue: #253237;
+  --darkestBlue: #63828e;
   --white: #fcfcfc;
   --black: #393e41;
   --error: #e17160;
@@ -60,6 +60,21 @@ h1 {
   border: solid 1px;
 }
 
+.submit-buttons {
+  display: flex;
+  width: 60%;
+  margin-left: auto;
+  justify-content: space-between;
+}
+.modal {
+  position: 'absolute';
+  top: 50%;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+  width: 400px;
+  border: 2px solid #000;
+  box-shadow: 24;
+}
 /* styling for doughnut chart */
 
 .groupDoughnutChart {

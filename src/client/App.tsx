@@ -12,14 +12,12 @@ import Overview from './components/Overview';
 import Dashboard from './components/Dashboard';
 import Topics from './components/managePages/Topics';
 import OffsetCharts from './components/monitorPages/OffsetCharts';
-import Produce from './components/testPages/Produce';
-import Consume from './components/testPages/Consume';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
 import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Forgot from './components/Forgot';
+import Login from './components/accountPages/Login';
+import Signup from './components/accountPages/Signup';
+import {Forgot, Reset} from './components/accountPages/Forgot';
 import Home from './components/Home';
 import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
@@ -47,7 +45,7 @@ function App() {
   );
   const [pollInterval, setPollInterval] = useState<number>(3); // poll interval in seconds
 
-  // State for alert notifications
+  // State for alert notifications, must be turned on after every login
   const [isAlertEnabled, setIsAlertEnabled] = useState<{[key: string]: boolean}>({
     consumerGroupStatus: false,
   });
@@ -298,18 +296,30 @@ function App() {
           `${new Date().toLocaleString()} - A change in consumer group statuses has occurred`,
         ];
       });
-
+      const alertText = {
+        text: `${connectedClient}: A change in consumer group statuses has occured`,
+      };
       // send slack alert if slack URI has been set
       if (savedURIs.slackURI) {
         fetch(savedURIs.slackURI, {
           method: 'POST',
-          body: JSON.stringify({
-            text: `${connectedClient}: A change in consumer group statuses has occurred`,
-          }),
+          body: JSON.stringify(alertText),
         }).then(response => {
           if (!response.ok) setIsSlackError(true);
         });
       }
+      //send an alert email
+      fetch('/api/alert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(alertText),
+      })
+        .then(response => response.json())
+        .catch(err => {
+          console.log('error when sending alert email', err);
+        });
     }
   };
 
@@ -392,11 +402,17 @@ function App() {
                       setSavedURIs={setSavedURIs}
                       isSlackError={isSlackError}
                       setIsSlackError={setIsSlackError}
+                      logout={logout}
+                      setSnackbarOpen={setSnackbarOpen}
+                      setSnackbarMessages={setSnackbarMessages}
                     />
                   </Protected>
                 }
               ></Route>
-              <Route path="forgot" element={<Forgot />}></Route>
+              <Route path="forgot">
+                <Route index element={<Forgot />} />
+                <Route path=":reset" element={<Reset />} />
+              </Route>
               <Route
                 path="dashboard"
                 element={
@@ -512,9 +528,6 @@ function App() {
                     />
                   }
                 />
-
-                <Route path="consume" element={<Consume />} />
-                <Route path="produce" element={<Produce />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

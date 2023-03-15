@@ -16,6 +16,7 @@ const Account = (props: SettingsProps) => {
     setSavedURIs,
     isSlackError,
     setIsSlackError,
+    logout,
   } = props;
 
   const theme = useTheme();
@@ -59,7 +60,7 @@ const Account = (props: SettingsProps) => {
 
           <Paper variant="outlined" sx={{height: '100%', color: 'inherit'}}>
             <TabPanel value="1">
-              <AccountTab />
+              <AccountTab logout={logout} />
             </TabPanel>
 
             <TabPanel value="2">
