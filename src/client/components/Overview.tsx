@@ -57,11 +57,9 @@ const Overview = (props: OverviewProps) => {
     for (const key in timeSeriesData[0].topicOffsets) {
       offsetTotal += timeSeriesData[0].topicOffsets[key];
     }
-    console.log('topic offsets only: ', offsetTotal);
     for (const key in timeSeriesData[0].groupOffsets) {
       offsetTotal += timeSeriesData[0].groupOffsets[key];
     }
-    console.log('total offsets', offsetTotal);
   }
 
   return (
@@ -159,7 +157,7 @@ const Overview = (props: OverviewProps) => {
             backgroundColor: colors.secondary[500],
           }}
         >
-          Brokers: <br />
+          Brokers <br />
           {data.clusterData.brokers.length}
         </Box>
 
