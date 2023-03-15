@@ -235,13 +235,13 @@ app.post(
   }
 );
 
-// Catch all handler
-app.use('*', (req, res) => {
-  return res.status(404).send('Not Found');
-});
 // Catch all to serve app
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'index.html'));
+});
+// Catch all handler
+app.use('*', (req, res) => {
+  return res.status(404).send('Not Found');
 });
 
 // Global error handler
