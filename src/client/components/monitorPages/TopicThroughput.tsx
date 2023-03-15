@@ -26,10 +26,32 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDatasets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope);
+    // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
+    console.log('TOPIC tsd: ', timeSeriesData);
+
+    if (timeSeriesData.length < xScope) {
+      console.log('GROUP short time array: ', timeSeriesData.length);
+      let i = 1;
+      while (i < timeSeriesData.length) {
+        console.log('i=', i);
+        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+        i++;
+      }
+      console.log('GROUP short adding spaces');
+      while (timeArray.length < xScope) {
+        timeArray.push('');
+      }
+    } else {
+      console.log('GROUP long time array');
+
+      for (let i = timeSeriesData.length - xScope; i < timeSeriesData.length; i++) {
+        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+      }
+    }
+    console.log('timearray: ', timeArray);
+
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
-    timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
-    while (timeArray.length < xScope - 1) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
       for (const el of newDatasets) {
         el.timestamp = timeArray;
@@ -55,11 +77,17 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
     // copy throughput data object to change before updating state
     const newData: datasetsObject[] = JSON.parse(JSON.stringify(topicDatasets));
 
+    // if there are empty strings in the x axis labels, replace the first one with the curernt time
+    // otherwise, push the new time to the array and shift the oldest time off
     newData.forEach(el => {
-      console.log('from foreach: ', el.timestamp);
-      el.timestamp.push(new Date(current.time).toLocaleTimeString());
+      const i = el.timestamp.indexOf('');
+      if (i !== -1) {
+        el.timestamp[i] = new Date(current.time).toLocaleTimeString();
+      } else {
+        el.timestamp.push(new Date(current.time).toLocaleTimeString());
+        el.timestamp.shift();
+      }
     });
-
     for (const el in topicThroughputs) {
       // push y-axis data to the appropriate array
       // shift oldest data point off to maintain current data on graph
@@ -77,24 +105,8 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
   // chart plugins
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-  // sort empty strings to end of labels array so that timestamps scroll from left
-  const labels = topicDatasets.length ? topicDatasets[0].timestamp : [];
-
-  // move x axis window as time advances
-  let xStart = 1,
-    xEnd = xScope;
-  labels.sort((a: string, b: string) => {
-    return !a.length && b.length ? 1 : -1;
-  });
-  const firstBlank = labels.indexOf('');
-  console.log(firstBlank);
-  if (firstBlank > xScope) {
-    xEnd = firstBlank - 1;
-    xStart = firstBlank - xScope;
-  }
-
   const data = {
-    labels: labels.slice(xStart, xEnd),
+    labels: topicDatasets.length ? topicDatasets[0].timestamp : [],
     datasets: topicDatasets.map((el: datasetsObject) => el.data),
     options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
