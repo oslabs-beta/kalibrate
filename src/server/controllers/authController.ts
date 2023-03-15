@@ -276,7 +276,6 @@ authController.sendResetPassword = async (req, res, next) => {
     await sgMail.send(msg);
     return next();
   } catch (error) {
-    console.error(error);
     return next({
       log: `ERROR - adminController.sendResetPassowrd failed to send rest email`,
       status: 400,
@@ -306,7 +305,6 @@ authController.resetPassword = async (req, res, next) => {
       },
     });
     if (!updatedPass) throw 400;
-    console.log('USER PASSWORD UPDATED', updatedPass);
   } catch (err) {
     return next({
       log: 'ERROR - authController.updateUser: failed to update user password',
@@ -327,7 +325,6 @@ authController.setSessionCookie = (req, res, next) => {
 };
 
 authController.verifySessionCookie = (req, res, next) => {
-  console.log(res.locals);
   // check for KST session cookie
   if (!Object.hasOwn(req.cookies, 'kst')) {
     return next({
@@ -348,7 +345,6 @@ authController.verifySessionCookie = (req, res, next) => {
       });
     }
     res.locals.user = decoded;
-    console.log('decoded: ', decoded);
     return next();
   });
 };

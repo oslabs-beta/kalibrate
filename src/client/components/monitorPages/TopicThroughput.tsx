@@ -28,28 +28,22 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
     const newDatasets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
-    console.log('TOPIC tsd: ', timeSeriesData);
 
     if (timeSeriesData.length < xScope) {
-      console.log('GROUP short time array: ', timeSeriesData.length);
       let i = 1;
       while (i < timeSeriesData.length) {
-        console.log('i=', i);
         timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
         i++;
       }
-      console.log('GROUP short adding spaces');
+
       while (timeArray.length < xScope) {
         timeArray.push('');
       }
     } else {
-      console.log('GROUP long time array');
-
       for (let i = timeSeriesData.length - xScope; i < timeSeriesData.length; i++) {
         timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
       }
     }
-    console.log('timearray: ', timeArray);
 
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
     for (i; i < timeSeriesData.length; i++) {

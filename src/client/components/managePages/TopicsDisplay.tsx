@@ -135,8 +135,6 @@ const TopicsDisplay = ({
       totalPartitions,
     };
 
-    console.log(updatePartitions, 'update partitions');
-
     //send post request to create new topic
     try {
       const response = await fetch(`/api/${connectedCluster}/partitions`, {
@@ -277,8 +275,6 @@ const TopicsDisplay = ({
       </GridToolbarContainer>
     );
   };
-
-  // console.log('selectedtopic', selectedTopic.numPartitions);
 
   return (
     <div>

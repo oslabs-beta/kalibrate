@@ -9,7 +9,6 @@ const initializeDatasets = (
   xScope: number
   // useStateFunction // setter function from whichever component calls initializeDatasets
 ) => {
-  console.log('initializing');
   const newDatasets: datasetsObject[] = [];
   const blankArray = new Array(xScope);
   blankArray.fill('');

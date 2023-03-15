@@ -72,7 +72,6 @@ function App() {
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
   const {clusterData, topicData, groupData} = connectedClusterData;
-  // console.log('connected cluster data:', connectedClusterData);
 
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<datasetsObject[]>([]);
@@ -176,7 +175,6 @@ function App() {
           empty = 0,
           preparingRebalance = 0;
         for (const el of data.groupData) {
-          console.log('status watch: ', el.state);
           if (el.state === 'Stable') stable++;
           if (el.state === 'Empty') empty++;
           if (el.state === 'PreparingRebalance') preparingRebalance++;

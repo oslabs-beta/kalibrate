@@ -106,7 +106,6 @@ const AccountTab = (props: UserMenuProps) => {
       body: JSON.stringify(selectCluster),
     })
       .then(response => {
-        console.log('cluster deleted');
         response.json();
       })
       .catch(err => {

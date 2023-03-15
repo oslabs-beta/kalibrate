@@ -44,8 +44,6 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
       }
     }
 
-    console.log('timearray: ', timeArray);
-
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
     for (i; i < timeSeriesData.length; i++) {
       for (const el of newDatasets) {
