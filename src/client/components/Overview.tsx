@@ -8,6 +8,7 @@ import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 import {Chart as ChartJS, ArcElement, Tooltip, Legend, Title} from 'chart.js';
 import {Doughnut} from 'react-chartjs-2';
+import Replicas from './monitorPages/Replicas';
 
 //register chartjs components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
@@ -131,11 +132,13 @@ const Overview = (props: OverviewProps) => {
           sx={{
             gridArea: 'graph2',
             backgroundColor: '#f9fdfe',
+            height: '350px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <CardContent>
-            <Typography>tk</Typography>
-          </CardContent>
+          <Replicas timeSeriesData={timeSeriesData} connectedCluster={connectedCluster} />
         </Card>
 
         <Card
