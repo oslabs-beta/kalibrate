@@ -114,7 +114,7 @@ const AccountTab = (props: UserMenuProps) => {
       });
   };
   const deleteAcc = () => {
-    deleteCluster();
+    // deleteCluster();
     //delete user
     fetch('/api/settings/delete/account', {
       method: 'POST',
@@ -249,7 +249,10 @@ const AccountTab = (props: UserMenuProps) => {
                 size="small"
                 placeholder="delete all"
                 value={clusterModal.input}
-                onChange={e => setClusterInput(e.target.value)}
+                onChange={e => {
+                  setClusterModal({...clusterModal, valid: false});
+                  setClusterInput(e.target.value);
+                }}
               />
               {clusterModal.valid ? <div>ENTER PHRASE</div> : <div></div>}
             </Box>
@@ -294,7 +297,10 @@ const AccountTab = (props: UserMenuProps) => {
                 variant="standard"
                 size="small"
                 value={accountModal.input}
-                onChange={e => setAccountInput(e.target.value)}
+                onChange={e => {
+                  setAccountModal({...accountModal, valid: false});
+                  setAccountInput(e.target.value);
+                }}
               />
               {accountModal.valid ? <div>ENTER VALID EMAIL</div> : <div></div>}
               <Button

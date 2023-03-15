@@ -235,9 +235,14 @@ app.post(
 app.post('/api/settings/delete/cluster', authController.verifySessionCookie, (req, res) => {
   return res.sendStatus(200);
 });
-app.post('/api/settings/delete/account', authController.verifySessionCookie, (req, res) => {
-  return res.sendStatus(200);
-});
+app.post(
+  '/api/settings/delete/account',
+  authController.verifySessionCookie,
+  authController.deleteAccount,
+  (req, res) => {
+    return res.sendStatus(200);
+  }
+);
 // Catch all handler
 app.use('*', (req, res) => {
   return res.status(404).send('Not Found');
