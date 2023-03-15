@@ -42,22 +42,19 @@ const Team = () => {
     'https://www.linkedin.com/in/jihuixue/',
   ];
   const team = names.map((name, i) => (
-    <Grid xs={4}>
-      <CardMedia
-        component='img'
-        alt='team member'
-        image={sources[i]}
-        sx={{borderRadius: '5px'}}
-      />
+    <Grid xs={4} key={i}>
+      <CardMedia component="img" alt="team member" image={sources[i]} sx={{borderRadius: '5px'}} />
       <Item>
-        <Typography variant='h6' sx={{ fontWeight: 'bold' }}>{names[i]}</Typography>
-        <Typography variant='subtitle2'>Software Engineer</Typography>
+        <Typography variant="h6" sx={{fontWeight: 'bold'}}>
+          {names[i]}
+        </Typography>
+        <Typography variant="subtitle2">Software Engineer</Typography>
         <Box sx={{marginTop: '.5rem', display: 'flex', justifyContent: 'center', gap: '4px'}}>
           <a href={github[i]}>
-            <img src={githubImg}/>
+            <img src={githubImg} />
           </a>
           <a href={linkedin[i]}>
-            <img src={linkedinImg}/>
+            <img src={linkedinImg} />
           </a>
         </Box>
       </Item>
@@ -68,7 +65,16 @@ const Team = () => {
     <>
       <Box sx={{flexGrow: 1, width: '56rem'}}>
         <h3 style={{fontSize: '1.5rem', color: colors.primary[900]}}>Meet the Team</h3>
-        <Grid container spacing={2} sx={{justifyContent: 'center', justifyItems: 'center', alignContent: 'space-evenly', alignItems: 'center'}}>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            justifyContent: 'center',
+            justifyItems: 'center',
+            alignContent: 'space-evenly',
+            alignItems: 'center',
+          }}
+        >
           {team}
         </Grid>
       </Box>

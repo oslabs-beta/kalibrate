@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router';
-import Loading from './Loading';
-import {RedirectProps} from '../types';
+import Loading from '../Loading';
+import {RedirectProps} from '../../types';
 
 const Redirect = ({isAuthenticated, setIsAuthenticated, children}: RedirectProps) => {
   const navigate = useNavigate();

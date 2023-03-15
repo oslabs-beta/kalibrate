@@ -9,7 +9,6 @@ const ENCRYPT_KEY: string = process.env.ENCRYPT_KEY || 'key';
 const clusterController: controller = {};
 
 clusterController.getClientConnections = async (req, res, next) => {
-  console.log(res.locals.user);
   const {id} = res.locals.user;
 
   if (!id) {

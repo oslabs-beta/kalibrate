@@ -2,8 +2,8 @@ import {useNavigate} from 'react-router';
 import {Grid, Button, Box, Alert, Typography, CircularProgress} from '@mui/material';
 import {Delete, Send, Cloud, CloudDone} from '@mui/icons-material';
 import {useTheme} from '@mui/material/styles';
-import {tokens} from '../theme';
-import {ClientProps} from '../types';
+import {tokens} from '../../theme';
+import {ClientProps} from '../../types';
 
 const Client = (props: ClientProps) => {
   const navigate = useNavigate();

@@ -1,10 +1,10 @@
 import {useState, SyntheticEvent} from 'react';
 import {Grid, Button, TextField, Box, Checkbox, Alert} from '@mui/material';
-import {ConnectProps, connectionConfig} from '../types';
-import '../stylesheets/style.scss';
-import crow from './assets/crow2.png';
+import {ConnectProps, connectionConfig} from '../../types';
+import '../../stylesheets/style.scss';
+import crow from '../assets/crow2.png';
 import {useTheme} from '@mui/material/styles';
-import {tokens} from '../theme';
+import {tokens} from '../../theme';
 
 const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectProps) => {
   const theme = useTheme();

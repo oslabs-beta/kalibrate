@@ -88,7 +88,7 @@ const UserMenu = (props: UserMenuProps) => {
           <Typography textAlign="center">Account</Typography>
         </MenuItem>
 
-        <MenuItem>
+        <MenuItem onClick={() => navigate('/')}>
           <InfoIcon />
           <Typography>About Kalibrate</Typography>
         </MenuItem>

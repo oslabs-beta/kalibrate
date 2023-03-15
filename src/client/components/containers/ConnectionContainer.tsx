@@ -1,6 +1,6 @@
-import {ConnectionContainerProps} from '../types';
-import Connect from './Connect';
-import Client from './Client';
+import {ConnectionContainerProps} from '../../types';
+import Connect from '../connectPages/Connect';
+import Client from '../connectPages/Client';
 
 const ConnectionContainer = (props: ConnectionContainerProps) => {
   const {

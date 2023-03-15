@@ -366,3 +366,8 @@ export type TrafficAndHealthProps = {
   groupDatasets: datasetsObject[];
   setGroupDatasets: (groupDatasets: datasetsObject[]) => void;
 };
+
+export type ConnectedProps = {
+  connectedClient: string;
+  children: JSX.Element;
+};

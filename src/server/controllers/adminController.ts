@@ -182,7 +182,6 @@ adminController.sendAlertEmail = async (req, res, next) => {
     await sgMail.send(msg);
     return next();
   } catch (error) {
-    console.error(error);
     return next({
       log: `ERROR - adminController.sendResetPassowrd failed to send rest email`,
       status: 400,
