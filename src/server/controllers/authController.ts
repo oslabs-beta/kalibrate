@@ -247,11 +247,17 @@ authController.updateUser = async (req, res, next) => {
         },
       });
 
-      if (!updatedPass) throw 400;
+      if (!updatedPass) {
+        return next({
+          log: 'ERROR - authController.updateUser: failed to update user password',
+          status: 400,
+          message: {err: 'Invalid update request'},
+        });
+      }
     } catch (err) {
       return next({
-        log: 'ERROR - authController.updateUser: failed to update user password',
-        status: err,
+        log: 'ERROR - authController.updateUser: failed when trying update user password',
+        status: 400,
         message: {err: 'Invalid update request'},
       });
     }
@@ -310,6 +316,66 @@ authController.resetPassword = async (req, res, next) => {
   } catch (err) {
     return next({
       log: 'ERROR - authController.updateUser: failed to update user password',
+      status: err,
+      message: {err: 'Invalid update request'},
+    });
+  }
+  return next();
+};
+
+authController.deleteAccount = async (req, res, next) => {
+  const {id, email} = res.locals;
+  console.log('trying to delete');
+
+  try {
+    // console.log('getting clusters');
+    // const clusters = await prisma.cluster.findMany({
+    //   where: {
+    //     userId: id,
+    //   },
+    // });
+    // console.log('gottem:', clusters);
+    // clusters.forEach(el => {
+    //   console.log('seed broker', el.id);
+    //   const deleteBroker = prisma.seedBroker.deleteMany({
+    //     where: {
+    //       clusterId: el.id,
+    //     },
+    //   });
+    // });
+    // if (!clusters) throw 400;
+    // console.log('cluster');
+    // const deleteCluster = await prisma.cluster.deleteMany({
+    //   where: {
+    //     userId: id,
+    //   },
+    // });
+    // if (!deleteCluster) {
+    //   return next({
+    //     log: 'ERROR - authController.updateUser: failed to delete user clusters',
+    //     status: 400,
+    //     message: {err: 'Invalid update request'},
+    //   });
+    // } else {
+    //   console.log('delete clusters');
+    // }
+    // console.log('acccount');
+    const deleteAcc = await prisma.user.delete({
+      where: {
+        email,
+      },
+    });
+    if (!deleteAcc) {
+      return next({
+        log: 'ERROR - authController.updateUser: failed to delete user acc',
+        status: 400,
+        message: {err: 'Invalid update request'},
+      });
+    }
+    console.log('ALL DONE');
+  } catch (err) {
+    return next({
+      log: 'ERROR - authController.updateUser: failed when trying to delete, ',
       status: err,
       message: {err: 'Invalid update request'},
     });

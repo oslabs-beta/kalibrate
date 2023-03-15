@@ -7,8 +7,6 @@ import {
   Typography,
   Button,
   TextField,
-  Alert,
-  CircularProgress,
   InputLabel,
   IconButton,
   FormControl,
@@ -19,8 +17,8 @@ import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 import {LoadingButton} from '@mui/lab';
 import {useTheme} from '@mui/material/styles';
-import {tokens} from '../theme';
-import {FormStateTypes, PasswordStateTypes} from './../types';
+import {tokens} from '../../theme';
+import {FormStateTypes, PasswordStateTypes} from '../../types';
 
 export const Forgot = () => {
   const navigate = useNavigate();
@@ -28,9 +26,15 @@ export const Forgot = () => {
   const colors = tokens(theme.palette.mode);
   const [email, setEmail] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<boolean>(false);
+  const [sentEmail, setSentEmail] = useState<boolean>(false);
+
+  const resetForm = () => {
+    setSentEmail(false);
+    setInputEmail(false);
+  };
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    resetForm();
     setEmail(e.target.value);
-    console.log('state', email);
   };
   const sendResetEmail = async () => {
     if (!email) {
@@ -46,6 +50,7 @@ export const Forgot = () => {
         body: JSON.stringify({email}),
       });
       if (!response.ok) throw new Error();
+      resetForm();
     } catch {
       console.log('no email');
     }
@@ -68,7 +73,7 @@ export const Forgot = () => {
           backgroundColor: colors.background[500],
         }}
       >
-        <Typography>Bye</Typography>
+        <h3>Forgot Password?</h3>
         <Box>
           <h6>Enter Account Email</h6>
           <TextField
@@ -79,6 +84,7 @@ export const Forgot = () => {
             onChange={e => handleFormChange(e)}
           />
           {inputEmail ? <div>MUST ENTER EMAIL</div> : <div></div>}
+          {sentEmail ? <div>EMAIL SENT! </div> : <div></div>}
         </Box>
         <Button onClick={() => sendResetEmail()}>SEND EMAIL</Button>
       </Box>

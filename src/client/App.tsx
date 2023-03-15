@@ -15,9 +15,9 @@ import OffsetCharts from './components/monitorPages/OffsetCharts';
 import PartitionsDisplay from './components/managePages/PartitionsDisplay';
 import MessagesDisplay from './components/managePages/MessagesDisplay';
 import TopicsDisplay from './components/managePages/TopicsDisplay';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import {Forgot, Reset} from './components/Forgot';
+import Login from './components/accountPages/Login';
+import Signup from './components/accountPages/Signup';
+import {Forgot, Reset} from './components/accountPages/Forgot';
 import Home from './components/Home';
 import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
@@ -403,6 +403,8 @@ function App() {
                       isSlackError={isSlackError}
                       setIsSlackError={setIsSlackError}
                       logout={logout}
+                      setSnackbarOpen={setSnackbarOpen}
+                      setSnackbarMessages={setSnackbarMessages}
                     />
                   </Protected>
                 }
