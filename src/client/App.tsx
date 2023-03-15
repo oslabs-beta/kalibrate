@@ -71,7 +71,10 @@ function App() {
   });
 
   // setConnectedClusterData({...connectedClusterData, topicData, groupData})
-  const {clusterData, topicData, groupData} = connectedClusterData;
+  let {clusterData, topicData, groupData} = connectedClusterData;
+
+  // filter out consumer offsets
+  topicData = {topics: topicData.topics.filter((el: any) => el.name !== '__consumer_offsets')};
 
   // state to persist line graphs while user isn't on that page
   const [topicDatasets, setTopicDatasets] = useState<datasetsObject[]>([]);
@@ -190,6 +193,8 @@ function App() {
         // topic replica status (percentage in sync)
         newPoll.topicReplicaStatus = {};
         for (const el of data.topicData.topics) {
+          if (el.name === '__consumer_offsets') continue; // don't include consumer offsets
+
           let replicas = 0;
           let isr = 0;
           for (const p of el.partitions) {
@@ -204,6 +209,8 @@ function App() {
         newPoll.topicThroughputs = {};
         if (data.topicData.topics.length) {
           for (const t of data.topicData.topics) {
+            if (t.name === '__consumer_offsets') continue; // don't include consumer offsets
+
             newPoll.topicOffsets[t.name] = t.offsets.reduce(
               (acc: number, curr: OffsetCollection) => {
                 return acc + Number(curr.offset);
@@ -225,7 +232,8 @@ function App() {
         // count of offsets by group
         newPoll.groupThroughputs = {};
         for (const g in data.groupOffsets) {
-          //const groupName = g;
+          if (g.includes('__consumer_offsets')) continue; // don't include consumer offsets
+
           let sum = 0;
           data.groupOffsets[g].forEach((el: GroupTopic) => {
             el.partitions.forEach(p => {
