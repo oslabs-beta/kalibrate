@@ -159,7 +159,9 @@ adminController.getGroupData = async (req, res, next) => {
   }
 };
 
+//sends consumer group email
 adminController.sendAlertEmail = async (req, res, next) => {
+  console.log('TRYING TO SENT ALERT EMAIL');
   const sgMail = require('@sendgrid/mail');
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 

@@ -23,7 +23,9 @@ const NotificationsTab = (props: NotificationsProps) => {
   } = props;
 
   // controlled state for form
-  const [isConsumerGroupStatusToggled, setIsConsumerGroupStatusToggled] = useState<boolean>(false);
+  const [isConsumerGroupStatusToggled, setIsConsumerGroupStatusToggled] = useState<boolean>(
+    isAlertEnabled.consumerGroupStatus
+  );
   const [localSlackURI, setLocalSlackURI] = useState<string>('');
 
   const handleSlackUriSave = () => {
@@ -46,9 +48,9 @@ const NotificationsTab = (props: NotificationsProps) => {
   // toggle alerts for consumer group status
   const handleConsumerGroupStatusToggle = () => {
     const newSwitchValue = !isConsumerGroupStatusToggled;
-
     isAlertEnabled.consumerGroupStatus = newSwitchValue; // mutate for poll
     setIsConsumerGroupStatusToggled(newSwitchValue); // set state for form
+    setIsAlertEnabled({...isAlertEnabled, consumerGroupStatus: newSwitchValue});
   };
 
   return (

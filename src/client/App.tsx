@@ -47,7 +47,7 @@ function App() {
   );
   const [pollInterval, setPollInterval] = useState<number>(3); // poll interval in seconds
 
-  // State for alert notifications
+  // State for alert notifications, must be turned on after every login
   const [isAlertEnabled, setIsAlertEnabled] = useState<{[key: string]: boolean}>({
     consumerGroupStatus: false,
   });
@@ -311,6 +311,7 @@ function App() {
         });
       }
       //send an alert email
+      console.log('sending alert email');
       fetch('/api/alert', {
         method: 'POST',
         headers: {

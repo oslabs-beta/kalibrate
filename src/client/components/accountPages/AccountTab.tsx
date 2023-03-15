@@ -10,6 +10,8 @@ import {
   InputAdornment,
   OutlinedInput,
   Dialog,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
 import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
@@ -247,6 +249,12 @@ const AccountTab = (props: AccountProps) => {
               {/* list all cluster and check off? */}
               <p>To delete ALL clusters please enter "delete all" :</p>
               <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Cluster"
+                fullWidth
+                variant="standard"
                 size="small"
                 placeholder="delete all"
                 value={clusterModal.input}
@@ -283,8 +291,16 @@ const AccountTab = (props: AccountProps) => {
             onClose={() => setAccountModal({...accountModal, open: false})}
           >
             <Box>
-              <p>To delete account please enter your email:</p>
+              <DialogTitle>DELETE ACCOUNT</DialogTitle>
+              <DialogContentText>To delete account please enter your email:</DialogContentText>
               <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Email Address"
+                type="email"
+                fullWidth
+                variant="standard"
                 size="small"
                 value={accountModal.input}
                 onChange={e => setAccountInput(e.target.value)}
