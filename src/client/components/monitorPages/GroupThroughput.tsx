@@ -16,7 +16,6 @@ import initializeDatasets from '../../util/initializeDatasets';
 
 const GroupThroughput = (props: GroupLineGraphComponentProps) => {
   const {timeSeriesData, groupDatasets, setGroupDatasets} = props;
-  console.log('tsd ', timeSeriesData);
 
   // todo: allow modification of xscope?
 
@@ -24,14 +23,49 @@ const GroupThroughput = (props: GroupLineGraphComponentProps) => {
 
   // when new data is received, new data to group arrays in throughput data object
   useEffect(() => {
+    console.log('group useeffect 1');
     // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
     // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
     const newDatasets = initializeDatasets(timeSeriesData, 'groupOffsets', xScope);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
+    console.log('GROUP tsd: ', timeSeriesData);
+    // if less than xScope elements in timeseriesdata, push their times to timearray and fill to xScope with ""
+    if (timeSeriesData.length < xScope) {
+      console.log('GROUP short time array: ', timeSeriesData.length);
+      let i = 0;
+      while (i < timeSeriesData.length) {
+        console.log('i=', i);
+        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+        i++;
+      }
+      console.log('GROUP short adding spaces');
+      while (timeArray.length < xScope) {
+        timeArray.push('');
+      }
+    } else {
+      console.log('GROUP long time array');
+
+      for (let i = timeSeriesData.length - xScope; i < timeSeriesData.length; i++) {
+        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+      }
+    }
+
+    // let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
+    // console.log('i: ', i);
+    // if (i < xScope) {
+    //   for (let j = 0; j < i; j++) {
+    //     timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
+    //   }
+    //   while (timeArray.length < xScope) timeArray.push('');
+    // } else {
+    //   for (let j = i; j < timeSeriesData.length; j++) {
+    //     timeArray.push(new Date(timeSeriesData[j].time).toLocaleTimeString());
+    //   }
+    // }
+    console.log('timearray: ', timeArray);
+
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
-    timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
-    while (timeArray.length < xScope) timeArray.push('');
     for (i; i < timeSeriesData.length; i++) {
       for (const el of newDatasets) {
         el.timestamp = timeArray;
