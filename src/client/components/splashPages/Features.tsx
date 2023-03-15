@@ -55,9 +55,9 @@ const Features = () => {
           <Grid xs={3}>
             <Item sx={{height: '15rem'}}>
               <img src={create} style={{marginTop: '10px'}}/>
-              <h4>CRUD Operations</h4>
+              <h4>Persistent Storage Operations</h4>
               <p>Execute create, read, update, and delete
-              functionality for brokers and topics</p>
+              functionality for topics and partitions</p>
             </Item>
           </Grid>
           <Grid xs={3}>

@@ -66,7 +66,7 @@ const Navbar = (props: NavbarProps) => {
           position: 'fixed',
           zIndex: theme => theme.zIndex.drawer + 1,
           width: '100vw',
-          bgcolor: colors.primary[400],
+          bgcolor: colors.primary[900],
         }}
       >
         <Toolbar disableGutters>
@@ -83,10 +83,10 @@ const Navbar = (props: NavbarProps) => {
             sx={{
               mr: 2,
               display: {xs: 'none', md: 'flex'},
-              fontFamily: 'monospace',
+              fontFamily: 'sans-serif',
               fontWeight: 700,
               letterSpacing: '.1rem',
-              color: 'inherit',
+              color: '#9cdfd8',
               textDecoration: 'none',
               cursor: 'pointer',
             }}
@@ -101,7 +101,8 @@ const Navbar = (props: NavbarProps) => {
                 onClick={() => navigate('/dashboard')}
                 sx={{
                   my: 2,
-                  color: 'inherit',
+                  color: '#9cdfd8',
+                  fontWeight: 'bold',
                   display: 'block',
                   m: 0,
                   visibility: isAuthenticated ? 'visible' : 'hidden',
@@ -112,16 +113,13 @@ const Navbar = (props: NavbarProps) => {
             ))}
           </Box>
 
-          <MenuItem>
-            {' '}
-            <IconButton color="inherit" onClick={handleDarkMode}>
-              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
-          </MenuItem>
+          <IconButton size="medium" color="inherit" onClick={handleDarkMode}>
+            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
 
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
-            size="large"
+            size="medium"
             color="inherit"
             onClick={handleOpenAlertsMenu}
             sx={{visibility: isAuthenticated ? 'visible' : 'hidden'}}

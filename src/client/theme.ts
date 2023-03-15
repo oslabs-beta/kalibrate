@@ -5,29 +5,29 @@ import {createTheme} from '@mui/material/styles';
 export const tokens = (mode: string) => ({
   ...(mode === 'light'
     ? {
-        //--blue
+        //--dark cyan
         primary: {
-          100: '#e5e9eb',
-          200: '#cbd3d7',
-          300: '#b2bcc2',
-          400: '#9db4c0',
-          500: '#7e909a',
-          600: '#65737b',
-          700: '#4c565c',
-          800: '#323a3e',
-          900: '#191d1f',
+          100: '#EDF6F9',
+          200: '#87e6f9',
+          300: '#57dbf5',
+          400: '#35d3f1',
+          500: '#23caed',
+          600: '#1ebad8',
+          700: '#16a4bd',
+          800: '#0f90a4',
+          900: '#006d77',
         },
-        //--lighterblue
+        //--lighter cyan
         secondary: {
-          100: '#f3f9f9',
-          200: '#e7f2f4',
-          300: '#daecee',
-          400: '#cee5e9',
-          500: '#c2dfe3',
-          600: '#9bb2b6',
-          700: '#748688',
-          800: '#4e595b',
-          900: '#272d2d',
+          100: '#b3dbd8',
+          200: '#83c5be',
+          300: '#53aea5',
+          400: '#319d92',
+          500: '#178d7f',
+          600: '#158073',
+          700: '#127063',
+          800: '#0f6155',
+          900: '#09453a',
         },
         //--white
         background: {
@@ -66,7 +66,7 @@ export const tokens = (mode: string) => ({
         },
         //--darkestBlue
         info: {
-          100: '#d3d6d7',
+          100: '#212529bf',
           200: '#a8adaf',
           300: '#7c8487',
           400: '#515b5f',
@@ -110,7 +110,7 @@ export const tokens = (mode: string) => ({
           600: '#9db4c0',
           700: '#b2bcc2',
           800: '#cbd3d7',
-          900: '#e5e9eb',
+          900: '#006d77',
         },
         secondary: {
           100: '#272d2d',
@@ -168,7 +168,7 @@ export const tokens = (mode: string) => ({
           900: '#f6d5d5',
         },
         info: {
-          100: '#070a0b',
+          100: '#899ba3',
           200: '#0f1416',
           300: '#161e21',
           400: '#1e282c',

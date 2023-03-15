@@ -97,7 +97,7 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'cluster',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
           {
@@ -126,50 +126,50 @@ const Overview = (props: OverviewProps) => {
         <Box
           sx={{
             gridArea: 'topic',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
-          Cluster Name: <br />
+          Cluster Name <br />
           {connectedCluster}
         </Box>
 
         <Box
           sx={{
             gridArea: 'partitions',
-            backgroundColor: colors.secondary[500],
+            backgroundColor: '#f9fdfe',
           }}
         >
-          Topics: <br />
+          Topics <br />
           {data.topicData.topics ? data.topicData.topics.length : 0}
         </Box>
 
         <Box
           sx={{
             gridArea: 'offset',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
-          Offsets at connection: <br />
+          Offsets at Connection <br />
           {offsetTotal}
         </Box>
 
         <Box
           sx={{
             gridArea: 'brokers',
-            backgroundColor: colors.secondary[500],
+            backgroundColor: '#f9fdfe',
           }}
         >
-          Brokers: <br />
+          Brokers <br />
           {data.clusterData.brokers.length}
         </Box>
 
         <Box
           sx={{
             gridArea: 'consumer',
-            backgroundColor: colors.secondary[300],
+            backgroundColor: '#f9fdfe',
           }}
         >
-          Partitions: <br />
+          Partitions <br />
           {data.topicData.topics
             ? data.topicData.topics.reduce((acc, el) => {
                 return acc + el.partitions.length;
