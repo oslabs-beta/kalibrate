@@ -293,6 +293,8 @@ export type SettingsProps = {
   isSlackError: boolean;
   setIsSlackError: (error: boolean) => void;
   logout: () => void;
+  setSnackbarOpen: (status: boolean) => void;
+  setSnackbarMessages: (messages: string[]) => void;
 };
 export type NotificationsProps = {
   isAlertEnabled: {[key: string]: boolean};

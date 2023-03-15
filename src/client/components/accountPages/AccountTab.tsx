@@ -16,7 +16,6 @@ import {
 import {LoadingButton} from '@mui/lab';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
-// import Schnax from './Snackbar';
 import {UserMenuProps, PasswordStateTypes} from '../../types';
 import cluster from 'cluster';
 
