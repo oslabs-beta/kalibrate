@@ -5,7 +5,7 @@ import {BrokersDisplayProps} from '../../types';
 
 const BrokersDisplay = ({clusterData}: BrokersDisplayProps) => {
   //default num of rows on a page of data grid
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(25);
   const {brokers} = clusterData;
 
   const brokerColumns = [
@@ -30,9 +30,8 @@ const BrokersDisplay = ({clusterData}: BrokersDisplayProps) => {
     <div className="wrapper">
       <div className="display-table">
         <Box sx={{height: 400, width: '1000'}}>
-          <Paper elevation={6}>
+          <Paper elevation={6} sx={{height: 'calc(100vh - 225px)'}}>
             <DataGrid
-              autoHeight // sets table height based on number of rows
               rows={brokerRows}
               columns={brokerColumns}
               pageSize={pageSize}

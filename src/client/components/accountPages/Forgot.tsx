@@ -73,12 +73,13 @@ export const Forgot = () => {
           backgroundColor: colors.background[500],
         }}
       >
-        <h3>Forgot Password?</h3>
+        <Typography variant="h5" sx={{marginBottom: '20px'}}>
+          Forgot Password?
+        </Typography>
         <Box>
-          <h6>Enter Account Email</h6>
           <TextField
             size="small"
-            sx={{width: '26ch'}}
+            sx={{width: '26ch', marginBottom: '15px'}}
             label="Email"
             value={email}
             onChange={e => handleFormChange(e)}
@@ -86,9 +87,14 @@ export const Forgot = () => {
           {inputEmail ? <div>MUST ENTER EMAIL</div> : <div></div>}
           {sentEmail ? <div>EMAIL SENT! </div> : <div></div>}
         </Box>
-        <Button onClick={() => sendResetEmail()}>SEND EMAIL</Button>
-      </Box>
-      <Box>
+        <Button
+          sx={{marginBottom: '20px'}}
+          variant="contained"
+          size="medium"
+          onClick={() => sendResetEmail()}
+        >
+          Reset Password
+        </Button>
         <Link to="/login">Back to Login</Link>
       </Box>
     </Container>

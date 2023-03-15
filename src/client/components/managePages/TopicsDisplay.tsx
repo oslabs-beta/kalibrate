@@ -25,13 +25,13 @@ const TopicsDisplay = ({
   const {topics} = topicData;
   const {handleComponentChange}: TopicsContext = useOutletContext();
   const navigate = useNavigate();
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(25);
 
   const [newTopicName, setNewTopicName] = useState<string>('');
   const [numPartitions, setNumPartitions] = useState<number | string>(1);
   const [addPartitions, setAddPartitions] = useState<any>(1);
 
-  const [selectedTopic, setSelectedTopic]  = useState<{[k: string]: any}[]>([]);
+  const [selectedTopic, setSelectedTopic] = useState<{[k: string]: any}[]>([]);
   const [selectionModel, setSelectionModel] = useState<GridRowId[]>([]);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -315,9 +315,8 @@ const TopicsDisplay = ({
       </Box>
 
       <Box sx={{height: 400, width: '1000'}}>
-        <Paper elevation={6}>
+        <Paper elevation={6} sx={{height: 'calc(100vh - 286px)'}}>
           <DataGrid
-            autoHeight // sets table height based on number of rows
             rows={topicRows}
             //@ts-ignore
             columns={topicColumns}

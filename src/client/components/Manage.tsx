@@ -9,13 +9,14 @@ import {
   ListItemButton,
   ListItemText,
   Collapse,
+  Divider,
 } from '@mui/material';
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
 import {useTheme} from '@mui/material/styles';
 import {tokens} from '../theme';
 import {ManageProps} from '../types';
 
-const drawerWidth = 200;
+const drawerWidth = 250;
 
 // Display, in sidebar, management options for a selected cluster
 const Manage = (props: ManageProps) => {
@@ -46,29 +47,25 @@ const Manage = (props: ManageProps) => {
         <Toolbar />
 
         <Box sx={{overflow: 'auto'}}>
-          <List className="no-padding-list">
+          <List className="no-padding-list" disablePadding>
             <ListItem key="Overview" disablePadding>
               <ListItemButton
                 onClick={() => navigate('/client/' + connectedCluster)}
                 sx={{
-                  borderRadius: '5px',
-                  border: '1px outset' + colors.secondary[200],
-                  backgroundColor: colors.secondary[100],
+                  backgroundColor: colors.secondary[200],
                 }}
               >
                 <ListItemText primary="Overview" />
               </ListItemButton>
             </ListItem>
-          </List>
 
-          <List className="no-padding-list">
+            <Divider />
+
             <ListItem key="Manage" disablePadding>
               <ListItemButton
                 onClick={() => setOpenManage(prev => !prev)}
                 sx={{
-                  borderRadius: '5px',
-                  border: '1px outset' + colors.secondary[200],
-                  backgroundColor: colors.secondary[100],
+                  backgroundColor: colors.secondary[200],
                 }}
               >
                 <ListItemText primary="Manage" />
@@ -76,7 +73,14 @@ const Manage = (props: ManageProps) => {
               </ListItemButton>
             </ListItem>
 
-            <Collapse in={openManage} timeout="auto" unmountOnExit>
+            <Collapse
+              in={openManage}
+              timeout="auto"
+              unmountOnExit
+              sx={{
+                backgroundColor: colors.secondary[100],
+              }}
+            >
               <ListItem key="Brokers" disablePadding>
                 <ListItemButton onClick={() => navigate('brokers')}>
                   <ListItemText primary="Brokers" />
@@ -96,13 +100,13 @@ const Manage = (props: ManageProps) => {
               </ListItem>
             </Collapse>
 
+            <Divider />
+
             <ListItem key="Monitor" disablePadding>
               <ListItemButton
                 onClick={() => setOpenMonitor(prev => !prev)}
                 sx={{
-                  borderRadius: '5px',
-                  border: '1px outset' + colors.secondary[200],
-                  backgroundColor: colors.secondary[100],
+                  backgroundColor: colors.secondary[200],
                 }}
               >
                 <ListItemText primary="Monitor" />
@@ -110,7 +114,14 @@ const Manage = (props: ManageProps) => {
               </ListItemButton>
             </ListItem>
 
-            <Collapse in={openMonitor} timeout="auto" unmountOnExit>
+            <Collapse
+              in={openMonitor}
+              timeout="auto"
+              unmountOnExit
+              sx={{
+                backgroundColor: colors.secondary[100],
+              }}
+            >
               <ListItem key="traffic" disablePadding>
                 <ListItemButton onClick={() => navigate('traffic')}>
                   <ListItemText primary="Traffic and Health" />

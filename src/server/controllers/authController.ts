@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {PrismaClient} from '@prisma/client';
 
-const SALT_WORK_FACTOR = Number(process.env.SALT_WORK_FACTOR);
+const SALT_WORK_FACTOR = Number(process.env.SALT_WORK_FACTOR) || 10;
 const JWT_SECRET: string = process.env.JWT_SECRET || 'secret';
 
 const prisma = new PrismaClient();

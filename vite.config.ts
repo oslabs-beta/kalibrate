@@ -9,10 +9,10 @@ const {PORT} = process.env;
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: true,
     proxy: {
       '/api': `http://localhost:${PORT}`, // proxy for our express server
     },
-    open: '/', // open the app on the root path URL
     port: 5712,
   },
   build: {

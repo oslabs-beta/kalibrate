@@ -1,0 +1,8 @@
+FROM node:18.13 
+RUN npm install -g vite prisma  
+WORKDIR /app 
+COPY package*.json ./ 
+COPY prisma ./prisma/ 
+RUN npm install
+RUN prisma generate 
+EXPOSE 5173
