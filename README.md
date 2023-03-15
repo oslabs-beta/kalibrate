@@ -26,7 +26,7 @@
   - [Running Demo Services](###running-demo-services)
   - [Reset the Cluster](###reset-the-cluster)
 - [Contributing](##contributing)
-- [Contrinutors](##contributors)
+- [Contributors](##contributors)
 - [License](##license)
 
 ---
@@ -62,7 +62,7 @@ the application will be accessible on `localhost:5173` in your browser.
 
 Run `npm run dev`. An HMR enabled dev server will listen on port 5712 and the application will be
 accessible on `localhost:5712` in your browser. Requests to the API will be proxied to the Express
-server listenening on port 5173 by default.
+server listening on port 5173 by default.
 
 ### Testing
 
@@ -84,7 +84,7 @@ Run `npx prisma migrate dev --name init` to map the Prisma Data Model to your da
 followed by `prisma generate` to generate the Prisma Client and `node scripts/init-dv.js` to
 initialize the database with necessary records.
 
-Delete the `node_modules` folder, and build the Docker image for the production environemnt with
+Delete the `node_modules` folder, and build the Docker image for the production environment with
 `npm run docker-build-prod`. You can verify that the `kalibrate-prod` image has been created by
 running `docker images`.
 
@@ -108,7 +108,7 @@ you can verify have been created by running `docker images`.
 
 Run the Docker Compose container with `npm run docker-dev:up`. An HMR enabled dev server will listen
 on port 5712 and the application will be accessible on `localhost:5712` in your browser. Requests to
-the API will be proxied to the Express server listenening on port 5173 by default. Environmental
+the API will be proxied to the Express server listening on port 5173 by default. Environmental
 variables have been preconfigured in the Docker Compose file to connect to the local PostgreSQL
 database.
 
@@ -154,7 +154,7 @@ These client instances create the following topics:
 - Payments
 - FulFilled orders
 
-They interract with the cluster in the following way:
+They interact with the cluster in the following way:
 
 - User service: produces to unfulfilled orders, subscribed to fulfilled orders
 - Inventory Service: subscribed to unfulfilled orders, produces to inventory
@@ -182,7 +182,7 @@ Planned features for future versions of Kalibrate include:
 - Improving the UI
 - Improving state management with Redux
 - Improving caching with Redis
-- Expanding testing
+- Expanding development testing suite
 
 ---
 

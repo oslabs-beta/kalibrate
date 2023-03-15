@@ -9,9 +9,6 @@ import {
   TextField,
   InputAdornment,
   OutlinedInput,
-  Dialog,
-  DialogContentText,
-  DialogTitle,
   Typography,
 } from '@mui/material';
 import {LoadingButton} from '@mui/lab';
@@ -36,15 +33,6 @@ const AccountTab = (props: UserMenuProps) => {
   const [formChanges, setFormChanges] = useState<{[k: string]: string}>({...defaultForm});
   const [inputOldPass, setInputOldPass] = useState<boolean>(false);
   const [inputMatching, setInputMatching] = useState<boolean>(false);
-  const [clusterModal, setClusterModal] = useState<{[k: string]: boolean}>({
-    open: false,
-    valid: false,
-  });
-  const [clusterInput, setClusterInput] = useState<string>('');
-  const [accountModal, setAccountModal] = useState<{[k: string]: boolean}>({
-    open: false,
-    valid: false,
-  });
   const [accountInput, setAccountInput] = useState<string>('');
 
   const handleFormChange = (
@@ -94,38 +82,6 @@ const AccountTab = (props: UserMenuProps) => {
     if (response.ok) handleFormClear();
   };
 
-  //delete user modal
-  const deleteCluster = () => {
-    //delete cluster
-    const selectCluster = ['all'];
-    fetch('/api/settings/delete/cluster', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(selectCluster),
-    })
-      .then(response => {
-        response.json();
-      })
-      .catch(err => {
-        console.log('error deleting clusters', err);
-      });
-  };
-  const deleteAcc = () => {
-    deleteCluster();
-    //delete user
-    fetch('/api/settings/delete/account', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({accountInput}),
-    })
-      .then(response => response.json())
-      .catch(err => console.log('error deleting account', err));
-    logout();
-  };
   //logic to create visible password forms
   const handleShowPassword = (pass: string) => {
     let oldVal = showPassword[pass];
@@ -213,61 +169,6 @@ const AccountTab = (props: UserMenuProps) => {
         >
           SAVE
         </LoadingButton>
-
-        <Button size="small" onClick={handleFormClear} sx={{width: '50%'}}>
-          Cancel
-        </Button>
-      </Box>
-
-      <hr />
-
-      <Box className="settings">
-        <div className="settings">
-          <Button
-            className="delete"
-            sx={{color: 'red'}}
-            onClick={() => setAccountModal({...accountModal, open: true})}
-          >
-            {' '}
-            DELETE ACCOUNT
-          </Button>
-          <Dialog
-            open={accountModal.open}
-            onClose={() => setAccountModal({...accountModal, open: false})}
-          >
-            <Box>
-              <DialogTitle>DELETE ACCOUNT</DialogTitle>
-              <DialogContentText>To delete account please enter your email:</DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
-                size="small"
-                value={accountModal.input}
-                onChange={e => setAccountInput(e.target.value)}
-              />
-              {accountModal.valid ? <div>ENTER VALID EMAIL</div> : <div></div>}
-              <Button
-                onClick={() => {
-                  const email = 'kwong.rebe@gmail.com';
-                  if (accountInput !== email) {
-                    setAccountModal({...accountModal, valid: true});
-                    return;
-                  }
-                  deleteAcc();
-                  setAccountInput('');
-                  setAccountModal({...accountModal, open: false});
-                }}
-              >
-                DELETE
-              </Button>
-            </Box>
-          </Dialog>
-        </div>
       </Box>
     </Container>
   );

@@ -247,11 +247,17 @@ authController.updateUser = async (req, res, next) => {
         },
       });
 
-      if (!updatedPass) throw 400;
+      if (!updatedPass) {
+        return next({
+          log: 'ERROR - authController.updateUser: failed to update user password',
+          status: 400,
+          message: {err: 'Invalid update request'},
+        });
+      }
     } catch (err) {
       return next({
-        log: 'ERROR - authController.updateUser: failed to update user password',
-        status: err,
+        log: 'ERROR - authController.updateUser: failed when trying update user password',
+        status: 400,
         message: {err: 'Invalid update request'},
       });
     }
@@ -314,6 +320,7 @@ authController.resetPassword = async (req, res, next) => {
   }
   return next();
 };
+
 authController.setSessionCookie = (req, res, next) => {
   const {id, firstName, lastName, email, authProvider} = res.locals.user;
 
