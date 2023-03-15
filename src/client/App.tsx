@@ -23,6 +23,7 @@ import Settings from './components/accountPages/Settings';
 import NotFound from './components/NotFound';
 import Protected from './components/Protected';
 import Redirect from './components/Redirect';
+import Connected from './components/Connected';
 import './stylesheets/style.scss';
 import {ColorModeContext, useMode} from './theme';
 import {ThemeProvider, CssBaseline, Snackbar, Alert} from '@mui/material';
@@ -455,7 +456,9 @@ function App() {
                     isAuthenticated={isAuthenticated}
                     setIsAuthenticated={setIsAuthenticated}
                   >
-                    <Manage connectedCluster={connectedClient} />
+                    <Connected connectedClient={connectedClient}>
+                      <Manage connectedCluster={connectedClient} />
+                    </Connected>
                   </Protected>
                 }
               >
