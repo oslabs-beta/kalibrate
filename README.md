@@ -66,10 +66,9 @@ encryption, and careful session management.
   <img src="./readme-assets/configure.gif?raw=true" width='75%'>
 </p>
 
-Get started with Kalibrate by visiting our [website](http://kalibratelabs.io/), or read on to learn
+Get started with Kalibrate by visiting our [website](https://www.kalibratelabs.io/), or read on to learn
 how to run Kafka in your local environment. If you're interested in learning more about our
-intentions, you can check out our launch article [INSERT MEDIUM ARTICLE
-HYPERLINK], and be sure to get the latest on Kalibrate by following us on
+intentions, you can check out our [launch article](https://medium.com/@kalibratelabs/demystifying-apache-kafka-with-kalibrate-ab9fc2e03ea), and be sure to get the latest on Kalibrate by following us on
 [LinkedIn](https://www.linkedin.com/company/kalibratelabs) and
 [Twitter](https://twitter.com/KalibrateLabs).
 
