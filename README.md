@@ -10,8 +10,8 @@
 
 ## Table of Contents
 
-- [About](##about)
-- [Running Kalibrate in a Local Environment](##running-kalibrate-in-a-local-environment)
+- [About](#about)
+- [Running Kalibrate in a Local Environment](#running-kalibrate-in-a-local-environment)
   - [Initialization](###initialization)
   - [Production](###production)
   - [Development](###development)
@@ -27,7 +27,7 @@
   - [Reset the Cluster](###reset-the-cluster)
 - [Contributing](##contributing)
 - [Contributors](##contributors)
-- [License](##license)
+- [License](#license)
 
 ---
 
