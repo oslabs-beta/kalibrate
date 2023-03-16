@@ -41,8 +41,8 @@ or create an account, then connect to your Kafka instances to get started.
   <img src="./readme-assets/connect.gif?raw=true" width='75%'>
 </p>
 
-With Kalibrate, you can save a Kafka cluster to your account by giving it a unique name, and
-entering a valid URI along with SASL credentials, if applicable. Add new clients to your account at
+With Kalibrate, you can save a Kafka cluster to your account by giving it a unique name and
+entering a valid URI along with SASL credentials if applicable. Add new clients to your account at
 any time, or remove one by selecting one of your saved clients and clicking delete.
 
 Once connected to a Kafka cluster, you'll be greeted with an high level overview of its metadata and
@@ -187,7 +187,7 @@ These client instances create the following topics:
 - Unfulfilled orders
 - Inventory
 - Payments
-- FulFilled orders
+- Fulfilled orders
 
 They interact with the cluster in the following way:
 
