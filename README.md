@@ -38,7 +38,7 @@ Kafka clusters a breeze. It's easy to set up and provides a friendly user experi
 or create an account, then connect to your Kafka instances to get started.
 
 <p align="center">
-  <img src="./readme-assets/connect.gif?raw=true" width='50%'>
+  <img src="./readme-assets/connect.gif?raw=true" width='75%'>
 </p>
 
 With Kalibrate, you can save a Kafka cluster to your account by giving it a unique name, and
@@ -51,7 +51,7 @@ partitions, messages, and consumer groups and members. Navigate to the monitor o
 and dynamically graphed view of your cluster throughput and offsets.
 
 <p align="center">
-  <img src="./readme-assets/manage.gif?raw=true" width='50%'>
+  <img src="./readme-assets/manage.gif?raw=true" width='75%'>
 </p>
 
 Kalibrate was developed with ease of use and configurability in mind. The application features a light
@@ -63,7 +63,7 @@ Kafka cluster credentials are securely stored through a combination of hashing, 
 encryption, and careful session management.
 
 <p align="center">
-  <img src="./readme-assets/configure.gif?raw=true" width='50%'>
+  <img src="./readme-assets/configure.gif?raw=true" width='75%'>
 </p>
 
 Get started with Kalibrate by visiting our [website](http://kalibratelabs.io/), or read on to learn
