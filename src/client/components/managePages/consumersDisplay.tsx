@@ -5,8 +5,8 @@ import {DataGrid, GridToolbar, GridValueGetterParams} from '@mui/x-data-grid';
 import {ConsumerDisplayProps} from '../../types';
 
 const ConsumersDisplay = (props: ConsumerDisplayProps) => {
-  const {groupData} = props;
-  const [pageSize, setPageSize] = useState(10);
+  let {groupData} = props;
+  const [pageSize, setPageSize] = useState(25);
   const navigate = useNavigate();
 
   //  Create column headers & "members" button functionality
@@ -35,7 +35,8 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
     },
   ];
 
-  // Create table rows
+  // Create table rows, setting group data to an array if it's undefined
+  if (!groupData) groupData = [];
   const consumerRows = groupData.map((group, index) => {
     return {
       id: index,
@@ -50,10 +51,10 @@ const ConsumersDisplay = (props: ConsumerDisplayProps) => {
   return (
     <div className="display-table" data-testid="consumerDisplay-1">
       <Box sx={{height: 400, width: '1000'}}>
-        <Paper elevation={6}>
+        <Paper elevation={6} sx={{height: 'calc(100vh - 225px)'}}>
           <DataGrid
-            autoHeight // sets table height based on number of rows
             rows={consumerRows}
+            // @ts-ignore
             columns={consumerColumns}
             pageSize={pageSize}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}

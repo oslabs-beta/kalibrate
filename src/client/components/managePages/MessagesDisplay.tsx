@@ -1,13 +1,12 @@
 import {useState, useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
-import {Box, Paper, Button, Alert} from '@mui/material';
+import {Box, Paper, Button, Alert, CircularProgress} from '@mui/material';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {message, TopicsContext} from '../../types';
-import crow from '../assets/crow2.png';
 
 const MessagesDisplay = () => {
-  const {selectedTopic}: TopicsContext = useOutletContext();
-  const [pageSize, setPageSize] = useState<number>(25);
+  const {selectedTopic, connectedCluster}: TopicsContext = useOutletContext();
+  const [pageSize, setPageSize] = useState<number>(100);
   const [messages, setMessages] = useState<message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -15,7 +14,7 @@ const MessagesDisplay = () => {
   // Fetches all messages for a given topic and update state
   const fetchTopicMessages = async () => {
     try {
-      const response = await fetch(`/api/${selectedTopic}/messages`);
+      const response = await fetch(`/api/messages/${connectedCluster}/${selectedTopic}`);
 
       if (!response.ok) throw new Error();
 
@@ -23,7 +22,6 @@ const MessagesDisplay = () => {
       setMessages(messages);
       setIsLoading(false);
     } catch (err) {
-      console.log(err);
       setIsLoading(false);
       setIsError(true);
     }
@@ -67,7 +65,7 @@ const MessagesDisplay = () => {
   // Generate messages data grid with generates columns and rows
   const messageTable = (
     <Box sx={{height: '70vh'}}>
-      <Paper elevation={6} sx={{height: '100%'}}>
+      <Paper elevation={6} sx={{height: 'calc(100vh - 261px)'}}>
         <DataGrid
           getRowHeight={() => 'auto'}
           rows={messageRows}
@@ -92,12 +90,15 @@ const MessagesDisplay = () => {
     </Box>
   );
 
-  //crow alternative
-  const loadingKrow = (
-    <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <img className="loadKrow rotation" src={crow} alt="loading"></img>
-    </Box>
-  );
+  // loading wheel
+  const loadingWheel = () => {
+    return (
+      <div style={{display: 'flex', justifyContent: 'center', marginTop: '100px'}}>
+        <CircularProgress size="70px" />
+      </div>
+    );
+  };
+
   // Button to reload messages
   const refreshButton = (
     <Button variant="contained" onClick={handleMessagesRefresh}>
@@ -120,7 +121,7 @@ const MessagesDisplay = () => {
     <div className="wrapper">
       <div className="refresh">{isLoading ? disabledRefreshutton : refreshButton}</div>
       <div className="message-table">
-        {isLoading ? loadingKrow : isError ? errorAlert : messageTable}
+        {isLoading ? loadingWheel() : isError ? errorAlert : messageTable}
       </div>
     </div>
   );

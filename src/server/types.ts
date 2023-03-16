@@ -1,4 +1,9 @@
-import {Request, Response, NextFunction, RequestHandler} from 'express';
+import {Request, Response, NextFunction} from 'express';
+
+// server types
+export type controller = {
+  [k: string]: (req: Request, res: Response, next: NextFunction) => Promise<void> | void;
+};
 
 export type errorObject = {
   log: string;
@@ -6,11 +11,6 @@ export type errorObject = {
   message: {
     err: string;
   };
-};
-
-export type controller = {
-  [k: string]: (req: Request, res: Response, next: NextFunction) => Promise<void> | void;
-  kafka?: any;
 };
 
 export type topicMessage = {
@@ -24,4 +24,8 @@ export type topicMessage = {
 
 export type consumedTopicPartitions = {
   [k: string]: boolean;
+};
+
+export type OffsetCollection = {
+  [k: string]: number;
 };

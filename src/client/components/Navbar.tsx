@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {
   AppBar,
@@ -7,29 +7,38 @@ import {
   Typography,
   Box,
   Button,
-  IconButton,
   Badge,
   Menu,
   MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
 } from '@mui/material';
+import {useTheme} from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import crow from './assets/crow2.png';
-
-interface Props {
-  isConnected: boolean;
-}
+import UserMenu from './accountPages/UserMenu';
+import {ColorModeContext, tokens} from '../theme';
+import {NavbarProps} from '../types';
 
 // Render navbar at top of page
-const Navbar = (props: Props) => {
+const Navbar = (props: NavbarProps) => {
   const pages = ['Dashboard'];
-  const settings = ['Account'];
-  const alerts = ['Alert 1', 'Alert 2'];
 
   const navigate = useNavigate();
-  const {isConnected} = props;
+  const {isAuthenticated, isConnected, logout, alerts, setAlerts} = props;
   const [anchorElAlerts, setAnchorElAlerts] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  // manages light/dark mode
+  const [checked, setChecked] = useState<boolean>(false);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const colorMode = useContext(ColorModeContext);
 
   const handleOpenAlertsMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElAlerts(event.currentTarget);
@@ -39,12 +48,14 @@ const Navbar = (props: Props) => {
     setAnchorElAlerts(null);
   };
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorElUser(event.currentTarget);
+  const handleClearAlerts = () => {
+    setAlerts([]);
   };
 
-  const handleCloseUserMenu = (): void => {
-    setAnchorElUser(null);
+  const handleDarkMode = (): void => {
+    // set to dark
+    setChecked(true);
+    colorMode.toggleColorMode();
   };
 
   return (
@@ -55,13 +66,13 @@ const Navbar = (props: Props) => {
           position: 'fixed',
           zIndex: theme => theme.zIndex.drawer + 1,
           width: '100vw',
-          bgcolor: '#9db4c0',
+          bgcolor: colors.primary[900],
         }}
       >
         <Toolbar disableGutters>
           <div className="logo">
             <Typography noWrap sx={{display: {xs: 'none', md: 'flex'}}}>
-              <img src={crow} length="25" width="35"></img>
+              <img src={crow} width="35"></img>
             </Typography>
           </div>
           <Typography
@@ -72,10 +83,10 @@ const Navbar = (props: Props) => {
             sx={{
               mr: 2,
               display: {xs: 'none', md: 'flex'},
-              fontFamily: 'monospace',
+              fontFamily: 'sans-serif',
               fontWeight: 700,
               letterSpacing: '.1rem',
-              color: 'inherit',
+              color: '#8bc6c0',
               textDecoration: 'none',
               cursor: 'pointer',
             }}
@@ -87,13 +98,14 @@ const Navbar = (props: Props) => {
             {pages.map(page => (
               <Button
                 key={page}
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/dashboard')}
                 sx={{
                   my: 2,
-                  color: 'inherit',
+                  color: '#8bc6c0',
+                  fontWeight: 'bold',
                   display: 'block',
                   m: 0,
-                  visibility: isConnected ? 'visible' : 'hidden',
+                  visibility: isAuthenticated ? 'visible' : 'hidden',
                 }}
               >
                 {page}
@@ -101,17 +113,20 @@ const Navbar = (props: Props) => {
             ))}
           </Box>
 
+          
+
           {/* when Alerts icon is clicked, display popover menu containing alerts from anchorEl */}
           <IconButton
-            size="large"
+            size="medium"
             color="inherit"
             onClick={handleOpenAlertsMenu}
-            sx={{visibility: isConnected ? 'visible' : 'hidden'}}
+            sx={{visibility: isAuthenticated ? 'visible' : 'hidden'}}
           >
-            <Badge badgeContent={2} color="error">
+            <Badge badgeContent={alerts.length} color="error">
               <NotificationsIcon aria-label="notification" />
             </Badge>
           </IconButton>
+
           <Menu
             sx={{mt: '30px'}}
             id="alerts-menu"
@@ -128,44 +143,37 @@ const Navbar = (props: Props) => {
             open={Boolean(anchorElAlerts)}
             onClose={handleCloseAlertsMenu}
           >
-            {alerts.map(alert => (
-              <MenuItem key={alert} onClick={handleCloseAlertsMenu}>
-                <Typography textAlign="center">{alert}</Typography>
+            <MenuItem onClick={handleClearAlerts}>
+              <ListItemIcon>
+                <ClearIcon />
+              </ListItemIcon>
+              <ListItemText>Clear all alerts</ListItemText>
+            </MenuItem>
+
+            <Divider />
+
+            {alerts.length ? (
+              alerts.map(alert => (
+                <MenuItem key={alert}>
+                  <ListItemIcon>
+                    <InfoIcon />
+                  </ListItemIcon>
+                  <ListItemText>{alert}</ListItemText>
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem>
+                <ListItemText>No active alerts...</ListItemText>
               </MenuItem>
-            ))}
+            )}
           </Menu>
 
           {/* when Settings icon is clicked, display settings menu containing elements from anchorEl */}
-          <IconButton
-            size="large"
-            color="inherit"
-            onClick={handleOpenUserMenu}
-            sx={{visibility: isConnected ? 'visible' : 'hidden'}}
-          >
-            <SettingsIcon aria-label="settings" />
+          <UserMenu isAuthenticated={isAuthenticated} logout={logout} />
+
+          <IconButton size="medium" color="inherit" onClick={handleDarkMode}>
+            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
-          <Menu
-            sx={{mt: '30px'}}
-            id="settings-menu"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map(setting => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
         </Toolbar>
       </Container>
     </AppBar>

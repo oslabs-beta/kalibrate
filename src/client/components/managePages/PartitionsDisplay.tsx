@@ -7,7 +7,7 @@ import {partitions, TopicsContext} from '../../types';
 // Displays partitions within Topics component
 const PartitionsDisplay = () => {
   const {topicPartitions}: TopicsContext = useOutletContext();
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(25);
 
   const partitionColumns = [
     {field: 'partId', headerName: 'Partition ID', flex: 1},
@@ -21,6 +21,7 @@ const PartitionsDisplay = () => {
   const partitionRows = topicPartitions.map((partition: partitions, index: number) => {
     return {
       id: index,
+      key: index,
       partId: partition.partitionId,
       leader: partition.leader,
       isr: partition.isr,
@@ -34,9 +35,8 @@ const PartitionsDisplay = () => {
     <div className="wrapper">
       <div className="partition-table">
         <Box sx={{height: 400, width: '1000'}}>
-          <Paper elevation={6}>
+          <Paper elevation={6} sx={{height: 'calc(100vh - 225px)'}}>
             <DataGrid
-              autoHeight // sets table height based on number of rows
               rows={partitionRows}
               columns={partitionColumns}
               pageSize={pageSize}

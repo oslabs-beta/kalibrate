@@ -1,14 +1,14 @@
 import {useState, SyntheticEvent} from 'react';
 import {Grid, Button, TextField, Box, Checkbox, Alert} from '@mui/material';
-import {useNavigate} from 'react-router-dom';
-import {ConnectProps, connectionConfig} from '../types';
-import '../stylesheets/style.css';
-import crow from './assets/crow2.png';
+import {ConnectProps, connectionConfig} from '../../types';
+import '../../stylesheets/style.scss';
+import crow from '../assets/crow2.png';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../../theme';
 
-const Connect = (props: ConnectProps) => {
-  const navigate = useNavigate();
-  const {setConnectedCluster, sessionClusters, setSessionClusters, setIsConnected, isConnected} =
-    props;
+const Connect = ({setSelectedClient, storedClients, setStoredClients}: ConnectProps) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   // controlled state for form
   const [clientId, setClientId] = useState('');
@@ -17,8 +17,6 @@ const Connect = (props: ConnectProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginInProgress, setLoginInProgress] = useState(false);
-
-  // state for displaying form input errors
   const [errorMessage, setErrorMessage] = useState('');
 
   // form submission handler
@@ -28,7 +26,10 @@ const Connect = (props: ConnectProps) => {
     // input validation
     if (!clientId)
       return setErrorMessage('Enter a Client ID to identify this cluster within Kalibrate.');
-    if (sessionClusters.includes(clientId)) return setErrorMessage('Client IDs must be unique.');
+
+    if (storedClients.filter(storedClient => storedClient.clientId === clientId).length)
+      return setErrorMessage('Client IDs must be unique.');
+
     if (!brokers) return setErrorMessage('Seed broker is required.');
     if (sasl && !username) return setErrorMessage('Username is required when SASL is selected.');
     if (sasl && !password) return setErrorMessage('Password is required when SASL is selected.');
@@ -60,25 +61,24 @@ const Connect = (props: ConnectProps) => {
         },
         body: JSON.stringify(connectionConfig),
       });
+
       // handle failed connection
+      if (response.status === 429) {
+        setErrorMessage('Too many requests. Wait a minute and try again.');
+      } else if (response.status === 403) {
+        setErrorMessage('Failed to connect. Verify credentials.');
+      } else if (!response.ok) {
+        setErrorMessage('An unknown error occurred.');
+      }
       if (!response.ok) throw new Error();
-      if (response.ok) setErrorMessage('');
+      setErrorMessage('');
 
-      // update global state and navigate to dashboard
-      setIsConnected(true);
-
-      setConnectedCluster(clientId);
-      const newSessionClusters = [...sessionClusters, clientId];
-      setSessionClusters(newSessionClusters);
-      setPassword('');
-      setClientId('');
-      setSasl(false);
-      setUsername('');
-      setBrokers('');
-
-      navigate('/');
+      // update global state
+      const client = await response.json();
+      setStoredClients([...storedClients, client]); // add to the list
+      setSelectedClient(client.clientId); // update selection to the addition
     } catch {
-      setErrorMessage('Failed to connect. Verify credentials.');
+      // if (errorMessage === '') setErrorMessage('Failed to connect. Verify credentials.');
     } finally {
       setLoginInProgress(false);
     }
@@ -93,27 +93,28 @@ const Connect = (props: ConnectProps) => {
       justifyContent="space-evenly"
       alignItems="center"
       textAlign="center"
-      sx={{position: isConnected ? 'static' : 'relative', right: '6rem', height: '80vh'}}
+      sx={{
+        height: '90vh',
+        width: 'calc(100vw + 202px)',
+      }}
     >
       <Box
         component="form"
         sx={{
-          '& .MuiTextField-root': {m: 1, width: '25ch'},
+          '& .MuiTextField-root': {m: 1, width: '350px'},
           padding: '30px',
-          border: '2px solid black',
-          borderRadius: '8px',
-          borderColor: '#253237',
-          boxShadow: '2px 2px 2px grey',
+          border: '1px solid' + colors.info[300],
+          borderRadius: '5px',
+          backgroundColor: colors.background[500],
         }}
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        <div className="connectText">Connect to a Cluster</div>
+        <div className="connectText">Add a New Client</div>
 
         <Grid>
           <TextField
-            id="outlined-basic"
             size="small"
             label="Client ID"
             variant="outlined"
@@ -124,9 +125,8 @@ const Connect = (props: ConnectProps) => {
 
         <Grid>
           <TextField
-            id="outlined-basic"
             size="small"
-            label="Seed Broker"
+            label="URI"
             variant="outlined"
             value={brokers}
             onChange={event => setBrokers(event.target.value)}
@@ -146,7 +146,6 @@ const Connect = (props: ConnectProps) => {
           <>
             <Grid>
               <TextField
-                id="outlined-basic"
                 label="Username"
                 variant="outlined"
                 size="small"
@@ -172,22 +171,32 @@ const Connect = (props: ConnectProps) => {
           <span className="loadingSpan">
             {
               // conditional rendering based on whether login attempt is in progress
-              loginInProgress ? <img className="rotocrow rotation" src={crow}></img> : null
+              loginInProgress ? (
+                <img className="rotocrow rotation" src={crow}></img>
+              ) : (
+                <Button
+                  variant="contained"
+                  size="medium"
+                  type="submit"
+                  disabled={
+                    !(sasl
+                      ? !!clientId && !!brokers && !!username && !!password
+                      : !!clientId && !!brokers)
+                  }
+                  sx={{fontWeight: 'bold', marginTop: '15px'}}
+                >
+                  {loginInProgress ? 'Connecting...' : 'Save'}
+                </Button>
+              )
             }
-            <Button
-              variant="contained"
-              size="medium"
-              type="submit"
-              sx={{fontWeight: 'bold', marginTop: '15px'}}
-            >
-              {loginInProgress ? 'Connecting...' : 'Connect'}
-            </Button>
           </span>
         </Grid>
 
         {errorMessage.length ? (
           <Grid>
-            <Alert severity="error">{errorMessage}</Alert>
+            <Alert className="err" severity="error">
+              {errorMessage}
+            </Alert>
           </Grid>
         ) : null}
       </Box>

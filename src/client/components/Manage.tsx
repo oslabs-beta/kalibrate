@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {
   Box,
@@ -8,21 +9,24 @@ import {
   ListItemButton,
   ListItemText,
   Collapse,
+  Divider,
 } from '@mui/material';
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
-import {useState} from 'react';
+import {useTheme} from '@mui/material/styles';
+import {tokens} from '../theme';
+import {ManageProps} from '../types';
 
-const drawerWidth = 200;
+const drawerWidth = 250;
 
 // Display, in sidebar, management options for a selected cluster
-const Manage = () => {
+const Manage = (props: ManageProps) => {
+  const {connectedCluster} = props;
   const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const [openManage, setOpenManage] = useState(false);
   const [openMonitor, setOpenMonitor] = useState(false);
-  const [openTest, setOpenTest] = useState(false);
-
-  const lightBlue = 'c8d6de';
 
   // Drawer = wrapper for sidebar
   return (
@@ -35,23 +39,48 @@ const Manage = () => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            background: '#edf8fe',
+            borderRight: '1px outset' + colors.secondary[900],
+            background: colors.manage[500],
           },
         }}
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto', background: lightBlue}}>
-          <List className="no-padding-list">
-            <ListItem key="Manage" disablePadding sx={{background: '#edf8fe'}}>
+
+        <Box sx={{overflow: 'auto'}}>
+          <List className="no-padding-list" disablePadding>
+            <ListItem key="Overview" disablePadding>
+              <ListItemButton
+                onClick={() => navigate('/client/' + connectedCluster)}
+                sx={{
+                  backgroundColor: colors.secondary[200],
+                }}
+              >
+                <ListItemText primary="Overview" />
+              </ListItemButton>
+            </ListItem>
+
+            <Divider />
+
+            <ListItem key="Manage" disablePadding>
               <ListItemButton
                 onClick={() => setOpenManage(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  backgroundColor: colors.secondary[200],
+                }}
               >
                 <ListItemText primary="Manage" />
                 {openManage ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
-            <Collapse in={openManage} timeout="auto" unmountOnExit>
+
+            <Collapse
+              in={openManage}
+              timeout="auto"
+              unmountOnExit
+              sx={{
+                backgroundColor: colors.secondary[100],
+              }}
+            >
               <ListItem key="Brokers" disablePadding>
                 <ListItemButton onClick={() => navigate('brokers')}>
                   <ListItemText primary="Brokers" />
@@ -71,46 +100,37 @@ const Manage = () => {
               </ListItem>
             </Collapse>
 
-            <ListItem key="Monitor" disablePadding sx={{background: lightBlue}}>
+            <Divider />
+
+            <ListItem key="Monitor" disablePadding>
               <ListItemButton
                 onClick={() => setOpenMonitor(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
+                sx={{
+                  backgroundColor: colors.secondary[200],
+                }}
               >
                 <ListItemText primary="Monitor" />
                 {openMonitor ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
-            <Collapse in={openMonitor} timeout="auto" unmountOnExit>
-              <ListItem key="Throughput" disablePadding>
-                <ListItemButton onClick={() => navigate('throughput')}>
-                  <ListItemText primary="Throughput" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem key="Lag" disablePadding>
-                <ListItemButton onClick={() => navigate('lag')}>
-                  <ListItemText primary="Lag" />
-                </ListItemButton>
-              </ListItem>
-            </Collapse>
 
-            <ListItem key="Test" disablePadding sx={{background: lightBlue}}>
-              <ListItemButton
-                onClick={() => setOpenTest(prev => !prev)}
-                sx={{borderRadius: '5px', border: '1px outset #c2dfe3'}}
-              >
-                <ListItemText primary="Test" />
-                {openTest ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-            </ListItem>
-            <Collapse in={openTest} timeout="auto" unmountOnExit>
-              <ListItem key="Produce" disablePadding>
-                <ListItemButton onClick={() => navigate('produce')}>
-                  <ListItemText primary="Produce" />
+            <Collapse
+              in={openMonitor}
+              timeout="auto"
+              unmountOnExit
+              sx={{
+                backgroundColor: colors.secondary[100],
+              }}
+            >
+              <ListItem key="traffic" disablePadding>
+                <ListItemButton onClick={() => navigate('traffic')}>
+                  <ListItemText primary="Traffic and Health" />
                 </ListItemButton>
               </ListItem>
-              <ListItem key="Consume" disablePadding>
-                <ListItemButton onClick={() => navigate('consume')}>
-                  <ListItemText primary="Consume" />
+
+              <ListItem key="offsets" disablePadding>
+                <ListItemButton onClick={() => navigate('offsets')}>
+                  <ListItemText primary="Offsets" />
                 </ListItemButton>
               </ListItem>
             </Collapse>

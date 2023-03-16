@@ -22,7 +22,7 @@ const consumeMessages = async () => {
         console.log({
           partition,
           offset: message.offset,
-          value: message.value.toString(),
+          value: message.value ? message.value.toString() : null,
         });
       },
     });
@@ -30,5 +30,5 @@ const consumeMessages = async () => {
     console.log(`[Consumer Error] ${err.message}:`, err);
   }
 };
-//run().catch(e => console.error(`Consumer error: ${e.message}`));
+
 export default consumeMessages;
