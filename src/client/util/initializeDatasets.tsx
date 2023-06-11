@@ -16,7 +16,7 @@ const initializeDatasets = (
     const newDataset = makeDataSet(el);
     newDatasets.push(newDataset);
   }
-
+  console.log('INIT DS: ', newDatasets);
   return newDatasets;
 };
 

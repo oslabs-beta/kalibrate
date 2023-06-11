@@ -13,48 +13,17 @@ import {
 } from 'chart.js';
 import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
+import initializeLineGraph from '../../util/initializeLineGraph';
 
 const ThroughputLineGraph = (props: LineGraphComponentProps) => {
   const {timeSeriesData, datasets, setDatasets, targetData} = props;
   const [xScope, setxScope] = useState<number>(10);
 
   useEffect(() => {
-    const dataThroughputProp = targetData === 'topics' ? 'topicThroughputs' : 'groupThroughputs';
-    const dataOffsetProp = targetData === 'topics' ? 'topicOffsets' : 'groupOffsets';
-
-    // on arrival, initialize datasets if not initialized
-    const newDatasets = initializeDatasets(timeSeriesData, dataOffsetProp, xScope);
+    // initialize line graph display
+    const newDatasets = initializeLineGraph(timeSeriesData, targetData, xScope);
     console.log(typeof newDatasets);
-    console.log('NDS: ', newDatasets);
-    // fill initialized dataset with up to xScope columns of data, if available
-    const timeArray = [];
-    if (timeSeriesData.length < xScope) {
-      let i = 1;
-      while (i < timeSeriesData.length) {
-        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
-        i++;
-      }
-
-      while (timeArray.length < xScope) {
-        timeArray.push('');
-      }
-    } else {
-      for (let i = timeSeriesData.length - xScope; i < timeSeriesData.length; i++) {
-        timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
-      }
-    }
-    let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
-    for (i; i < timeSeriesData.length; i++) {
-      for (const el of newDatasets) {
-        el.timestamp = timeArray;
-        for (const t in timeSeriesData[i][dataThroughputProp]) {
-          if (t === el.data.label) {
-            // @ts-ignore
-            el.data.data.push(timeSeriesData[i][dataThroughputProp][t]);
-          }
-        }
-      }
-    }
+    console.log(newDatasets);
     setDatasets(newDatasets);
   }, []);
 
@@ -64,7 +33,6 @@ const ThroughputLineGraph = (props: LineGraphComponentProps) => {
     if (timeSeriesData.length <= 1 || datasets.length < 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
 
-    console.log('TARGET DATA: ', targetData);
     let throughputs: ThroughputCollection = {};
     if (targetData === 'topics') {
       throughputs = current.topicThroughputs!;
