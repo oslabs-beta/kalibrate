@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
-import {datasetsObject, TopicLineGraphComponentProps} from '../../types';
+import {datasetsObject, LineGraphComponentProps, ThroughputCollection} from '../../types';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,21 +14,20 @@ import {
 import lineGraphOptions from '../../util/line-graph-options';
 import initializeDatasets from '../../util/initializeDatasets';
 
-const TopicThroughput = (props: TopicLineGraphComponentProps) => {
-  const {timeSeriesData, topicDatasets, setTopicDatasets} = props;
-
-  // todo: allow modification of xscope?
-
+const ThroughputLineGraph = (props: LineGraphComponentProps) => {
+  const {timeSeriesData, datasets, setDatasets, targetData} = props;
   const [xScope, setxScope] = useState<number>(10);
 
-  // on arrival, initialize datasets if not initialized
   useEffect(() => {
-    // the keys for offsets and throughputs are identical, but offsets are ready one poll sooner, since throughputs require two data points to calculate
-    // use offset data to initialize here on the initial poll so that throughput data have somewhere to land
-    const newDatasets = initializeDatasets(timeSeriesData, 'topicOffsets', xScope);
+    const dataThroughputProp = targetData === 'topics' ? 'topicThroughputs' : 'groupThroughputs';
+    const dataOffsetProp = targetData === 'topics' ? 'topicOffsets' : 'groupOffsets';
+
+    // on arrival, initialize datasets if not initialized
+    const newDatasets = initializeDatasets(timeSeriesData, dataOffsetProp, xScope);
+    console.log(typeof newDatasets);
+    console.log('NDS: ', newDatasets);
     // fill initialized dataset with up to xScope columns of data, if available
     const timeArray = [];
-
     if (timeSeriesData.length < xScope) {
       let i = 1;
       while (i < timeSeriesData.length) {
@@ -44,35 +43,39 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
         timeArray.push(new Date(timeSeriesData[i].time).toLocaleTimeString());
       }
     }
-
     let i = timeSeriesData.length >= xScope ? timeSeriesData.length - xScope : 0;
     for (i; i < timeSeriesData.length; i++) {
       for (const el of newDatasets) {
         el.timestamp = timeArray;
-        for (const t in timeSeriesData[i].topicThroughputs) {
+        for (const t in timeSeriesData[i][dataThroughputProp]) {
           if (t === el.data.label) {
             // @ts-ignore
-            el.data.data.push(timeSeriesData[i].topicThroughputs[t]);
+            el.data.data.push(timeSeriesData[i][dataThroughputProp][t]);
           }
         }
       }
     }
-
-    setTopicDatasets(newDatasets);
+    setDatasets(newDatasets);
   }, []);
 
-  // when new data is received, new data to topic arrays in throughput data object
+  // when new data is received, add new data to topic arrays in throughput data object
   useEffect(() => {
-    // don't go forward without sufficient data for calculations
-    if (timeSeriesData.length <= 1 || topicDatasets.length < 1) return;
+    // don't proceed unless there are at least two data points -- we need at least that many to calculate a rate over time
+    if (timeSeriesData.length <= 1 || datasets.length < 1) return;
     const current = timeSeriesData[timeSeriesData.length - 1];
-    const {topicThroughputs} = current;
 
-    // copy throughput data object to change before updating state
-    const newData: datasetsObject[] = JSON.parse(JSON.stringify(topicDatasets));
+    console.log('TARGET DATA: ', targetData);
+    let throughputs: ThroughputCollection = {};
+    if (targetData === 'topics') {
+      throughputs = current.topicThroughputs!;
+    } else if (targetData === 'groups') {
+      throughputs = current.groupThroughputs!;
+    }
 
-    // if there are empty strings in the x axis labels, replace the first one with the curernt time
-    // otherwise, push the new time to the array and shift the oldest time off
+    // clone throughput data object before changing it and updating state with it
+    const newData: datasetsObject[] = JSON.parse(JSON.stringify(datasets));
+
+    // labeling logic for x axis
     newData.forEach(el => {
       const i = el.timestamp.indexOf('');
       if (i !== -1) {
@@ -82,30 +85,34 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
         el.timestamp.shift();
       }
     });
-    for (const el in topicThroughputs) {
+
+    for (const el in throughputs) {
       // push y-axis data to the appropriate array
       // shift oldest data point off to maintain current data on graph
       // update state
       for (const set of newData) {
         // @ts-ignore
-        if (el === set.data.label) set.data.data.push(topicThroughputs[el]);
+        if (el === set.data.label) set.data.data.push(throughputs[el]);
         if (set.data.data.length > xScope) set.data.data.shift();
       }
     }
-    setTopicDatasets(newData);
-    // using the last element of the array as the dependency guarantees updates both while the array gets longer and after it reaches max length of 50
+    setDatasets(newData);
   }, [timeSeriesData[timeSeriesData.length - 1]]);
 
+  // chart plugins
   // chart plugins
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
   const data = {
-    labels: topicDatasets.length ? topicDatasets[0].timestamp : [],
-    datasets: topicDatasets.map((el: datasetsObject) => el.data),
-    options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
+    labels: datasets.length ? datasets[0].timestamp : [],
+    datasets: datasets.map((el: datasetsObject) => el.data),
+    // copy options object to make local changes
+    options: JSON.parse(JSON.stringify(lineGraphOptions)),
   };
 
-  data.options.plugins.title.text = 'Throughput by Topic';
+  data.options.plugins.title.text = `Throughput by ${
+    targetData === 'topics' ? 'Topic' : 'Consumer Group'
+  }`;
   data.options.scales.y.title.text = 'Messages/sec';
   data.options.maintainAspectRatio = false;
 
@@ -123,4 +130,4 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
   );
 };
 
-export default TopicThroughput;
+export default ThroughputLineGraph;

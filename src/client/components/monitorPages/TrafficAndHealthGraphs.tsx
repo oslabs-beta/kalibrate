@@ -1,18 +1,10 @@
-import GroupThroughput from './GroupThroughput';
-import TopicThroughput from './TopicThroughput';
+import ThroughputLineGraph from './ThroughputGraph';
 import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
 import {TrafficAndHealthProps} from '../../types';
 
 const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
-  const {
-    timeSeriesData,
-    connectedCluster,
-    topicDatasets,
-    setTopicDatasets,
-    groupDatasets,
-    setGroupDatasets,
-  } = props;
+  const {timeSeriesData, topicDatasets, setTopicDatasets, groupDatasets, setGroupDatasets} = props;
 
   return timeSeriesData.length ? (
     <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
@@ -23,10 +15,11 @@ const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
           marginTop: '25px',
         }}
       >
-        <TopicThroughput
+        <ThroughputLineGraph
           timeSeriesData={timeSeriesData}
-          topicDatasets={topicDatasets}
-          setTopicDatasets={setTopicDatasets}
+          datasets={topicDatasets}
+          setDatasets={setTopicDatasets}
+          targetData={'topics'}
         />
       </Card>
       <Card
@@ -35,10 +28,11 @@ const TrafficAndHealthGraphs = (props: TrafficAndHealthProps) => {
           marginTop: '25px',
         }}
       >
-        <GroupThroughput
+        <ThroughputLineGraph
           timeSeriesData={timeSeriesData}
-          groupDatasets={groupDatasets}
-          setGroupDatasets={setGroupDatasets}
+          datasets={groupDatasets}
+          setDatasets={setGroupDatasets}
+          targetData={'groups'}
         />
       </Card>
     </div>

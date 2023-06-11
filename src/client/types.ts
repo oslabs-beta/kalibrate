@@ -98,6 +98,12 @@ export type TopicThroughputProps = {
   timeSeriesData: newPollType[];
 };
 
+export type LineGraphComponentProps = {
+  timeSeriesData: newPollType[];
+  datasets: datasetsObject[];
+  setDatasets: (datasets: datasetsObject[]) => void;
+};
+
 export type TopicLineGraphComponentProps = {
   timeSeriesData: newPollType[];
   topicDatasets: datasetsObject[];

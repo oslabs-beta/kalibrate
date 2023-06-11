@@ -333,7 +333,7 @@ authController.setSessionCookie = (req, res, next) => {
 
 authController.verifySessionCookie = (req, res, next) => {
   // check for KST session cookie
-  if (!Object.hasOwn(req.cookies, 'kst')) {
+  if (!req.cookies.kst) {
     return next({
       log: `ERROR - authController.verifySessionCookie: Failed to extract session cookie.`,
       status: 440,
