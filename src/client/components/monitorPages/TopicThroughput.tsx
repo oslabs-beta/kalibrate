@@ -105,7 +105,7 @@ const TopicThroughput = (props: TopicLineGraphComponentProps) => {
     options: JSON.parse(JSON.stringify(lineGraphOptions)), // copy options object to make local changes
   };
 
-  data.options.plugins.title.text = 'Throughput by Topic Group';
+  data.options.plugins.title.text = 'Throughput by Topic';
   data.options.scales.y.title.text = 'Messages/sec';
   data.options.maintainAspectRatio = false;
 

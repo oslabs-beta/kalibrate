@@ -1,5 +1,4 @@
-import {empty} from '@prisma/client/runtime';
-import {chartJSdataset, datasetsObject, newPollType, timeSeriesData} from '../types';
+import {datasetsObject, newPollType} from '../types';
 import makeDataSet from './makeDataSet';
 
 // create labels array and one chartJS dataset object per group
@@ -17,7 +16,7 @@ const initializeDatasets = (
     const newDataset = makeDataSet(el);
     newDatasets.push(newDataset);
   }
-
+  console.log('INIT DS: ', newDatasets);
   return newDatasets;
 };
 
